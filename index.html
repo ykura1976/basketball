@@ -1348,11 +1348,17 @@
                     
                     saveData();
                     closeModal('joinTeamModal');
-                    displayTeamStatus();
+                    
+                    // データを取得
                     await loadTeamData();
                     
+                    // 表示を更新
+                    displayTeamStatus();
+                    displayPlayers();
+                    updateMyPlayerSelect();
+                    
                     showSyncIndicator('success', 'チーム参加完了!');
-                    alert('✅ チームに参加しました！\n\nチームコード: ' + teamCode + '\n\nスプレッドシート: ' + result.spreadsheetUrl);
+                    alert('✅ チームに参加しました！\n\nチーム名: ' + teamData.name + '\nチームコード: ' + teamCode + '\n\n選手データを取得しました。\n設定タブの「個人モード表示設定」で選手を選択してください。');
                 } else {
                     throw new Error(result.error || 'チーム参加に失敗しました');
                 }
@@ -1398,6 +1404,8 @@
         async function loadTeamData() {
             if (!teamData) return;
             
+            showSyncIndicator('syncing', 'データ取得中...');
+            
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -1413,21 +1421,27 @@
                 const result = await response.json();
                 
                 if (result.success && result.players) {
+                    let addedCount = 0;
                     result.players.forEach(function(serverPlayer) {
                         const exists = players.some(function(p) {
                             return p.id === serverPlayer.id;
                         });
                         if (!exists) {
                             players.push(serverPlayer);
+                            addedCount++;
                         }
                     });
                     
                     saveData();
-                    displayPlayers();
-                    updateMyPlayerSelect();
+                    showSyncIndicator('success', addedCount + '人の選手データを取得');
+                    
+                    return addedCount;
+                } else {
+                    showSyncIndicator('error', 'データ取得失敗');
                 }
             } catch (error) {
                 console.error('データ取得エラー:', error);
+                showSyncIndicator('error', 'データ取得失敗');
             }
         }
 
