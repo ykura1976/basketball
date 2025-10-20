@@ -565,6 +565,134 @@
             font-size: 16px;
             cursor: pointer;
         }
+        .ranking-medal {
+            font-size: 2em;
+            display: inline-block;
+            width: 50px;
+            text-align: center;
+        }
+
+        .ranking-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-info .rank {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        .ranking-info .player-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .ranking-info .stat-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-left: 10px;
+        }
+
+        .game-history-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .game-history-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .game-history-item .game-date {
+            font-size: 1em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .game-history-item .game-opponent {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .game-detail {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        .game-detail.active {
+            display: block;
+        }
+
+        .ranking-section {
+            margin-bottom: 30px;
+        }
+
+        .ranking-section h3 {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .top3-container {
+            margin-bottom: 15px;
+        }
+
+        .all-rankings {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .all-rankings.active {
+            display: block;
+        }
+
+        .toggle-rankings {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .toggle-rankings:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .toggle-rankings.active {
+            background: #667eea;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -842,6 +970,12 @@
         </div>
 
         <div id="teamMode" style="display: none;">
+            <div class="tab-bar">
+                <button class="tab active" onclick="switchTeamTab('record')">⚡ 記録</button>
+                <button class="tab" onclick="switchTeamTab('history')">📊 履歴</button>
+            </div>
+
+            <div id="teamRecordTab">
             <div class="card">
                 <h2 style="margin-bottom: 20px;">⚡ 試合記録</h2>
                 
@@ -903,6 +1037,10 @@
                     <button class="save-btn" style="margin-top: 20px;" onclick="saveTeamGame()">試合終了・保存</button>
                 </div>
             </div>
+     </div>
+     <div id="teamHistoryTab" style="display: none;">
+         <div id="teamGamesList"></div>
+     </div>           
         </div>
     </div>
 
