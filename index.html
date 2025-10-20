@@ -1788,6 +1788,105 @@
             alert('✅ ' + name + ' #' + num + ' を登録しました！');
         }
 
+        function editPlayer(playerId) {
+            const player = players.find(function(p) {
+                return p.id === playerId;
+            });
+            
+            if (!player) return;
+            
+            const newNumber = prompt('新しい背番号を入力してください（現在: #' + player.number + '）', player.number);
+            if (newNumber === null) return;
+            
+            if (!newNumber || newNumber.trim() === '') {
+                alert('背番号を入力してください');
+                return;
+            }
+            
+            const duplicate = players.some(function(p) {
+                return p.id !== playerId && p.number === newNumber.trim();
+            });
+            
+            if (duplicate) {
+                alert('この背番号は既に他の選手が使用しています');
+                return;
+            }
+            
+            const newName = prompt('新しい名前を入力してください（現在: ' + player.name + '）', player.name);
+            if (newName === null) return;
+            
+            if (!newName || newName.trim() === '') {
+                alert('名前を入力してください');
+                return;
+            }
+            
+            player.number = newNumber.trim();
+            player.name = newName.trim();
+            
+            saveData();
+            
+            if (teamData) {
+                syncWithServer();
+            }
+            
+            displayPlayers();
+            updateMyPlayerSelect();
+            displayGames();
+            displayRankings();
+            updateCharts();
+            
+            alert('✅ 選手情報を更新しました！\n\n#' + player.number + ' ' + player.name);
+        }
+
+        function deletePlayer(playerId) {
+            const player = players.find(function(p) {
+                return p.id === playerId;
+            });
+            
+            if (!player) return;
+            
+            if (!confirm('「#' + player.number + ' ' + player.name + '」を削除しますか？\n\n⚠️ この選手の試合記録も全て削除されます。')) {
+                return;
+            }
+            
+            players = players.filter(function(p) {
+                return p.id !== playerId;
+            });
+            
+            personalGames = personalGames.filter(function(g) {
+                return g.playerId !== playerId;
+            });
+            
+            teamGames.forEach(function(game) {
+                if (game.playerStats && game.playerStats[playerId]) {
+                    delete game.playerStats[playerId];
+                }
+                if (game.plays) {
+                    game.plays = game.plays.filter(function(play) {
+                        return play.playerId !== playerId;
+                    });
+                }
+            });
+            
+            if (myPlayerId === playerId) {
+                myPlayerId = players.length > 0 ? players[0].id : null;
+            }
+            
+            saveData();
+            
+            if (teamData) {
+                syncWithServer();
+            }
+            
+            displayPlayers();
+            updateMyPlayerSelect();
+            displayGames();
+            displayRankings();
+            updateCharts();
+            
+            alert('✅ 選手を削除しました');
+        }
+        
         function changeMyPlayer() {
             myPlayerId = document.getElementById('myPlayerSelect').value || null;
             saveData();
@@ -1832,7 +1931,13 @@
                     '<span class="number">#' + p.number + '</span>' +
                     '<span style="font-weight: bold; margin-left: 10px;">' + p.name + '</span>' +
                     '</div>' +
+                    '<div>' +
                     (isMyPlayer ? '<span class="my-data-badge">個人モード表示中</span>' : '') +
+                    '</div>' +
+                    '</div>' +
+                    '<div style="display: flex; gap: 10px; margin-top: 10px;">' +
+                    '<button class="primary-btn" style="flex: 1; padding: 10px; font-size: 0.9em; background: #3498db;" onclick="editPlayer(\'' + p.id + '\')">編集</button>' +
+                    '<button class="primary-btn" style="flex: 1; padding: 10px; font-size: 0.9em; background: #e74c3c;" onclick="deletePlayer(\'' + p.id + '\')">削除</button>' +
                     '</div>' +
                     '</div>';
             }).join('');
