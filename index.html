@@ -87,6 +87,10 @@
             color: #667eea;
         }
 
+        .mode-btn.active.team-mode {
+            color: #f39c12;
+        }
+
         .tab-bar {
             display: flex;
             gap: 10px;
@@ -1794,6 +1798,7 @@
             currentMode = mode;
             document.querySelectorAll('.mode-btn').forEach(function(btn) {
                 btn.classList.remove('active');
+                btn.classList.remove('team-mode');
             });
             
             if (mode === 'personal') {
@@ -1802,7 +1807,9 @@
                 document.getElementById('teamMode').style.display = 'none';
                 displayGames();
             } else if (mode === 'team') {
-                document.querySelector('.mode-btn:nth-child(2)').classList.add('active');
+                const teamBtn = document.querySelector('.mode-btn:nth-child(2)');
+                teamBtn.classList.add('active');
+                teamBtn.classList.add('team-mode');
                 document.getElementById('personalMode').style.display = 'none';
                 document.getElementById('teamMode').style.display = 'block';
             }
