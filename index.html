@@ -1808,32 +1808,31 @@
         document.getElementById('gameDate').valueAsDate = new Date();
         document.getElementById('teamGameDate').valueAsDate = new Date();
 
-        行1793:         function switchMode(mode) {
-行1794:             currentMode = mode;
-行1795:             document.querySelectorAll('.mode-btn').forEach(function(btn) {
-行1796:                 btn.classList.remove('active');
-行1797:                 btn.classList.remove('team-mode');  ← 追加
-行1798:             });
-行1799:             
-行1800:             // body要素のクラスを切り替え  ← 追加
-行1801:             document.body.classList.remove('personal-mode', 'team-mode');  ← 追加
-行1802:             
-行1803:             if (mode === 'personal') {
-行1804:                 document.querySelector('.mode-btn:nth-child(1)').classList.add('active');
-行1805:                 document.getElementById('personalMode').style.display = 'block';
-行1806:                 document.getElementById('teamMode').style.display = 'none';
-行1807:                 document.body.classList.add('personal-mode');  ← 追加
-行1808:                 displayGames();
-行1809:             } else if (mode === 'team') {
-行1810:                 const teamBtn = document.querySelector('.mode-btn:nth-child(2)');  ← 変更
-行1811:                 teamBtn.classList.add('active');  ← 変更
-行1812:                 teamBtn.classList.add('team-mode');  ← 追加
-行1813:                 document.getElementById('personalMode').style.display = 'none';
-行1814:                 document.getElementById('teamMode').style.display = 'block';
-行1815:                 document.body.classList.add('team-mode');  ← 追加
-行1816:             }
-行1817:         }
-
+        function switchMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+                btn.classList.remove('team-mode');
+            });
+            
+            document.body.classList.remove('personal-mode', 'team-mode');
+            
+            if (mode === 'personal') {
+                document.querySelector('.mode-btn:nth-child(1)').classList.add('active');
+                document.getElementById('personalMode').style.display = 'block';
+                document.getElementById('teamMode').style.display = 'none';
+                document.body.classList.add('personal-mode');
+                displayGames();
+            } else if (mode === 'team') {
+                const teamBtn = document.querySelector('.mode-btn:nth-child(2)');
+                teamBtn.classList.add('active');
+                teamBtn.classList.add('team-mode');
+                document.getElementById('personalMode').style.display = 'none';
+                document.getElementById('teamMode').style.display = 'block';
+                document.body.classList.add('team-mode');
+            }
+        }
+        
         function switchTab(tab) {
             document.querySelectorAll('#personalMode .tab').forEach(function(t) {
                 t.classList.remove('active');
