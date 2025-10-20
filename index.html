@@ -1383,6 +1383,182 @@
             alert('✅ 試合記録を保存しました！\n\n全選手のデータが個人モードに反映されます。');
         }
 
+        function switchTeamTab(tab) {
+            // タブボタンの切り替え
+            const tabs = document.querySelectorAll('#teamMode .tab');
+            tabs.forEach(function(t) {
+                t.classList.remove('active');
+            });
+            
+            if (tab === 'record') {
+                tabs[0].classList.add('active');
+                document.getElementById('teamRecordTab').style.display = 'block';
+                document.getElementById('teamHistoryTab').style.display = 'none';
+            } else if (tab === 'history') {
+                tabs[1].classList.add('active');
+                document.getElementById('teamRecordTab').style.display = 'none';
+                document.getElementById('teamHistoryTab').style.display = 'block';
+                displayTeamGamesHistory();
+            }
+        }
+
+        function displayTeamGamesHistory() {
+            const listEl = document.getElementById('teamGamesList');
+            
+            if (teamGames.length === 0) {
+                listEl.innerHTML = '<div class="empty-state"><div class="icon">🏀</div><h3>まだ試合記録がありません</h3><p>試合記録タブで記録を開始しましょう！</p></div>';
+                return;
+            }
+            
+            let html = '<div class="card"><h2 style="margin-bottom: 20px;">📊 試合履歴</h2></div>';
+            
+            teamGames.forEach(function(game, index) {
+                const dateObj = new Date(game.date);
+                const dateStr = dateObj.toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'});
+                
+                html += '<div class="game-history-item" onclick="toggleGameDetail(' + index + ')">' +
+                    '<div class="game-date">' + dateStr + '</div>' +
+                    '<div class="game-opponent">vs ' + (game.opponent || '対戦相手なし') + '</div>' +
+                    '</div>' +
+                    '<div class="game-detail" id="gameDetail' + index + '">' +
+                    generateGameRankings(game) +
+                    '</div>';
+            });
+            
+            listEl.innerHTML = html;
+        }
+
+        function toggleGameDetail(index) {
+            const detail = document.getElementById('gameDetail' + index);
+            detail.classList.toggle('active');
+        }
+
+        function generateGameRankings(game) {
+            let html = '';
+            
+            // 得点ランキング
+            html += generateRankingSection(game, 'points', '🏆 得点王', function(stats) {
+                return (stats.twoPointsMade * 2) + (stats.threePointsMade * 3) + stats.freeThrowsMade;
+            }, '点');
+            
+            // シュート成功率ランキング
+            html += generateRankingSection(game, 'fieldGoalPct', '🎯 シュート成功率', function(stats) {
+                const made = stats.twoPointsMade + stats.threePointsMade;
+                const attempted = stats.twoPointsAttempted + stats.threePointsAttempted;
+                return attempted > 0 ? ((made / attempted) * 100).toFixed(1) : 0;
+            }, '%', true);
+            
+            // リバウンドランキング
+            html += generateRankingSection(game, 'rebounds', '📦 リバウンド王', function(stats) {
+                return stats.offensiveRebounds + stats.defensiveRebounds;
+            }, '本');
+            
+            // アシストランキング
+            html += generateRankingSection(game, 'assists', '🤝 アシスト王', function(stats) {
+                return stats.assists;
+            }, '回');
+            
+            // スティールランキング
+            html += generateRankingSection(game, 'steals', '🛡️ スティール王', function(stats) {
+                return stats.steals;
+            }, '回');
+            
+            return html;
+        }
+
+        function generateRankingSection(game, key, title, calcFunc, unit, isPercentage) {
+            // 選手データを配列に変換して値を計算
+            const playerData = [];
+            Object.keys(game.playerStats).forEach(function(playerId) {
+                const player = players.find(function(p) { return p.id === playerId; });
+                if (player) {
+                    const stats = game.playerStats[playerId];
+                    const value = calcFunc(stats);
+                    
+                    // シュート成功率の場合、試投数が0の選手は除外
+                    if (isPercentage) {
+                        const attempted = stats.twoPointsAttempted + stats.threePointsAttempted;
+                        if (attempted > 0) {
+                            playerData.push({
+                                player: player,
+                                value: parseFloat(value),
+                                displayValue: value
+                            });
+                        }
+                    } else {
+                        playerData.push({
+                            player: player,
+                            value: parseFloat(value),
+                            displayValue: value
+                        });
+                    }
+                }
+            });
+            
+            // 値でソート（降順）
+            playerData.sort(function(a, b) { return b.value - a.value; });
+            
+            if (playerData.length === 0) {
+                return '';
+            }
+            
+            let html = '<div class="ranking-section">';
+            html += '<h3>' + title + '</h3>';
+            
+            // TOP3を表示
+            html += '<div class="top3-container">';
+            const medals = ['🥇', '🥈', '🥉'];
+            for (let i = 0; i < Math.min(3, playerData.length); i++) {
+                const data = playerData[i];
+                html += '<div class="ranking-card">' +
+                    '<span class="ranking-medal">' + medals[i] + '</span>' +
+                    '<div class="ranking-info">' +
+                    '<span class="player-name">#' + data.player.number + ' ' + data.player.name + '</span>' +
+                    '<span class="stat-value">' + data.displayValue + unit + '</span>' +
+                    '</div>' +
+                    '</div>';
+            }
+            html += '</div>';
+            
+            // 全選手ランキング（折りたたみ）
+            if (playerData.length > 3) {
+                html += '<button class="toggle-rankings" onclick="toggleAllRankings(\'' + key + game.id + '\')">' +
+                    '▼ 全' + playerData.length + '名のランキングを表示' +
+                    '</button>';
+                
+                html += '<div class="all-rankings" id="allRankings' + key + game.id + '">';
+                playerData.forEach(function(data, index) {
+                    html += '<div class="ranking-card">' +
+                        '<div class="ranking-info">' +
+                        '<span class="rank">' + (index + 1) + '位</span>' +
+                        '<span class="player-name">#' + data.player.number + ' ' + data.player.name + '</span>' +
+                        '<span class="stat-value">' + data.displayValue + unit + '</span>' +
+                        '</div>' +
+                        '</div>';
+                });
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            
+            return html;
+        }
+
+        function toggleAllRankings(id) {
+            const el = document.getElementById('allRankings' + id);
+            const btn = event.target;
+            
+            if (el.classList.contains('active')) {
+                el.classList.remove('active');
+                btn.classList.remove('active');
+                btn.textContent = btn.textContent.replace('▲ 閉じる', '▼ 全' + btn.textContent.match(/\d+/)[0] + '名のランキングを表示');
+            } else {
+                el.classList.add('active');
+                btn.classList.add('active');
+                btn.textContent = '▲ 閉じる';
+            }
+        }
+        
         function showCreateTeamModal() {
             document.getElementById('createTeamModal').classList.add('active');
         }
