@@ -36,6 +36,34 @@
             margin-bottom: 10px;
         }
 
+        .sync-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+        }
+
+        .sync-indicator.syncing {
+            display: block;
+            color: #667eea;
+        }
+
+        .sync-indicator.success {
+            display: block;
+            color: #2ecc71;
+        }
+
+        .sync-indicator.error {
+            display: block;
+            color: #ff4757;
+        }
+
         .mode-switch {
             display: flex;
             gap: 10px;
@@ -186,6 +214,11 @@
             transform: scale(0.98);
         }
 
+        .save-btn:disabled, .primary-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .game-item {
             background: white;
             border-radius: 15px;
@@ -235,28 +268,6 @@
             font-size: 1.1em;
             font-weight: bold;
             color: #667eea;
-        }
-
-        .delete-selected-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 30px;
-            border: none;
-            border-radius: 25px;
-            background: #ff4757;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-            display: none;
-        }
-
-        .delete-selected-btn.show {
-            display: block;
         }
 
         .empty-state {
@@ -316,37 +327,20 @@
             margin-top: 0;
         }
 
-        .player-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .player-btn {
+        .team-code-display {
+            background: #f0f0f0;
             padding: 15px;
-            border: 2px solid #e0e0e0;
             border-radius: 10px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s;
             text-align: center;
+            margin: 20px 0;
         }
 
-        .player-btn.selected {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .player-btn .number {
-            font-size: 1.5em;
+        .team-code-display .code {
+            font-size: 2em;
             font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .player-btn .name {
-            font-size: 0.85em;
+            color: #667eea;
+            letter-spacing: 2px;
+            margin: 10px 0;
         }
 
         .player-item {
@@ -355,11 +349,6 @@
             padding: 20px;
             margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .player-item.editing {
-            background: #f0f8ff;
-            border: 2px solid #667eea;
         }
 
         .player-info {
@@ -382,53 +371,6 @@
             border-radius: 12px;
             font-size: 0.8em;
             font-weight: bold;
-        }
-
-        .edit-form {
-            display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #e0e0e0;
-        }
-
-        .edit-form.active {
-            display: block;
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .action-btn {
-            padding: 20px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .action-btn.success {
-            background: #2ecc71;
-            color: white;
-        }
-
-        .action-btn.miss {
-            background: #e0e0e0;
-            color: #666;
-        }
-
-        .action-btn.other {
-            background: #667eea;
-            color: white;
-        }
-
-        .action-btn:active {
-            transform: scale(0.95);
         }
 
         select {
@@ -462,16 +404,6 @@
             font-size: 0.9em;
         }
 
-        .ranking-table tr:hover {
-            background: #f9f9f9;
-        }
-
-        .ranking-table .value-cell {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 1.1em;
-        }
-
         .top-record {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 15px;
@@ -493,145 +425,60 @@
             margin: 10px 0;
         }
 
-        .top-record .details {
-            font-size: 1.1em;
-            opacity: 0.95;
-        }
-
-        .play-history {
-            margin-top: 15px;
-            max-height: 200px;
-            overflow-y: auto;
-            background: #f7f7f7;
-            border-radius: 10px;
-            padding: 10px;
-        }
-
-        .play-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-
-        .play-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .undo-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 6px;
-            background: #ff4757;
-            color: white;
-            font-size: 0.85em;
-            cursor: pointer;
-        }
-
-        .team-stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            padding: 20px;
-            color: white;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .team-stat-card .big-number {
-            font-size: 3em;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .team-stat-card .label {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .backup-reminder {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
         }
 
-        .backup-reminder.show {
-            display: block;
-        }
-
-        .backup-reminder h3 {
-            color: #856404;
-            margin-bottom: 8px;
-        }
-
-        .backup-reminder p {
-            color: #856404;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .team-game-item {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .team-game-header {
+        .modal.active {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
         }
 
-        .team-game-date {
-            font-size: 1.2em;
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 1.5em;
             font-weight: bold;
-            color: #667eea;
-        }
-
-        .player-stat-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 10px;
-            padding: 8px;
-            background: #f7f7f7;
-            border-radius: 8px;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .player-stat-name {
-            font-weight: bold;
+            margin-bottom: 20px;
             color: #333;
         }
 
-        .player-stat-value {
-            text-align: center;
-            font-weight: bold;
-            color: #667eea;
+        .close-modal {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <div class="sync-indicator" id="syncIndicator">同期中...</div>
+    
     <div class="container">
         <div class="header">
             <h1>🏀 バスケ記録</h1>
             <p>成長を記録しましょう</p>
-        </div>
-
-        <div id="backupReminder" class="backup-reminder">
-            <h3>⚠️ バックアップをお忘れなく!</h3>
-            <p>10試合以上記録されています。大切なデータを守るため、バックアップすることをおすすめします。</p>
-            <button class="primary-btn" style="background: #ffc107; color: #856404;" onclick="exportData()">今すぐバックアップ</button>
         </div>
 
         <div class="mode-switch">
@@ -809,7 +656,7 @@
                         </div>
                     </div>
 
-                    <button class="save-btn" onclick="savePersonalGame()">記録を保存</button>
+                    <button class="save-btn" id="saveGameBtn" onclick="savePersonalGame()">記録を保存</button>
                 </div>
             </div>
 
@@ -820,24 +667,7 @@
             <div id="rankingTab" class="tab-content">
                 <div class="card">
                     <h2 style="margin-bottom: 20px;">🏆 ベストパフォーマンス</h2>
-                    
-                    <h3 style="margin: 30px 0 15px 0; color: #667eea; font-size: 1.3em;">最高得点</h3>
                     <div id="topPoints"></div>
-                    
-                    <h3 style="margin: 40px 0 15px 0; color: #667eea; font-size: 1.3em;">最高2P成功率</h3>
-                    <div id="top2P"></div>
-                    
-                    <h3 style="margin: 40px 0 15px 0; color: #667eea; font-size: 1.3em;">最高3P成功率</h3>
-                    <div id="top3P"></div>
-                    
-                    <h3 style="margin: 40px 0 15px 0; color: #667eea; font-size: 1.3em;">最高FT成功率</h3>
-                    <div id="topFT"></div>
-                    
-                    <h3 style="margin: 40px 0 15px 0; color: #667eea; font-size: 1.3em;">最多リバウンド</h3>
-                    <div id="topRebounds"></div>
-                    
-                    <h3 style="margin: 40px 0 15px 0; color: #667eea; font-size: 1.3em;">最多アシスト</h3>
-                    <div id="topAssists"></div>
                 </div>
             </div>
 
@@ -848,33 +678,22 @@
                         <canvas id="shootingChart"></canvas>
                     </div>
                 </div>
-                <div class="card">
-                    <h2 style="margin-bottom: 20px;">総得点の推移</h2>
-                    <div class="chart-container">
-                        <canvas id="pointsChart"></canvas>
-                    </div>
-                </div>
-                <div class="card">
-                    <h2 style="margin-bottom: 20px;">リバウンドの推移</h2>
-                    <div class="chart-container">
-                        <canvas id="reboundsChart"></canvas>
-                    </div>
-                </div>
-                <div class="card">
-                    <h2 style="margin-bottom: 20px;">その他の統計</h2>
-                    <div class="chart-container">
-                        <canvas id="otherStatsChart"></canvas>
-                    </div>
-                </div>
-                <div class="card">
-                    <h2 style="margin-bottom: 20px;">ディフェンス統計</h2>
-                    <div class="chart-container">
-                        <canvas id="defenseChart"></canvas>
-                    </div>
-                </div>
             </div>
 
             <div id="settingsTab" class="tab-content">
+                <div class="card">
+                    <h2 style="margin-bottom: 20px;">🔗 チーム連携</h2>
+                    <div id="teamStatus"></div>
+                    
+                    <button class="primary-btn" style="margin-bottom: 10px;" onclick="showCreateTeamModal()">
+                        🆕 新しいチームを作成
+                    </button>
+                    
+                    <button class="primary-btn" style="background: #3498db;" onclick="showJoinTeamModal()">
+                        👋 チームに参加
+                    </button>
+                </div>
+
                 <div class="card">
                     <h2 style="margin-bottom: 20px;">👤 個人モード表示設定</h2>
                     <div class="input-group">
@@ -883,10 +702,6 @@
                             <option value="">選手を選択してください</option>
                         </select>
                     </div>
-                    <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
-                        選択した選手の個人成績が個人モードに表示されます。<br>
-                        チームモードでこの選手が記録したデータも自動的に個人モードに反映されます。
-                    </p>
                 </div>
 
                 <div class="card">
@@ -909,108 +724,62 @@
 
                 <div class="card">
                     <h2 style="margin-bottom: 20px;">📥 データ管理</h2>
-                    <p style="color: #666; margin-bottom: 15px;">大切なデータを守るため、定期的にバックアップしましょう</p>
-                    
                     <button class="primary-btn" style="background: #2ecc71; margin-bottom: 10px;" onclick="exportData()">
-                        💾 データをバックアップ（ダウンロード）
+                        💾 データをバックアップ
                     </button>
                     
                     <button class="primary-btn" style="background: #3498db;" onclick="document.getElementById('importFile').click()">
                         📂 バックアップから復元
                     </button>
                     <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 10px; border-left: 4px solid #ffc107;">
-                        <strong>⚠️ 重要：</strong>
-                        <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
-                            <li>ブラウザのデータを消去するとアプリのデータも消えます</li>
-                            <li>アプリを更新する前に必ずバックアップしてください</li>
-                            <li>バックアップファイルは大切に保管してください</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div id="teamMode" style="display: none;">
-            <div class="tab-bar">
-                <button class="tab active" onclick="switchTeamTab('record')">📝 記録</button>
-                <button class="tab" onclick="switchTeamTab('history')">📊 履歴</button>
-            </div>
-
-            <div id="teamRecordTab" class="tab-content active">
-                <div class="card">
-                    <h2 style="margin-bottom: 20px;">試合記録</h2>
-                    
-                    <div class="input-group">
-                        <label>試合日</label>
-                        <input type="date" id="teamGameDate">
-                    </div>
-
-                    <div class="input-group">
-                        <label>対戦相手</label>
-                        <input type="text" id="teamOpponent" placeholder="相手チーム名を入力">
-                    </div>
-
-                    <button class="primary-btn" onclick="startTeamGame()">試合開始</button>
-                </div>
-
-                <div id="teamRecording" style="display: none;">
-                    <div class="card">
-                        <h2 style="margin-bottom: 15px;">選手を選択</h2>
-                        <div id="playerSelector" class="player-grid"></div>
-                    </div>
-
-                    <div class="card">
-                        <h2 style="margin-bottom: 15px;">プレイを記録</h2>
-                        <div class="action-buttons">
-                            <button class="action-btn success" onclick="recordPlay('2p-made')">2P成功</button>
-                            <button class="action-btn miss" onclick="recordPlay('2p-miss')">2P失敗</button>
-                            <button class="action-btn success" onclick="recordPlay('3p-made')">3P成功</button>
-                            <button class="action-btn miss" onclick="recordPlay('3p-miss')">3P失敗</button>
-                            <button class="action-btn success" onclick="recordPlay('ft-made')">FT成功</button>
-                            <button class="action-btn miss" onclick="recordPlay('ft-miss')">FT失敗</button>
-                            <button class="action-btn other" onclick="recordPlay('oreb')">オフェンスリバウンド</button>
-                            <button class="action-btn other" onclick="recordPlay('dreb')">ディフェンスリバウンド</button>
-                            <button class="action-btn other" onclick="recordPlay('ast')">アシスト</button>
-                            <button class="action-btn other" onclick="recordPlay('stl')">スティール</button>
-                            <button class="action-btn other" onclick="recordPlay('blk')">ブロック</button>
-                            <button class="action-btn other" onclick="recordPlay('to')">ターンオーバー</button>
-                            <button class="action-btn other" onclick="recordPlay('foul')">ファウル</button>
-                        </div>
-
-                        <div class="play-history" id="playHistory">
-                            <div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h2 style="margin-bottom: 15px;">試合統計</h2>
-                        <div id="teamStats"></div>
-                        <button class="save-btn" style="margin-top: 20px;" onclick="saveTeamGame()">試合終了・保存</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="teamHistoryTab" class="tab-content">
-                <div id="teamGameList"></div>
+            <div class="card">
+                <h2 style="margin-bottom: 20px;">👥 チーム統計</h2>
+                <div id="teamStats"></div>
             </div>
         </div>
     </div>
 
-    <button class="delete-selected-btn" id="deleteSelectedBtn" onclick="deleteSelectedGames()">選択した記録を削除</button>
+    <div id="createTeamModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">🆕 チームを作成</h2>
+            <div class="input-group">
+                <label>チーム名</label>
+                <input type="text" id="newTeamName" placeholder="例: さくらバスケ部">
+            </div>
+            <button class="primary-btn" onclick="createTeam()">作成</button>
+            <button class="close-modal" onclick="closeModal('createTeamModal')">キャンセル</button>
+        </div>
+    </div>
+
+    <div id="joinTeamModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">👋 チームに参加</h2>
+            <div class="input-group">
+                <label>チームコード</label>
+                <input type="text" id="joinTeamCode" placeholder="6桁のコード" maxlength="6">
+            </div>
+            <button class="primary-btn" onclick="joinTeam()">参加</button>
+            <button class="close-modal" onclick="closeModal('joinTeamModal')">キャンセル</button>
+        </div>
+    </div>
+
     <div class="saved-indicator" id="savedIndicator">✓ 保存しました</div>
 
     <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwbPUgd-QAVhwBmhyBwiCtS1GDvZks0imrC78ZsJu5dV-d-Zt6reEW0oi1Lkc_MbW_agQ/exec';
+        
         let currentMode = 'personal';
-        let currentTeamTab = 'record';
         let personalGames = [];
         let teamGames = [];
         let players = [];
         let myPlayerId = null;
-        let selectedGameIds = new Set();
-        let editingPlayerId = null;
-        let lastBackupCheck = null;
+        let teamData = null;
+        let charts = {};
         
         let stats = {
             twoPointsMade: 0, twoPointsAttempted: 0,
@@ -1020,9 +789,17 @@
             assists: 0, steals: 0, blocks: 0, turnovers: 0, fouls: 0
         };
 
-        let currentTeamGame = null;
-        let selectedPlayer = null;
-        let charts = {};
+        function showSyncIndicator(status, message) {
+            const indicator = document.getElementById('syncIndicator');
+            indicator.className = 'sync-indicator ' + status;
+            indicator.textContent = message;
+            
+            if (status === 'success' || status === 'error') {
+                setTimeout(function() {
+                    indicator.className = 'sync-indicator';
+                }, 3000);
+            }
+        }
 
         function loadData() {
             try {
@@ -1033,9 +810,8 @@
                     teamGames = data.teamGames || [];
                     players = data.players || [];
                     myPlayerId = data.myPlayerId || null;
-                    lastBackupCheck = data.lastBackupCheck || null;
+                    teamData = data.teamData || null;
                 }
-                checkBackupReminder();
             } catch (e) {
                 console.error('データ読み込みエラー:', e);
             }
@@ -1043,89 +819,14 @@
 
         function saveData() {
             const data = {
-                personalGames,
-                teamGames,
-                players,
-                myPlayerId,
-                lastBackupCheck: lastBackupCheck || new Date().toISOString()
+                personalGames: personalGames,
+                teamGames: teamGames,
+                players: players,
+                myPlayerId: myPlayerId,
+                teamData: teamData
             };
             localStorage.setItem('basketballData', JSON.stringify(data));
             showSavedIndicator();
-            checkBackupReminder();
-        }
-
-        function checkBackupReminder() {
-            const totalGames = personalGames.length + teamGames.length;
-            const reminder = document.getElementById('backupReminder');
-            
-            if (totalGames >= 10) {
-                if (!lastBackupCheck || daysSinceDate(lastBackupCheck) >= 7) {
-                    reminder.classList.add('show');
-                }
-            } else {
-                reminder.classList.remove('show');
-            }
-        }
-
-        function daysSinceDate(dateStr) {
-            const date = new Date(dateStr);
-            const now = new Date();
-            const diff = now - date;
-            return Math.floor(diff / (1000 * 60 * 60 * 24));
-        }
-
-        function exportData() {
-            const data = {
-                version: '1.1',
-                exportDate: new Date().toISOString(),
-                personalGames,
-                teamGames,
-                players,
-                myPlayerId
-            };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'バスケ記録_' + new Date().toISOString().split('T')[0] + '.json';
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            lastBackupCheck = new Date().toISOString();
-            saveData();
-            document.getElementById('backupReminder').classList.remove('show');
-            
-            alert('✅ バックアップが完了しました！\n\nファイルを大切に保管してください。');
-        }
-
-        function importData(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                try {
-                    const data = JSON.parse(ev.target.result);
-                    if (confirm('⚠️ データを復元します\n\n現在のデータは上書きされます。よろしいですか？')) {
-                        personalGames = data.personalGames || [];
-                        teamGames = data.teamGames || [];
-                        players = data.players || [];
-                        myPlayerId = data.myPlayerId || null;
-                        saveData();
-                        displayGames();
-                        displayPlayers();
-                        displayTeamGames();
-                        alert('✅ データの復元が完了しました！');
-                        location.reload();
-                    }
-                } catch (err) {
-                    alert('❌ ファイルの読み込みに失敗しました\n\n正しいバックアップファイルを選択してください。');
-                    console.error('インポートエラー:', err);
-                }
-            };
-            reader.readAsText(file);
-            e.target.value = '';
         }
 
         function showSavedIndicator() {
@@ -1136,8 +837,153 @@
             }, 2000);
         }
 
+        function showCreateTeamModal() {
+            document.getElementById('createTeamModal').classList.add('active');
+        }
+
+        function showJoinTeamModal() {
+            document.getElementById('joinTeamModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function generateTeamCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function createTeam() {
+            const teamName = document.getElementById('newTeamName').value.trim();
+            if (!teamName) {
+                alert('チーム名を入力してください');
+                return;
+            }
+
+            showSyncIndicator('syncing', 'チームを作成中...');
+            
+            const teamCode = generateTeamCode();
+            
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'createTeam',
+                    teamName: teamName,
+                    teamCode: teamCode
+                })
+            })
+            .then(function() {
+                teamData = {
+                    name: teamName,
+                    code: teamCode,
+                    createdAt: new Date().toISOString()
+                };
+                saveData();
+                closeModal('createTeamModal');
+                displayTeamStatus();
+                showSyncIndicator('success', 'チーム作成完了!');
+                
+                alert('✅ チーム「' + teamName + '」を作成しました！\n\nチームコード: ' + teamCode + '\n\nこのコードを友達に共有してください。');
+            })
+            .catch(function(error) {
+                console.error('エラー:', error);
+                showSyncIndicator('error', 'エラーが発生しました');
+                alert('❌ チーム作成に失敗しました。もう一度お試しください。');
+            });
+        }
+
+        function joinTeam() {
+            const teamCode = document.getElementById('joinTeamCode').value.trim().toUpperCase();
+            if (!teamCode || teamCode.length !== 6) {
+                alert('正しい6桁のチームコードを入力してください');
+                return;
+            }
+
+            showSyncIndicator('syncing', 'チームに参加中...');
+            
+            teamData = {
+                name: 'チーム',
+                code: teamCode,
+                joinedAt: new Date().toISOString()
+            };
+            
+            saveData();
+            closeModal('joinTeamModal');
+            displayTeamStatus();
+            syncWithServer();
+            
+            showSyncIndicator('success', 'チーム参加完了!');
+            alert('✅ チームに参加しました！\n\nチームコード: ' + teamCode);
+        }
+
+        function syncWithServer() {
+            if (!teamData) return;
+            
+            showSyncIndicator('syncing', '同期中...');
+            
+            const syncData = {
+                action: 'syncData',
+                teamCode: teamData.code,
+                players: players,
+                personalGames: personalGames,
+                teamGames: teamGames
+            };
+            
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(syncData)
+            })
+            .then(function() {
+                showSyncIndicator('success', '同期完了!');
+            })
+            .catch(function(error) {
+                console.error('同期エラー:', error);
+                showSyncIndicator('error', '同期失敗');
+            });
+        }
+
+        function displayTeamStatus() {
+            const statusEl = document.getElementById('teamStatus');
+            
+            if (!teamData) {
+                statusEl.innerHTML = '<p style="color: #999; text-align: center;">チームに参加していません</p>';
+                return;
+            }
+            
+            statusEl.innerHTML = 
+                '<div class="team-code-display">' +
+                '<div style="font-size: 0.9em; color: #666;">現在のチーム</div>' +
+                '<div style="font-size: 1.3em; font-weight: bold; color: #667eea; margin: 10px 0;">' + teamData.name + '</div>' +
+                '<div style="font-size: 0.9em; color: #666;">チームコード</div>' +
+                '<div class="code">' + teamData.code + '</div>' +
+                '<button class="primary-btn" style="background: #2ecc71; margin-top: 15px;" onclick="syncWithServer()">今すぐ同期</button>' +
+                '<button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="leaveTeam()">チームから退出</button>' +
+                '</div>';
+        }
+
+        function leaveTeam() {
+            if (confirm('本当にチームから退出しますか？')) {
+                teamData = null;
+                saveData();
+                displayTeamStatus();
+                alert('✅ チームから退出しました');
+            }
+        }
+
         document.getElementById('gameDate').valueAsDate = new Date();
-        document.getElementById('teamGameDate').valueAsDate = new Date();
 
         function switchMode(mode) {
             currentMode = mode;
@@ -1154,7 +1000,7 @@
                 document.querySelector('.mode-btn:nth-child(2)').classList.add('active');
                 document.getElementById('personalMode').style.display = 'none';
                 document.getElementById('teamMode').style.display = 'block';
-                displayTeamGames();
+                displayTeamStats();
             }
         }
 
@@ -1174,29 +1020,11 @@
             if (tab === 'graph') updateCharts();
             if (tab === 'settings') { 
                 displayPlayers(); 
-                updateMyPlayerSelect(); 
+                updateMyPlayerSelect();
+                displayTeamStatus();
             }
             if (tab === 'ranking') displayRankings();
             if (tab === 'list') displayGames();
-        }
-
-        function switchTeamTab(tab) {
-            currentTeamTab = tab;
-            document.querySelectorAll('#teamMode .tab').forEach(function(t) {
-                t.classList.remove('active');
-            });
-            document.querySelectorAll('#teamMode .tab-content').forEach(function(c) {
-                c.classList.remove('active');
-            });
-            
-            if (tab === 'record') {
-                document.querySelector('#teamMode .tab:nth-child(1)').classList.add('active');
-                document.getElementById('teamRecordTab').classList.add('active');
-            } else {
-                document.querySelector('#teamMode .tab:nth-child(2)').classList.add('active');
-                document.getElementById('teamHistoryTab').classList.add('active');
-                displayTeamGames();
-            }
         }
 
         function changeValue(key, delta) {
@@ -1248,6 +1076,10 @@
                 return;
             }
 
+            const saveBtn = document.getElementById('saveGameBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = '保存中...';
+
             const game = {
                 id: Date.now(),
                 date: date,
@@ -1277,8 +1109,16 @@
 
             personalGames.unshift(game);
             saveData();
+            
+            if (teamData) {
+                syncWithServer();
+            }
+            
             displayGames();
             resetForm();
+            
+            saveBtn.disabled = false;
+            saveBtn.textContent = '記録を保存';
             
             alert('✅ 試合記録を保存しました！');
         }
@@ -1291,35 +1131,6 @@
             document.getElementById('opponent').value = '';
             document.getElementById('playTime').value = 0;
             updateDisplay();
-        }
-
-        function toggleGameSelection(id) {
-            if (selectedGameIds.has(id)) {
-                selectedGameIds.delete(id);
-            } else {
-                selectedGameIds.add(id);
-            }
-            
-            const deleteBtn = document.getElementById('deleteSelectedBtn');
-            if (selectedGameIds.size > 0) {
-                deleteBtn.classList.add('show');
-                deleteBtn.textContent = '選択した' + selectedGameIds.size + '件の記録を削除';
-            } else {
-                deleteBtn.classList.remove('show');
-            }
-        }
-
-        function deleteSelectedGames() {
-            if (selectedGameIds.size === 0) return;
-            if (confirm('選択した' + selectedGameIds.size + '件の記録を削除しますか？\n\nこの操作は取り消せません。')) {
-                personalGames = personalGames.filter(function(g) {
-                    return !selectedGameIds.has(g.id);
-                });
-                selectedGameIds.clear();
-                saveData();
-                displayGames();
-                document.getElementById('deleteSelectedBtn').classList.remove('show');
-            }
         }
 
         function displayGames() {
@@ -1337,11 +1148,9 @@
             gameList.innerHTML = myGames.map(function(g) {
                 const dateObj = new Date(g.date);
                 const dateStr = dateObj.toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'});
-                const checked = selectedGameIds.has(g.id) ? 'checked' : '';
                 const sourceLabel = g.source === 'team' ? ' <span style="background: #2ecc71; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8em;">チーム記録</span>' : '';
                 
                 return '<div class="game-item">' +
-                    '<input type="checkbox" class="game-checkbox" ' + checked + ' onchange="toggleGameSelection(' + g.id + ')">' +
                     '<div class="game-date">' + dateStr + 
                     (g.opponent ? ' vs ' + g.opponent : '') + 
                     (g.playTime ? ' (' + g.playTime + '分)' : '') + 
@@ -1359,48 +1168,33 @@
             }).join('');
         }
 
-        function displayTeamGames() {
-            const teamGameList = document.getElementById('teamGameList');
+        function displayTeamStats() {
+            const statsEl = document.getElementById('teamStats');
             
-            if (teamGames.length === 0) {
-                teamGameList.innerHTML = '<div class="empty-state"><div class="icon">👥</div><h3>チーム試合の記録がありません</h3><p>チームで試合を記録しましょう！</p></div>';
+            if (!teamData) {
+                statsEl.innerHTML = '<div class="empty-state"><div class="icon">👥</div><h3>チームに参加していません</h3><p>設定タブからチームを作成または参加してください</p></div>';
                 return;
             }
-
-            teamGameList.innerHTML = teamGames.map(function(g) {
-                const dateObj = new Date(g.date);
-                const dateStr = dateObj.toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'});
-                
-                let html = '<div class="team-game-item">' +
-                    '<div class="team-game-header">' +
-                    '<div>' +
-                    '<div class="team-game-date">' + dateStr + '</div>' +
-                    '<div style="color: #666;">vs ' + (g.opponent || '相手チーム') + '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="team-game-stats">';
-
-                Object.keys(g.playerStats).forEach(function(playerId) {
-                    const player = players.find(function(p) {
-                        return p.id === playerId;
-                    });
-                    if (player) {
-                        const pStats = g.playerStats[playerId];
-                        const points = (pStats.twoPointsMade * 2) + (pStats.threePointsMade * 3) + pStats.freeThrowsMade;
-                        const rebounds = pStats.offensiveRebounds + pStats.defensiveRebounds;
-
-                        html += '<div class="player-stat-row">' +
-                            '<div class="player-stat-name">#' + player.number + ' ' + player.name + '</div>' +
-                            '<div class="player-stat-value">' + points + '点</div>' +
-                            '<div class="player-stat-value">' + rebounds + 'R</div>' +
-                            '<div class="player-stat-value">' + pStats.assists + 'A</div>' +
-                            '</div>';
-                    }
-                });
-
-                html += '</div></div>';
-                return html;
-            }).join('');
+            
+            const totalGames = personalGames.length;
+            const totalPoints = personalGames.reduce(function(sum, g) {
+                return sum + (g.totalPoints || 0);
+            }, 0);
+            const avgPoints = totalGames > 0 ? (totalPoints / totalGames).toFixed(1) : 0;
+            
+            statsEl.innerHTML = 
+                '<div class="team-code-display">' +
+                '<div style="font-size: 1.5em; font-weight: bold; color: #667eea; margin-bottom: 10px;">📊 チーム統計</div>' +
+                '<div style="font-size: 1.1em; margin: 10px 0;">チーム名: ' + teamData.name + '</div>' +
+                '<div style="font-size: 0.9em; color: #666; margin-bottom: 20px;">チームコード: ' + teamData.code + '</div>' +
+                '</div>' +
+                '<div class="stats-grid">' +
+                '<div class="stats-display"><h3>総試合数</h3><div class="percentage">' + totalGames + '</div></div>' +
+                '<div class="stats-display"><h3>平均得点</h3><div class="percentage">' + avgPoints + '</div></div>' +
+                '</div>' +
+                '<div style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 10px;">' +
+                '<p style="color: #666; font-size: 0.9em; text-align: center;">チームメンバーが記録を追加すると、ここに統計が表示されます</p>' +
+                '</div>';
         }
 
         function displayRankings() {
@@ -1409,89 +1203,33 @@
             });
             
             if (myGames.length === 0) {
-                ['topPoints', 'top2P', 'top3P', 'topFT', 'topRebounds', 'topAssists'].forEach(function(id) {
-                    document.getElementById(id).innerHTML = '<p style="text-align: center; color: #999;">記録がありません</p>';
-                });
+                document.getElementById('topPoints').innerHTML = '<p style="text-align: center; color: #999;">記録がありません</p>';
                 return;
             }
 
             const topPoints = myGames.slice().sort(function(a, b) {
                 return b.totalPoints - a.totalPoints;
             }).slice(0, 10);
-            
-            const top2P = myGames.filter(function(g) {
-                return g.twoPointsAttempted >= 3;
-            }).sort(function(a, b) {
-                return parseFloat(b.twoPointPercentage) - parseFloat(a.twoPointPercentage);
-            }).slice(0, 10);
-            
-            const top3P = myGames.filter(function(g) {
-                return g.threePointsAttempted >= 3;
-            }).sort(function(a, b) {
-                return parseFloat(b.threePointPercentage) - parseFloat(a.threePointPercentage);
-            }).slice(0, 10);
-            
-            const topFT = myGames.filter(function(g) {
-                return g.freeThrowsAttempted >= 3;
-            }).sort(function(a, b) {
-                return parseFloat(b.freeThrowPercentage) - parseFloat(a.freeThrowPercentage);
-            }).slice(0, 10);
-            
-            const topRebounds = myGames.slice().sort(function(a, b) {
-                return b.totalRebounds - a.totalRebounds;
-            }).slice(0, 10);
-            
-            const topAssists = myGames.slice().sort(function(a, b) {
-                return b.assists - a.assists;
-            }).slice(0, 10);
 
-            function renderRanking(games, key, unit, title) {
-                if (games.length === 0) {
-                    return '<p style="text-align: center; color: #999;">試投3本以上の記録がありません</p>';
-                }
-
-                const top = games[0];
-                const val = typeof top[key] === 'number' ? top[key] : parseFloat(top[key]);
+            if (topPoints.length > 0) {
+                const top = topPoints[0];
                 const dateObj = new Date(top.date);
                 const dateStr = dateObj.toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'});
                 
                 let html = '<div class="top-record">' +
                     '<div class="trophy">🏆</div>' +
-                    '<div style="font-size: 1.2em; margin-bottom: 10px;">' + title + '</div>' +
-                    '<div class="value">' + val + unit + '</div>' +
-                    '<div class="details">' + dateStr;
+                    '<div style="font-size: 1.2em; margin-bottom: 10px;">最高得点</div>' +
+                    '<div class="value">' + top.totalPoints + '点</div>' +
+                    '<div style="font-size: 1.1em; opacity: 0.95;">' + dateStr;
                 
                 if (top.opponent) {
                     html += '<br>vs ' + top.opponent;
                 }
                 
-                html += '</div></div><table class="ranking-table">' +
-                    '<thead><tr><th>順位</th><th>記録</th><th>日付</th><th>対戦相手</th></tr></thead>' +
-                    '<tbody>';
-
-                games.forEach(function(g, i) {
-                    const v = typeof g[key] === 'number' ? g[key] : parseFloat(g[key]);
-                    const badge = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-                    const gDateObj = new Date(g.date);
-                    const gDateStr = gDateObj.toLocaleDateString('ja-JP', {month: 'short', day: 'numeric'});
-                    
-                    html += '<tr>' +
-                        '<td style="text-align: center; font-weight: bold;">' + badge + '</td>' +
-                        '<td class="value-cell">' + v + unit + '</td>' +
-                        '<td>' + gDateStr + '</td>' +
-                        '<td>' + (g.opponent || '-') + '</td>' +
-                        '</tr>';
-                });
-
-                return html + '</tbody></table>';
+                html += '</div></div>';
+                
+                document.getElementById('topPoints').innerHTML = html;
             }
-
-            document.getElementById('topPoints').innerHTML = renderRanking(topPoints, 'totalPoints', '点', '最高得点');
-            document.getElementById('top2P').innerHTML = renderRanking(top2P, 'twoPointPercentage', '%', '最高2P成功率');
-            document.getElementById('top3P').innerHTML = renderRanking(top3P, 'threePointPercentage', '%', '最高3P成功率');
-            document.getElementById('topFT').innerHTML = renderRanking(topFT, 'freeThrowPercentage', '%', '最高FT成功率');
-            document.getElementById('topRebounds').innerHTML = renderRanking(topRebounds, 'totalRebounds', '本', '最多リバウンド');
-            document.getElementById('topAssists').innerHTML = renderRanking(topAssists, 'assists', '本', '最多アシスト');
         }
 
         function updateCharts() {
@@ -1545,111 +1283,6 @@
                     }
                 }
             });
-
-            if (charts.points) charts.points.destroy();
-            charts.points = new Chart(document.getElementById('pointsChart'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '総得点',
-                        data: sorted.map(function(g) { return g.totalPoints; }),
-                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                        borderColor: '#667eea',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-
-            if (charts.rebounds) charts.rebounds.destroy();
-            charts.rebounds = new Chart(document.getElementById('reboundsChart'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'オフェンスリバウンド',
-                        data: sorted.map(function(g) { return g.offensiveRebounds; }),
-                        backgroundColor: 'rgba(255, 107, 107, 0.8)',
-                        borderColor: '#ff6b6b',
-                        borderWidth: 2
-                    }, {
-                        label: 'ディフェンスリバウンド',
-                        data: sorted.map(function(g) { return g.defensiveRebounds; }),
-                        backgroundColor: 'rgba(78, 205, 196, 0.8)',
-                        borderColor: '#4ecdc4',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: {
-                        y: { beginAtZero: true, stacked: true },
-                        x: { stacked: true }
-                    }
-                }
-            });
-
-            if (charts.other) charts.other.destroy();
-            charts.other = new Chart(document.getElementById('otherStatsChart'), {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'アシスト',
-                        data: sorted.map(function(g) { return g.assists; }),
-                        borderColor: '#4ecdc4',
-                        backgroundColor: 'rgba(78, 205, 196, 0.1)',
-                        tension: 0.4
-                    }, {
-                        label: 'ターンオーバー',
-                        data: sorted.map(function(g) { return g.turnovers; }),
-                        borderColor: '#ff6b6b',
-                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-
-            if (charts.defense) charts.defense.destroy();
-            charts.defense = new Chart(document.getElementById('defenseChart'), {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'スティール',
-                        data: sorted.map(function(g) { return g.steals; }),
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        tension: 0.4
-                    }, {
-                        label: 'ブロック',
-                        data: sorted.map(function(g) { return g.blocks; }),
-                        borderColor: '#f093fb',
-                        backgroundColor: 'rgba(240, 147, 251, 0.1)',
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
         }
 
         function addPlayer() {
@@ -1680,6 +1313,11 @@
             if (!myPlayerId) myPlayerId = player.id;
             
             saveData();
+            
+            if (teamData) {
+                syncWithServer();
+            }
+            
             displayPlayers();
             updateMyPlayerSelect();
 
@@ -1723,10 +1361,9 @@
             }
 
             playerList.innerHTML = players.map(function(p) {
-                const isEditing = editingPlayerId === p.id;
                 const isMyPlayer = p.id === myPlayerId;
                 
-                return '<div class="player-item' + (isEditing ? ' editing' : '') + '">' +
+                return '<div class="player-item">' +
                     '<div class="player-info">' +
                     '<div>' +
                     '<span class="number">#' + p.number + '</span>' +
@@ -1734,310 +1371,58 @@
                     '</div>' +
                     (isMyPlayer ? '<span class="my-data-badge">個人モード表示中</span>' : '') +
                     '</div>' +
-                    '<div class="edit-form' + (isEditing ? ' active' : '') + '" id="editForm_' + p.id + '">' +
-                    '<div class="input-group">' +
-                    '<label>背番号</label>' +
-                    '<input type="number" id="editNumber_' + p.id + '" value="' + p.number + '" min="0" max="99">' +
-                    '</div>' +
-                    '<div class="input-group">' +
-                    '<label>名前</label>' +
-                    '<input type="text" id="editName_' + p.id + '" value="' + p.name + '">' +
-                    '</div>' +
-                    '<div style="display: flex; gap: 10px; margin-top: 10px;">' +
-                    '<button style="flex: 1; padding: 10px; border: none; border-radius: 8px; background: #2ecc71; color: white; font-weight: bold; cursor: pointer;" onclick="saveEditPlayer(\'' + p.id + '\')">保存</button>' +
-                    '<button style="flex: 1; padding: 10px; border: none; border-radius: 8px; background: #95a5a6; color: white; font-weight: bold; cursor: pointer;" onclick="cancelEditPlayer()">キャンセル</button>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div style="display: ' + (isEditing ? 'none' : 'flex') + '; gap: 10px; margin-top: 10px;">' +
-                    '<button style="flex: 1; padding: 8px; border: none; border-radius: 8px; background: #667eea; color: white; cursor: pointer;" onclick="startEditPlayer(\'' + p.id + '\')">編集</button>' +
-                    '<button style="flex: 1; padding: 8px; border: none; border-radius: 8px; background: #ff4757; color: white; cursor: pointer;" onclick="deletePlayer(\'' + p.id + '\')">削除</button>' +
-                    '</div>' +
                     '</div>';
             }).join('');
         }
 
-        function startEditPlayer(id) {
-            editingPlayerId = id;
-            displayPlayers();
-        }
-
-        function cancelEditPlayer() {
-            editingPlayerId = null;
-            displayPlayers();
-        }
-
-        function saveEditPlayer(id) {
-            const p = players.find(function(pl) {
-                return pl.id === id;
-            });
-            if (!p) return;
-            
-            const newNum = document.getElementById('editNumber_' + id).value;
-            const newName = document.getElementById('editName_' + id).value.trim();
-            
-            if (!newNum || !newName) {
-                alert('背番号と名前を入力してください');
-                return;
-            }
-            
-            const exists = players.some(function(pl) {
-                return pl.id !== id && pl.number === newNum;
-            });
-            
-            if (exists) {
-                alert('この背番号は既に使用されています');
-                return;
-            }
-            
-            p.number = newNum;
-            p.name = newName;
-            editingPlayerId = null;
-            saveData();
-            displayPlayers();
-            updateMyPlayerSelect();
-            
-            if (currentMode === 'personal') displayGames();
-            
-            showSavedIndicator();
-        }
-
-        function deletePlayer(id) {
-            const p = players.find(function(pl) {
-                return pl.id === id;
-            });
-            if (!p) return;
-            
-            if (confirm(p.name + ' #' + p.number + ' を削除しますか？\n\nこの操作は取り消せません。')) {
-                players = players.filter(function(pl) {
-                    return pl.id !== id;
-                });
-                if (myPlayerId === id) myPlayerId = null;
-                editingPlayerId = null;
-                saveData();
-                displayPlayers();
-                updateMyPlayerSelect();
-            }
-        }
-
-        function startTeamGame() {
-            if (players.length === 0) { 
-                alert('先に選手を登録してください（設定タブ）'); 
-                return; 
-            }
-
-            const date = document.getElementById('teamGameDate').value;
-            if (!date) { 
-                alert('試合日を選択してください'); 
-                return; 
-            }
-
-            currentTeamGame = {
-                id: Date.now(),
-                date: date,
-                opponent: document.getElementById('teamOpponent').value.trim(),
-                plays: [],
-                playerStats: {}
+        function exportData() {
+            const data = {
+                version: '2.0',
+                exportDate: new Date().toISOString(),
+                personalGames: personalGames,
+                teamGames: teamGames,
+                players: players,
+                myPlayerId: myPlayerId,
+                teamData: teamData
             };
-
-            players.forEach(function(p) {
-                currentTeamGame.playerStats[p.id] = {
-                    twoPointsMade: 0, twoPointsAttempted: 0,
-                    threePointsMade: 0, threePointsAttempted: 0,
-                    freeThrowsMade: 0, freeThrowsAttempted: 0,
-                    offensiveRebounds: 0, defensiveRebounds: 0,
-                    assists: 0, steals: 0, blocks: 0, turnovers: 0, fouls: 0
-                };
-            });
-
-            document.getElementById('teamRecording').style.display = 'block';
-            displayPlayerSelector();
-            updateTeamStats();
-            displayPlayHistory();
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'バスケ記録_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('✅ バックアップが完了しました！');
         }
 
-        function displayPlayerSelector() {
-            const sel = document.getElementById('playerSelector');
-            sel.innerHTML = players.map(function(p) {
-                const isSelected = selectedPlayer === p.id;
-                return '<div class="player-btn' + (isSelected ? ' selected' : '') + '" onclick="selectPlayer(\'' + p.id + '\')">' +
-                    '<div class="number">#' + p.number + '</div>' +
-                    '<div class="name">' + p.name + '</div>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function selectPlayer(id) {
-            selectedPlayer = id;
-            displayPlayerSelector();
-        }
-
-        function getPlayLabel(type) {
-            const labels = {
-                '2p-made': '2P成功', '2p-miss': '2P失敗',
-                '3p-made': '3P成功', '3p-miss': '3P失敗',
-                'ft-made': 'FT成功', 'ft-miss': 'FT失敗',
-                'oreb': 'オフェンスリバウンド', 'dreb': 'ディフェンスリバウンド',
-                'ast': 'アシスト', 'stl': 'スティール', 'blk': 'ブロック',
-                'to': 'ターンオーバー', 'foul': 'ファウル'
+        function importData(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (confirm('⚠️ データを復元します\n\n現在のデータは上書きされます。よろしいですか？')) {
+                        personalGames = data.personalGames || [];
+                        teamGames = data.teamGames || [];
+                        players = data.players || [];
+                        myPlayerId = data.myPlayerId || null;
+                        teamData = data.teamData || null;
+                        saveData();
+                        displayGames();
+                        displayPlayers();
+                        alert('✅ データの復元が完了しました！');
+                        location.reload();
+                    }
+                } catch (err) {
+                    alert('❌ ファイルの読み込みに失敗しました');
+                }
             };
-            return labels[type] || type;
-        }
-
-        function recordPlay(type) {
-            if (!selectedPlayer) { 
-                alert('先に選手を選択してください'); 
-                return; 
-            }
-
-            const st = currentTeamGame.playerStats[selectedPlayer];
-            
-            if (type === '2p-made') { st.twoPointsMade++; st.twoPointsAttempted++; }
-            else if (type === '2p-miss') { st.twoPointsAttempted++; }
-            else if (type === '3p-made') { st.threePointsMade++; st.threePointsAttempted++; }
-            else if (type === '3p-miss') { st.threePointsAttempted++; }
-            else if (type === 'ft-made') { st.freeThrowsMade++; st.freeThrowsAttempted++; }
-            else if (type === 'ft-miss') { st.freeThrowsAttempted++; }
-            else if (type === 'oreb') { st.offensiveRebounds++; }
-            else if (type === 'dreb') { st.defensiveRebounds++; }
-            else if (type === 'ast') { st.assists++; }
-            else if (type === 'stl') { st.steals++; }
-            else if (type === 'blk') { st.blocks++; }
-            else if (type === 'to') { st.turnovers++; }
-            else if (type === 'foul') { st.fouls++; }
-
-            currentTeamGame.plays.push({
-                playerId: selectedPlayer,
-                playType: type,
-                timestamp: Date.now()
-            });
-
-            updateTeamStats();
-            displayPlayHistory();
-        }
-
-        function deletePlay(timestamp) {
-            const playIndex = currentTeamGame.plays.findIndex(function(p) {
-                return p.timestamp === timestamp;
-            });
-            if (playIndex === -1) return;
-            
-            const play = currentTeamGame.plays[playIndex];
-            const st = currentTeamGame.playerStats[play.playerId];
-            
-            if (play.playType === '2p-made') { st.twoPointsMade--; st.twoPointsAttempted--; }
-            else if (play.playType === '2p-miss') { st.twoPointsAttempted--; }
-            else if (play.playType === '3p-made') { st.threePointsMade--; st.threePointsAttempted--; }
-            else if (play.playType === '3p-miss') { st.threePointsAttempted--; }
-            else if (play.playType === 'ft-made') { st.freeThrowsMade--; st.freeThrowsAttempted--; }
-            else if (play.playType === 'ft-miss') { st.freeThrowsAttempted--; }
-            else if (play.playType === 'oreb') { st.offensiveRebounds--; }
-            else if (play.playType === 'dreb') { st.defensiveRebounds--; }
-            else if (play.playType === 'ast') { st.assists--; }
-            else if (play.playType === 'stl') { st.steals--; }
-            else if (play.playType === 'blk') { st.blocks--; }
-            else if (play.playType === 'to') { st.turnovers--; }
-            else if (play.playType === 'foul') { st.fouls--; }
-            
-            currentTeamGame.plays.splice(playIndex, 1);
-            
-            updateTeamStats();
-            displayPlayHistory();
-        }
-
-        function displayPlayHistory() {
-            const histEl = document.getElementById('playHistory');
-            
-            if (currentTeamGame.plays.length === 0) {
-                histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
-                return;
-            }
-            
-            const recentPlays = currentTeamGame.plays.slice().reverse().slice(0, 10);
-            histEl.innerHTML = '<div style="margin-bottom: 10px; font-size: 0.9em; color: #666; font-weight: bold;">最新のプレイ（最大10件） - タップで削除</div>' +
-                recentPlays.map(function(play) {
-                    const p = players.find(function(pl) {
-                        return pl.id === play.playerId;
-                    });
-                    return '<div class="play-item">' +
-                        '<div>' +
-                        '<strong>#' + p.number + ' ' + p.name + '</strong>' +
-                        '<div style="font-size: 0.85em; color: #666; margin-top: 2px;">' + getPlayLabel(play.playType) + '</div>' +
-                        '</div>' +
-                        '<button class="undo-btn" onclick="deletePlay(' + play.timestamp + ')">削除</button>' +
-                        '</div>';
-                }).join('');
-        }
-
-        function updateTeamStats() {
-            const el = document.getElementById('teamStats');
-            let html = '';
-
-            players.forEach(function(p) {
-                const st = currentTeamGame.playerStats[p.id];
-                const pts = (st.twoPointsMade * 2) + (st.threePointsMade * 3) + st.freeThrowsMade;
-                const reb = st.offensiveRebounds + st.defensiveRebounds;
-
-                html += '<div style="padding: 10px; background: #f7f7f7; border-radius: 8px; margin-bottom: 10px;">' +
-                    '<div style="font-weight: bold; margin-bottom: 5px;">#' + p.number + ' ' + p.name + '</div>' +
-                    '<div style="font-size: 0.9em; color: #666;">' +
-                    pts + '点 | ' + reb + 'リバウンド | ' + st.assists + 'アシスト | ' + st.steals + 'スティール | ' + st.blocks + 'ブロック' +
-                    '</div>' +
-                    '</div>';
-            });
-
-            el.innerHTML = html;
-        }
-
-        function saveTeamGame() {
-            if (!currentTeamGame) return;
-
-            teamGames.unshift(currentTeamGame);
-
-            if (myPlayerId && currentTeamGame.playerStats[myPlayerId]) {
-                const st = currentTeamGame.playerStats[myPlayerId];
-                const totalReb = st.offensiveRebounds + st.defensiveRebounds;
-                const totalPts = (st.twoPointsMade * 2) + (st.threePointsMade * 3) + st.freeThrowsMade;
-
-                const personalGame = {
-                    id: Date.now() + 1,
-                    date: currentTeamGame.date,
-                    opponent: currentTeamGame.opponent,
-                    playTime: 0,
-                    playerId: myPlayerId,
-                    twoPointsMade: st.twoPointsMade,
-                    twoPointsAttempted: st.twoPointsAttempted,
-                    threePointsMade: st.threePointsMade,
-                    threePointsAttempted: st.threePointsAttempted,
-                    freeThrowsMade: st.freeThrowsMade,
-                    freeThrowsAttempted: st.freeThrowsAttempted,
-                    offensiveRebounds: st.offensiveRebounds,
-                    defensiveRebounds: st.defensiveRebounds,
-                    assists: st.assists,
-                    steals: st.steals,
-                    blocks: st.blocks,
-                    turnovers: st.turnovers,
-                    fouls: st.fouls,
-                    totalRebounds: totalReb,
-                    twoPointPercentage: st.twoPointsAttempted > 0 ? ((st.twoPointsMade / st.twoPointsAttempted) * 100).toFixed(1) : '0',
-                    threePointPercentage: st.threePointsAttempted > 0 ? ((st.threePointsMade / st.threePointsAttempted) * 100).toFixed(1) : '0',
-                    freeThrowPercentage: st.freeThrowsAttempted > 0 ? ((st.freeThrowsMade / st.freeThrowsAttempted) * 100).toFixed(1) : '0',
-                    totalPoints: totalPts,
-                    source: 'team'
-                };
-
-                personalGames.unshift(personalGame);
-            }
-
-            saveData();
-            displayTeamGames();
-            
-            currentTeamGame = null;
-            selectedPlayer = null;
-            document.getElementById('teamRecording').style.display = 'none';
-            document.getElementById('teamGameDate').valueAsDate = new Date();
-            document.getElementById('teamOpponent').value = '';
-            
-            alert('✅ 試合記録を保存しました！');
+            reader.readAsText(file);
+            e.target.value = '';
         }
 
         loadData();
@@ -2045,6 +1430,7 @@
         displayGames();
         displayPlayers();
         updateMyPlayerSelect();
+        displayTeamStatus();
     </script>
 </body>
 </html>
