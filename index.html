@@ -983,6 +983,10 @@
                         📂 バックアップから復元
                     </button>
                     <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+             <button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="confirmClearGames()">
+                🗑️ 試合データをクリア
+             </button>
+                    
                 </div>
             </div>
         </div>
@@ -2387,7 +2391,70 @@
             reader.readAsText(file);
             e.target.value = '';
         }
+        function confirmClearGames() {
+            const message = '⚠️ 試合データをクリアします\n\n' +
+                '【削除されるもの】\n' +
+                '• 個人の試合記録（' + personalGames.length + '件）\n' +
+                '• チーム試合記録（' + teamGames.length + '件）\n\n' +
+                '【残るもの】\n' +
+                '• 選手情報\n' +
+                '• チーム設定\n\n' +
+                '本当に削除しますか？';
+            
+            if (confirm(message)) {
+                clearGameData();
+            }
+        }
 
+        function clearGameData() {
+            // 試合データをクリア
+            personalGames = [];
+            teamGames = [];
+            
+            // ローカルストレージに保存
+            saveData();
+            
+            // Google Sheetsの試合データもクリア
+            if (teamData) {
+                clearServerGameData();
+            }
+            
+            // 画面を更新
+            displayGames();
+            displayRankings();
+            updateCharts();
+            displayTeamGamesHistory();
+            
+            alert('✅ 試合データをクリアしました！\n\n選手情報は残っています。\n\nGoogle Sheetsの試合データも削除されました。');
+        }
+
+        async function clearServerGameData() {
+            try {
+                showSyncIndicator('syncing', 'サーバーの試合データを削除中...');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: JSON.stringify({
+                        action: 'clearGames',
+                        teamCode: teamData.code
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSyncIndicator('success', 'サーバーの試合データも削除完了');
+                } else {
+                    showSyncIndicator('error', 'サーバー削除失敗');
+                }
+            } catch (error) {
+                console.error('サーバー削除エラー:', error);
+                showSyncIndicator('error', 'サーバー削除失敗');
+            }
+        }
         loadData();
         updateDisplay();
         displayGames();
