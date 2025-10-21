@@ -1752,20 +1752,76 @@
                 
                 const result = await response.json();
                 
-                if (result.success && result.players) {
+                if (result.success) {
                     let addedCount = 0;
-                    result.players.forEach(function(serverPlayer) {
-                        const exists = players.some(function(p) {
-                            return p.id === serverPlayer.id;
+                    
+                    // 選手データを取得
+                    if (result.players) {
+                        result.players.forEach(function(serverPlayer) {
+                            const exists = players.some(function(p) {
+                                return p.id === serverPlayer.id;
+                            });
+                            if (!exists) {
+                                players.push(serverPlayer);
+                                addedCount++;
+                            }
                         });
-                        if (!exists) {
-                            players.push(serverPlayer);
-                            addedCount++;
-                        }
-                    });
+                    }
+                    
+                    // 試合データを取得してpersonalGamesに変換
+                    if (result.games) {
+                        result.games.forEach(function(game) {
+                            // この試合がすでに存在するかチェック
+                            const gameExists = teamGames.some(function(g) {
+                                return g.id === game.id;
+                            });
+                            
+                            if (!gameExists) {
+                                teamGames.push(game);
+                                
+                                // 各選手のデータをpersonalGamesに追加
+                                Object.keys(game.playerStats).forEach(function(playerId) {
+                                    const stats = game.playerStats[playerId];
+                                    const totalReb = stats.offensiveRebounds + stats.defensiveRebounds;
+                                    const totalPts = (stats.twoPointsMade * 2) + (stats.threePointsMade * 3) + stats.freeThrowsMade;
+                                    
+                                    const personalGame = {
+                                        id: Date.now() + Math.random(),
+                                        date: game.date,
+                                        opponent: game.opponent,
+                                        playTime: 0,
+                                        playerId: playerId,
+                                        twoPointsMade: stats.twoPointsMade,
+                                        twoPointsAttempted: stats.twoPointsAttempted,
+                                        threePointsMade: stats.threePointsMade,
+                                        threePointsAttempted: stats.threePointsAttempted,
+                                        freeThrowsMade: stats.freeThrowsMade,
+                                        freeThrowsAttempted: stats.freeThrowsAttempted,
+                                        offensiveRebounds: stats.offensiveRebounds,
+                                        defensiveRebounds: stats.defensiveRebounds,
+                                        assists: stats.assists,
+                                        steals: stats.steals,
+                                        blocks: stats.blocks,
+                                        turnovers: stats.turnovers,
+                                        fouls: stats.fouls,
+                                        totalRebounds: totalReb,
+                                        twoPointPercentage: stats.twoPointsAttempted > 0 ? ((stats.twoPointsMade / stats.twoPointsAttempted) * 100).toFixed(1) : '0',
+                                        threePointPercentage: stats.threePointsAttempted > 0 ? ((stats.threePointsMade / stats.threePointsAttempted) * 100).toFixed(1) : '0',
+                                        freeThrowPercentage: stats.freeThrowsAttempted > 0 ? ((stats.freeThrowsMade / stats.freeThrowsAttempted) * 100).toFixed(1) : '0',
+                                        totalPoints: totalPts,
+                                        source: 'team'
+                                    };
+                                    
+                                    personalGames.unshift(personalGame);
+                                });
+                            }
+                        });
+                    }
                     
                     saveData();
-                    showSyncIndicator('success', addedCount + '人の選手データを取得');
+                    
+                    const gameCount = result.games ? result.games.length : 0;
+                    showSyncIndicator('success', addedCount + '人の選手、' + gameCount + '試合のデータを取得');
                     
                     return addedCount;
                 } else {
