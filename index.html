@@ -2395,41 +2395,96 @@
             reader.readAsText(file);
             e.target.value = '';
         }
-        function confirmClearGames() {
-            const message = '⚠️ 試合データをクリアします\n\n' +
-                '【削除されるもの】\n' +
-                '• 個人の試合記録（' + personalGames.length + '件）\n' +
-                '• チーム試合記録（' + teamGames.length + '件）\n\n' +
-                '【残るもの】\n' +
+        // ========== 個人用：このスマホのデータをクリア ==========
+        function confirmClearLocalData() {
+            const message = '⚠️ このスマホの試合データをクリアします\n\n' +
+                '【クリアされるもの】\n' +
+                '• このスマホの試合記録（' + personalGames.length + '件）\n\n' +
+                '【クリアされないもの】\n' +
                 '• 選手情報\n' +
-                '• チーム設定\n\n' +
-                '本当に削除しますか？';
+                '• Google Sheetsのデータ（全員共有）\n' +
+                '• 他の人のスマホのデータ\n\n' +
+                '💡 ヒント：「今すぐ同期」で復元できます\n\n' +
+                '本当にクリアしますか？';
             
             if (confirm(message)) {
-                clearGameData();
+                clearLocalData();
             }
         }
 
-        function clearGameData() {
-            // 試合データをクリア
+        function clearLocalData() {
             personalGames = [];
             teamGames = [];
             
-            // ローカルストレージに保存
             saveData();
             
-            // Google Sheetsの試合データもクリア
+            displayGames();
+            displayRankings();
+            updateCharts();
+            if (typeof displayTeamGamesHistory === 'function') {
+                displayTeamGamesHistory();
+            }
+            
+            alert('✅ このスマホのデータをクリアしました！\n\n「今すぐ同期」ボタンで復元できます。');
+        }
+
+        // ========== 管理者用：チーム全体のデータをリセット ==========
+        function confirmResetTeamData() {
+            if (!teamData) {
+                alert('チームに参加していません');
+                return;
+            }
+            
+            const message = '🔐 管理者のみ実行可能\n\n' +
+                '⚠️ チーム全体の試合データをリセットします\n\n' +
+                '【影響】\n' +
+                '• Google Sheetsの試合データが削除されます\n' +
+                '• 全メンバーのスマホから試合記録が消えます\n' +
+                '• 復元できません！\n\n' +
+                '【残るもの】\n' +
+                '• 選手情報\n' +
+                '• チーム設定\n\n' +
+                '続けるには、チームコードを入力してください：';
+            
+            const inputCode = prompt(message);
+            
+            if (inputCode === null) {
+                return;
+            }
+            
+            if (inputCode.toUpperCase() === teamData.code) {
+                const finalConfirm = confirm(
+                    '⚠️ 最終確認\n\n' +
+                    'チーム全体の試合データを完全に削除します。\n' +
+                    'この操作は取り消せません。\n\n' +
+                    '本当に実行しますか？'
+                );
+                
+                if (finalConfirm) {
+                    resetTeamData();
+                }
+            } else {
+                alert('❌ チームコードが正しくありません');
+            }
+        }
+
+        function resetTeamData() {
+            personalGames = [];
+            teamGames = [];
+            saveData();
+            
             if (teamData) {
                 clearServerGameData();
             }
             
-            // 画面を更新
             displayGames();
             displayRankings();
             updateCharts();
-            displayTeamGamesHistory();
+            if (typeof displayTeamGamesHistory === 'function') {
+                displayTeamGamesHistory();
+            }
             
-            alert('✅ 試合データをクリアしました！\n\n選手情報は残っています。\n\nGoogle Sheetsの試合データも削除されました。');
+            alert('✅ チーム全体のデータをリセットしました！\n\n全メンバーに影響があります。\n各メンバーは「今すぐ同期」で空のデータが取得されます。');
         }
 
         async function clearServerGameData() {
