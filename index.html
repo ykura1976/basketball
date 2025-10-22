@@ -983,9 +983,13 @@
                         📂 バックアップから復元
                     </button>
                     <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
-             <button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="confirmClearGames()">
-                🗑️ 試合データをクリア
-             </button>
+             <button class="primary-btn" style="background: #3498db; margin-top: 10px;" onclick="confirmClearLocalData()">
+    🗑️ このスマホのデータをクリア
+</button>
+
+<button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="confirmResetTeamData()">
+    ⚠️ チーム全体のデータをリセット
+</button>
                     
                 </div>
             </div>
