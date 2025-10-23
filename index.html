@@ -757,6 +757,41 @@
         .feedback-notification.other {
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
         }
+        /* 現在選択中の選手表示 */
+        .current-player-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .current-player-banner .player-icon {
+            font-size: 1.5em;
+        }
+
+        .current-player-banner .player-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .current-player-banner .player-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        .current-player-banner .player-name {
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
@@ -783,6 +818,13 @@
             </div>
 
             <div id="inputTab" class="tab-content active">
+                <div id="inputPlayerBanner" class="current-player-banner" style="display: none;">
+                    <span class="player-icon">👤</span>
+                    <div class="player-info">
+                        <span class="player-label">現在表示中</span>
+                        <span class="player-name" id="inputPlayerName"></span>
+                    </div>
+                </div>
                 <div class="card">
                     <h2 style="margin-bottom: 20px;">新しい試合を記録</h2>
                     
@@ -948,10 +990,24 @@
             </div>
 
             <div id="listTab" class="tab-content">
+                <div id="listPlayerBanner" class="current-player-banner" style="display: none;">
+                    <span class="player-icon">👤</span>
+                    <div class="player-info">
+                        <span class="player-label">現在表示中</span>
+                        <span class="player-name" id="listPlayerName"></span>
+                    </div>
+                </div>
                 <div id="gameList"></div>
             </div>
 
             <div id="rankingTab" class="tab-content">
+                <div id="rankingPlayerBanner" class="current-player-banner" style="display: none;">
+                    <span class="player-icon">👤</span>
+                    <div class="player-info">
+                        <span class="player-label">現在表示中</span>
+                        <span class="player-name" id="rankingPlayerName"></span>
+                    </div>
+                </div>
                 <div class="card">
                     <h2 style="margin-bottom: 20px;">🏆 ベストパフォーマンス</h2>
                     <p style="color: #666; margin-bottom: 15px; font-size: 0.9em;">
@@ -962,6 +1018,13 @@
             </div>
 
             <div id="graphTab" class="tab-content">
+                <div id="graphPlayerBanner" class="current-player-banner" style="display: none;">
+                    <span class="player-icon">👤</span>
+                    <div class="player-info">
+                        <span class="player-label">現在表示中</span>
+                        <span class="player-name" id="graphPlayerName"></span>
+                    </div>
+                </div>
                 <div class="card">
                     <h2 style="margin-bottom: 20px;">シュート成功率の推移</h2>
                     <div class="chart-container">
@@ -2483,6 +2546,8 @@
             displayRankings();
             updateCharts();
             
+            updatePlayerBanners();  // ← 追加
+            
             if (myPlayerId) {
                 const p = players.find(function(pl) {
                     return pl.id === myPlayerId;
@@ -2490,6 +2555,44 @@
                 alert('✅ 個人モード表示を「' + p.name + ' #' + p.number + '」に設定しました\n\n履歴・ランキング・グラフが更新されました！');
             }
         }
+
+        function updatePlayerBanners() {
+            // 現在選択中の選手を取得
+            const player = players.find(function(p) {
+                return p.id === myPlayerId;
+            });
+
+            if (player) {
+                const playerText = '#' + player.number + ' ' + player.name;
+                
+                // 各タブのバナーを更新
+                const banners = [
+                    { banner: 'inputPlayerBanner', name: 'inputPlayerName' },
+                    { banner: 'listPlayerBanner', name: 'listPlayerName' },
+                    { banner: 'rankingPlayerBanner', name: 'rankingPlayerName' },
+                    { banner: 'graphPlayerBanner', name: 'graphPlayerName' }
+                ];
+
+                banners.forEach(function(b) {
+                    const bannerEl = document.getElementById(b.banner);
+                    const nameEl = document.getElementById(b.name);
+                    
+                    if (bannerEl && nameEl) {
+                        bannerEl.style.display = 'flex';
+                        nameEl.textContent = playerText;
+                    }
+                });
+            } else {
+                // 選手が選択されていない場合は非表示
+                ['inputPlayerBanner', 'listPlayerBanner', 'rankingPlayerBanner', 'graphPlayerBanner'].forEach(function(id) {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.style.display = 'none';
+                    }
+                });
+            }
+        }
+        
 
         function updateMyPlayerSelect() {
             const sel = document.getElementById('myPlayerSelect');
@@ -2710,6 +2813,7 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         displayPlayers();
         updateMyPlayerSelect();
         displayTeamStatus();
+        updatePlayerBanners();
     </script>
 </body>
 </html>
