@@ -711,6 +711,52 @@
             background: #667eea;
             color: white;
         }
+        /* ボタンフィードバックアニメーション */
+        @keyframes button-press {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+            100% { transform: scale(1); }
+        }
+
+        .action-btn.pressed {
+            animation: button-press 0.3s ease;
+        }
+
+        /* フィードバック通知 */
+        .feedback-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            z-index: 10000;
+            animation: fade-in-out 1s ease;
+            pointer-events: none;
+        }
+
+        @keyframes fade-in-out {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        }
+
+        .feedback-notification.success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .feedback-notification.miss {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+
+        .feedback-notification.other {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
     </style>
 </head>
 <body>
@@ -1035,7 +1081,12 @@
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-bottom: 15px;">プレイを記録</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 style="margin: 0;">プレイを記録</h2>
+                        <button class="primary-btn" style="background: #3498db; padding: 8px 16px; font-size: 0.9em;" onclick="openGlossary()">
+                            ❓ 用語解説
+                        </button>
+                    </div>
                     <div class="action-buttons">
                         <button class="action-btn success" onclick="recordPlay('2p-made')">2P成功</button>
                         <button class="action-btn miss" onclick="recordPlay('2p-miss')">2P失敗</button>
@@ -1093,7 +1144,76 @@
             <button class="close-modal" onclick="closeModal('joinTeamModal')">キャンセル</button>
         </div>
     </div>
+　　<div id="glossaryModal" class="modal">
+        <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <h2 class="modal-title">📚 バスケ用語解説</h2>
+            
+            <div style="text-align: left;">
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <h3 style="color: #2ecc71; margin-top: 0;">✅ 成功プレイ</h3>
+                    
+                    <p style="margin: 10px 0;"><strong>2P成功（ツーポイント成功）</strong><br>
+                    2点シュートが入ったとき。ゴールに近い場所からのシュート。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>3P成功（スリーポイント成功）</strong><br>
+                    3点シュートが入ったとき。3点ラインの外側からのシュート。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>FT成功（フリースロー成功）</strong><br>
+                    フリースロー（1点）が入ったとき。ファウルされた後の無妨害シュート。</p>
+                </div>
 
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <h3 style="color: #95a5a6; margin-top: 0;">❌ 失敗プレイ</h3>
+                    
+                    <p style="margin: 10px 0;"><strong>2P失敗</strong><br>
+                    2点シュートが外れたとき。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>3P失敗</strong><br>
+                    3点シュートが外れたとき。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>FT失敗</strong><br>
+                    フリースローが外れたとき。</p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <h3 style="color: #3498db; margin-top: 0;">📊 その他の記録</h3>
+                    
+                    <p style="margin: 10px 0;"><strong>オフェンスリバウンド（攻撃リバウンド）</strong><br>
+                    味方のシュートが外れた後、自分のチームが再びボールを取ったとき。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>ディフェンスリバウンド（守備リバウンド）</strong><br>
+                    相手のシュートが外れた後、ボールを取ったとき。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>アシスト</strong><br>
+                    パスを出して、そのパスを受けた味方がシュートを決めたとき。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>スティール</strong><br>
+                    相手からボールを奪ったとき。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>ブロック</strong><br>
+                    相手のシュートを手で防いだとき。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>ターンオーバー</strong><br>
+                    ボールを失ったとき。パスミス、ドリブルミス、相手に奪われたときなど。</p>
+                    
+                    <p style="margin: 10px 0;"><strong>ファウル</strong><br>
+                    反則をしたとき。相手を押す、叩く、不正なブロックなど。</p>
+                </div>
+
+                <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <h3 style="color: #f39c12; margin-top: 0;">💡 記録のコツ</h3>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>迷ったら記録しないより、記録した方がいい</li>
+                        <li>間違えたら「プレイ履歴」から削除できる</li>
+                        <li>シュートは「成功」または「失敗」の両方を必ず記録</li>
+                        <li>リバウンドは誰が取ったかが重要</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <button class="primary-btn" onclick="closeModal('glossaryModal')">閉じる</button>
+        </div>
+    </div>
     <div class="saved-indicator" id="savedIndicator">✓ 保存しました</div>
 
     <script>
@@ -1253,6 +1373,23 @@
 
             const st = currentTeamGame.playerStats[selectedPlayer];
             
+            // プレイタイプごとのラベル
+            const playLabels = {
+                '2p-made': '✓ 2P成功',
+                '2p-miss': '✗ 2P失敗',
+                '3p-made': '✓ 3P成功',
+                '3p-miss': '✗ 3P失敗',
+                'ft-made': '✓ FT成功',
+                'ft-miss': '✗ FT失敗',
+                'oreb': '📦 オフェンスリバウンド',
+                'dreb': '📦 ディフェンスリバウンド',
+                'ast': '🤝 アシスト',
+                'stl': '🛡️ スティール',
+                'blk': '🚫 ブロック',
+                'to': '⚠️ ターンオーバー',
+                'foul': '⚠️ ファウル'
+            };
+            
             if (type === '2p-made') { st.twoPointsMade++; st.twoPointsAttempted++; }
             else if (type === '2p-miss') { st.twoPointsAttempted++; }
             else if (type === '3p-made') { st.threePointsMade++; st.threePointsAttempted++; }
@@ -1274,8 +1411,53 @@
                 timestamp: Date.now()
             });
 
+            // フィードバック表示
+            showPlayFeedback(playLabels[type] || 'プレイを記録', type);
+
             updateTeamStats();
             displayPlayHistory();
+        }
+
+        function showPlayFeedback(message, type) {
+            // 既存のフィードバックがあれば削除
+            const existing = document.querySelector('.feedback-notification');
+            if (existing) {
+                existing.remove();
+            }
+
+            // フィードバック通知を作成
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-notification';
+            
+            // タイプに応じてクラスを追加
+            if (type.includes('made')) {
+                feedback.classList.add('success');
+            } else if (type.includes('miss')) {
+                feedback.classList.add('miss');
+            } else {
+                feedback.classList.add('other');
+            }
+            
+            feedback.textContent = message;
+            document.body.appendChild(feedback);
+
+            // 1秒後に削除
+            setTimeout(function() {
+                if (feedback && feedback.parentNode) {
+                    feedback.remove();
+                }
+            }, 1000);
+
+            // ボタンにアニメーションを追加
+            const buttons = document.querySelectorAll('.action-btn');
+            buttons.forEach(function(btn) {
+                if (btn.textContent.toLowerCase().includes(type.split('-')[0])) {
+                    btn.classList.add('pressed');
+                    setTimeout(function() {
+                        btn.classList.remove('pressed');
+                    }, 300);
+                }
+            });
         }
 
         function deletePlay(timestamp) {
@@ -1597,6 +1779,10 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
+        function openGlossary() {
+            document.getElementById('glossaryModal').classList.add('active');
+        }
+        
         function generateTeamCode() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let code = '';
