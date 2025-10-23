@@ -2469,52 +2469,55 @@
     }
 }
 
-        function resetTeamData() {
-            personalGames = [];
-            teamGames = [];
-            saveData();
-            
-            if (teamData) {
-                clearServerGameData();
-            }
-            
-            displayGames();
-            displayRankings();
-            updateCharts();
-            if (typeof displayTeamGamesHistory === 'function') {
-                displayTeamGamesHistory();
-            }
-            
-            alert('✅ チーム全体のデータをリセットしました！\n\n全メンバーに影響があります。\n各メンバーは「今すぐ同期」で空のデータが取得されます。');
-        }
+        function resetTeamData(adminPassword) {  // ← パラメータ追加
+    personalGames = [];
+    teamGames = [];
+    saveData();
+    
+    if (teamData) {
+        clearServerGameData(adminPassword);  // ← パスワードを渡す
+    }
+    
+    displayGames();
+    displayRankings();
+    updateCharts();
+    if (typeof displayTeamGamesHistory === 'function') {
+        displayTeamGamesHistory();
+    }
+    
+    alert('✅ チーム全体のデータをリセットしました！\n\n全メンバーに影響があります。\n各メンバーは「今すぐ同期」で空のデータが取得されます。');
+}
 
-        async function clearServerGameData() {
-            try {
-                showSyncIndicator('syncing', 'サーバーの試合データを削除中...');
-                
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain',
-                    },
-                    body: JSON.stringify({
-                        action: 'clearGames',
-                        teamCode: teamData.code
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showSyncIndicator('success', 'サーバーの試合データも削除完了');
-                } else {
-                    showSyncIndicator('error', 'サーバー削除失敗');
-                }
-            } catch (error) {
-                console.error('サーバー削除エラー:', error);
-                showSyncIndicator('error', 'サーバー削除失敗');
-            }
+async function clearServerGameData(adminPassword) {  // ← パラメータ追加
+    try {
+        showSyncIndicator('syncing', 'サーバーの試合データを削除中...');
+        
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: JSON.stringify({
+                action: 'clearGames',
+                teamCode: teamData.code,
+                adminPassword: adminPassword  // ← パスワードを送信
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showSyncIndicator('success', 'サーバーの試合データも削除完了');
+        } else {
+            showSyncIndicator('error', result.error || 'サーバー削除失敗');
+            alert('❌ ' + (result.error || 'サーバー削除に失敗しました'));
         }
+    } catch (error) {
+        console.error('サーバー削除エラー:', error);
+        showSyncIndicator('error', 'サーバー削除失敗');
+        alert('❌ エラーが発生しました: ' + error.message);
+    }
+}
         loadData();
         updateDisplay();
         displayGames();
