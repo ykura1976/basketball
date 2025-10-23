@@ -2430,43 +2430,44 @@
 
         // ========== 管理者用：チーム全体のデータをリセット ==========
         function confirmResetTeamData() {
-            if (!teamData) {
-                alert('チームに参加していません');
-                return;
-            }
-            
-            const message = '🔐 管理者のみ実行可能\n\n' +
-                '⚠️ チーム全体の試合データをリセットします\n\n' +
-                '【影響】\n' +
-                '• Google Sheetsの試合データが削除されます\n' +
-                '• 全メンバーのスマホから試合記録が消えます\n' +
-                '• 復元できません！\n\n' +
-                '【残るもの】\n' +
-                '• 選手情報\n' +
-                '• チーム設定\n\n' +
-                '続けるには、チームコードを入力してください：';
-            
-            const inputCode = prompt(message);
-            
-            if (inputCode === null) {
-                return;
-            }
-            
-            if (inputCode.toUpperCase() === teamData.code) {
-                const finalConfirm = confirm(
-                    '⚠️ 最終確認\n\n' +
-                    'チーム全体の試合データを完全に削除します。\n' +
-                    'この操作は取り消せません。\n\n' +
-                    '本当に実行しますか？'
-                );
-                
-                if (finalConfirm) {
-                    resetTeamData();
-                }
-            } else {
-                alert('❌ チームコードが正しくありません');
-            }
-        }
+    if (!teamData) {
+        alert('チームに参加していません');
+        return;
+    }
+    
+    const message = '🔐 管理者のみ実行可能\n\n' +
+        '⚠️ チーム全体の試合データをリセットします\n\n' +
+        '【影響】\n' +
+        '• Google Sheetsの試合データが削除されます\n' +
+        '• 全メンバーのスマホから試合記録が消えます\n' +
+        '• 復元できません！\n\n' +
+        '【残るもの】\n' +
+        '• 選手情報\n' +
+        '• チーム設定\n\n' +
+        '続けるには、管理者パスワードを入力してください：';
+    
+    const inputPassword = prompt(message);
+    
+    if (inputPassword === null) {
+        return;
+    }
+    
+    if (!inputPassword || inputPassword.trim() === '') {
+        alert('❌ パスワードを入力してください');
+        return;
+    }
+    
+    const finalConfirm = confirm(
+        '⚠️ 最終確認\n\n' +
+        'チーム全体の試合データを完全に削除します。\n' +
+        'この操作は取り消せません。\n\n' +
+        '本当に実行しますか？'
+    );
+    
+    if (finalConfirm) {
+        resetTeamData(inputPassword);
+    }
+}
 
         function resetTeamData() {
             personalGames = [];
