@@ -1990,6 +1990,41 @@
             }
         }
 
+        // ▼▼▼ ここから追加：送受信まとめて行う ▼▼▼
+async function syncAll() {
+  if (!teamData) {
+    alert('チームに参加していません');
+    return;
+  }
+  showSyncIndicator('syncing', '送受信中…');
+
+  try {
+    // 1) まず送る（端末→サーバ）
+    await syncWithServer();
+
+    // 2) 次に受け取る（サーバ→端末）
+    await loadTeamData();
+
+    // 3) 画面を最新化
+    if (typeof updateDisplay === 'function') updateDisplay();
+    displayPlayers();
+    updateMyPlayerSelect();
+    displayGames();
+    displayRankings();
+    updateCharts();
+    if (typeof displayTeamGamesHistory === 'function') {
+      displayTeamGamesHistory();
+    }
+
+    showSyncIndicator('success', '同期完了！');
+  } catch (e) {
+    console.error(e);
+    showSyncIndicator('error', '同期失敗：' + e.message);
+  }
+}
+// ▲▲▲ 追加ここまで ▲▲▲
+
+
         async function loadTeamData() {
             if (!teamData) return;
             
@@ -2104,7 +2139,7 @@
                 '<div style="font-size: 1.3em; font-weight: bold; color: #667eea; margin: 10px 0;">' + teamData.name + '</div>' +
                 '<div style="font-size: 0.9em; color: #666;">チームコード</div>' +
                 '<div class="code">' + teamData.code + '</div>' +
-                '<button class="primary-btn" style="background: #2ecc71; margin-top: 15px;" onclick="syncWithServer()">今すぐ同期</button>' +
+                '<button class="primary-btn" style="background: ... margin-top: 15px;" onclick="syncAll()">今すぐ同期（送受信）</button>' +
                 '<button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="leaveTeam()">チームから退出</button>' +
                 '</div>';
         }
@@ -2814,6 +2849,7 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         updateMyPlayerSelect();
         displayTeamStatus();
         updatePlayerBanners();
+        loadTeamData();
     </script>
 </body>
 </html>
