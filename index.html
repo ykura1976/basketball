@@ -1641,7 +1641,7 @@
             saveData();
             
             if (teamData) {
-                syncWithServer();
+                syncGamesOnly();
             }
             
             currentTeamGame = null;
@@ -1958,63 +1958,98 @@
             }
         }
 
-        async function syncWithServer() {
-            if (!teamData) return;
-            
-            showSyncIndicator('syncing', '同期中...');
-            
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain',
-                    },
-                    body: JSON.stringify({
-                        action: 'syncData',
-                        teamCode: teamData.code,
-                        players: players,
-                        games: teamGames
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showSyncIndicator('success', '同期完了!');
-                } else {
-                    throw new Error(result.error || '同期に失敗しました');
-                }
-            } catch (error) {
-                console.error('同期エラー:', error);
-                showSyncIndicator('error', '同期失敗');
-            }
+        async function syncWithServer(options = { pushPlayers: false, pushGames: true }) {
+    if (!teamData) return;
+
+    showSyncIndicator('syncing', '同期中...');
+
+    try {
+        const payload = {
+            action: 'syncData',
+            teamCode: teamData.code
+        };
+
+        // 新規追加した選手だけ送る（後述の addPlayer で _localNew を付ける）
+        if (options.pushPlayers) {
+            const newPlayers = players.filter(p => p && p._localNew === true);
+            if (newPlayers.length > 0) payload.players = newPlayers;
         }
 
+        if (options.pushGames) {
+            payload.games = teamGames;
+        }
+
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'syncData failed');
+
+        // 送信に成功した“新規選手”はフラグを外しておく
+        if (options.pushPlayers) {
+            players.forEach(p => { if (p._localNew) p._localNew = false; });
+        }
+
+        showSyncIndicator('success', '送信完了');
+    } catch (e) {
+        console.error(e);
+        showSyncIndicator('error', '同期失敗：' + e.message);
+    }
+}
+
+// ▼▼▼ 追加：試合だけを送る同期（選手は送らない） ▼▼▼
+async function syncGamesOnly() {
+  if (!teamData) return;
+
+  showSyncIndicator('syncing', '同期中...');
+
+  try {
+    const payload = {
+      action: 'syncData',
+      teamCode: teamData.code,
+      // ← 選手は送らない
+      games: teamGames       // ← 試合だけ送る
+    };
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    if (!result.success) throw new Error(result.error || 'syncData failed');
+
+    showSyncIndicator('success', '送信完了');
+  } catch (e) {
+    console.error(e);
+    showSyncIndicator('error', '同期失敗：' + e.message);
+  }
+}
+// ▲▲▲ 追加ここまで ▲▲▲
+        
+        
         // ▼▼▼ ここから追加：送受信まとめて行う ▼▼▼
 async function syncAll() {
-  if (!teamData) {
-    alert('チームに参加していません');
-    return;
-  }
+  if (!teamData) { alert('チームに参加していません'); return; }
   showSyncIndicator('syncing', '送受信中…');
 
   try {
-    // 1) まず送る（端末→サーバ）
-    await syncWithServer();
+    // 1) まず送る（試合のみ）
+    await syncWithServer({ pushPlayers: false, pushGames: true });
 
-    // 2) 次に受け取る（サーバ→端末）
+    // 2) 次に受け取る（最新を取り込む）
     await loadTeamData();
 
     // 3) 画面を最新化
-    if (typeof updateDisplay === 'function') updateDisplay();
     displayPlayers();
     updateMyPlayerSelect();
     displayGames();
     displayRankings();
     updateCharts();
-    if (typeof displayTeamGamesHistory === 'function') {
-      displayTeamGamesHistory();
-    }
 
     showSyncIndicator('success', '同期完了！');
   } catch (e) {
@@ -2049,16 +2084,19 @@ async function syncAll() {
                     
                     // 選手データを取得
                     if (result.players) {
-                        result.players.forEach(function(serverPlayer) {
-                            const exists = players.some(function(p) {
-                                return p.id === serverPlayer.id;
-                            });
-                            if (!exists) {
-                                players.push(serverPlayer);
-                                addedCount++;
-                            }
-                        });
-                    }
+    result.players.forEach(function(serverPlayer) {
+        serverPlayer._localNew = false;  // サーバ由来は“新規アップ対象”ではない
+
+        const local = players.find(function(p) { return p.id === serverPlayer.id; });
+        if (!local) {
+            players.push(serverPlayer);
+            addedCount++;
+        } else {
+            // 既存オブジェクトにも念のためフラグを反映
+            local._localNew = false;
+        }
+    });
+}
                     
                     // 試合データを取得してpersonalGamesに変換
                     if (result.games) {
@@ -2288,7 +2326,7 @@ async function syncAll() {
             saveData();
             
             if (teamData) {
-                syncWithServer();
+                syncGamesOnly();
             }
             
             displayGames();
@@ -2461,10 +2499,15 @@ async function syncAll() {
             if (!myPlayerId) myPlayerId = player.id;
             
             saveData();
-            
-            if (teamData) {
-                syncWithServer();
-            }
+
+if (teamData) {
+    // 新規追加フラグをつける
+    // （この行は、プレイヤーオブジェクト生成直後でもOK）
+    player._localNew = true;
+
+    // 選手だけ送信（試合は送らない）
+    syncWithServer({ pushPlayers: true, pushGames: false });
+}
             
             displayPlayers();
             updateMyPlayerSelect();
@@ -2511,10 +2554,11 @@ async function syncAll() {
             player.name = newName.trim();
             
             saveData();
-            
-            if (teamData) {
-                syncWithServer();
-            }
+
+// サーバへは送らない（編集/削除は手動でシートを直す運用）
+/* if (teamData) {
+    syncWithServer();
+} */
             
             displayPlayers();
             updateMyPlayerSelect();
@@ -2737,21 +2781,18 @@ async function syncAll() {
         }
 
         function clearLocalData() {
-            personalGames = [];
-            teamGames = [];
-            
-            saveData();
-            
-            displayGames();
-            displayRankings();
-            updateCharts();
-            if (typeof displayTeamGamesHistory === 'function') {
-                displayTeamGamesHistory();
-            }
-            
-            alert('✅ このスマホのデータをクリアしました！\n\n「今すぐ同期」ボタンで復元できます。');
-        }
+    personalGames = [];
+    teamGames = [];
+    players = [];
+    myPlayerId = null;
 
+    saveData();
+
+    displayGames();
+    displayRankings();
+    updateCharts();
+    // ...必要なUI更新
+}
         // ========== 管理者用：チーム全体のデータをリセット ==========
         function confirmResetTeamData() {
     if (!teamData) {
