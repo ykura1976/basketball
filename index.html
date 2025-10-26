@@ -2429,23 +2429,44 @@
         let currentEditingGameIndex = null;
 
         function openEditGameModal(gameIndex) {
+            // チームに参加していない場合
+            if (!teamData) {
+                alert('❌ チームに参加していません');
+                return;
+            }
+            
+            // デバッグ：管理者パスワードが取得できているか確認
+            console.log('teamData:', teamData);
+            console.log('管理者パスワード:', teamData.adminPassword);
+            
+            // 管理者パスワードが設定されていない場合
+            if (!teamData.adminPassword) {
+                alert('⚠️ 管理者パスワードが設定されていません\n\nスプレッドシートの「チーム情報」シートB4セルにパスワードを設定してください。\nその後、「今すぐ同期」ボタンを押してください。');
+                return;
+            }
+            
             // 管理者パスワードを確認
-            const password = prompt('🔒 管理者パスワードを入力してください：');
+            const password = prompt('🔒 管理者パスワードを入力してください\n\n※スプレッドシートの「チーム情報」シートB4セルで確認できます');
             
             if (!password) {
                 return;
             }
             
-            // パスワードをチェック（ここでは簡易的に設定）
-            // 実際のパスワードはteamDataに保存されているべきですが、
-            // 簡易版として固定パスワードまたはチームコードを使用
-            const correctPassword = teamData ? teamData.code : 'ADMIN123';
-            
-            if (password !== correctPassword) {
-                alert('❌ パスワードが正しくありません');
+            // 空白チェック
+            if (password.trim() === '') {
+                alert('❌ パスワードを入力してください');
                 return;
             }
             
+            // パスワードを検証
+            const correctPassword = teamData.adminPassword || '';
+            
+            if (password !== correctPassword) {
+                alert('❌ 管理者パスワードが正しくありません\n\nスプレッドシートの「チーム情報」シートB4セルを確認してください。');
+                return;
+            }
+            
+            // パスワード認証成功
             currentEditingGameIndex = gameIndex;
             const game = teamGames[gameIndex];
             
