@@ -2926,23 +2926,27 @@ async function syncAll() {
                 const result = await response.json();
                 
                 if (result.success) {
-                    let addedCount = 0;
-                    
-                    // 選手データを取得
-                    if (result.players) {
-    result.players.forEach(function(serverPlayer) {
-        serverPlayer._localNew = false;  // サーバ由来は“新規アップ対象”ではない
-
-        const local = players.find(function(p) { return p.id === serverPlayer.id; });
-        if (!local) {
-            players.push(serverPlayer);
-            addedCount++;
-        } else {
-            // 既存オブジェクトにも念のためフラグを反映
-            local._localNew = false;
-        }
-    });
-}
+    let addedCount = 0;
+    
+    // 管理者パスワードをteamDataに保存
+    if (result.teamData && result.teamData.adminPassword) {
+        teamData.adminPassword = result.teamData.adminPassword;
+    }
+    
+    // 選手データを取得
+    if (result.players) {
+        result.players.forEach(function(serverPlayer) {
+            serverPlayer._localNew = false;
+            
+            const local = players.find(function(p) { return p.id === serverPlayer.id; });
+            if (!local) {
+                players.push(serverPlayer);
+                addedCount++;
+            } else {
+                local._localNew = false;
+            }
+        });
+    }
                     
                    // 試合データを取得してpersonalGamesに変換
 if (result.games) {
