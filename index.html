@@ -216,6 +216,13 @@
             font-weight: bold;
         }
 
+        .stats-display .fraction {
+            font-size: 0.9em;
+            opacity: 0.85;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+
         .save-btn, .primary-btn {
             width: 100%;
             padding: 18px;
@@ -904,14 +911,17 @@
                         <div class="stats-display">
                             <h3>2P成功率</h3>
                             <div class="percentage" id="twoPointPercentage">0%</div>
+                            <div class="fraction" id="twoPointFraction">(0/0)</div>
                         </div>
                         <div class="stats-display">
                             <h3>3P成功率</h3>
                             <div class="percentage" id="threePointPercentage">0%</div>
+                            <div class="fraction" id="threePointFraction">(0/0)</div>
                         </div>
                         <div class="stats-display">
                             <h3>FT成功率</h3>
                             <div class="percentage" id="freeThrowPercentage">0%</div>
+                            <div class="fraction" id="freeThrowFraction">(0/0)</div>
                         </div>
                         <div class="stats-display">
                             <h3>総得点</h3>
@@ -2473,8 +2483,12 @@ async function syncAll() {
             document.getElementById('threePointPercentage').textContent = threeP + '%';
             document.getElementById('freeThrowPercentage').textContent = ft + '%';
             document.getElementById('totalPoints').textContent = totalPoints;
+            
+            // 分数を表示
+            document.getElementById('twoPointFraction').textContent = '(' + stats.twoPointsMade + '/' + stats.twoPointsAttempted + ')';
+            document.getElementById('threePointFraction').textContent = '(' + stats.threePointsMade + '/' + stats.threePointsAttempted + ')';
+            document.getElementById('freeThrowFraction').textContent = '(' + stats.freeThrowsMade + '/' + stats.freeThrowsAttempted + ')';
         }
-
         function savePersonalGame() {
             const date = document.getElementById('gameDate').value;
             if (!date) {
