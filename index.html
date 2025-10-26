@@ -1571,28 +1571,35 @@
         }
 
         function displayPlayHistory() {
-            const histEl = document.getElementById('playHistory');
-            
-            if (currentTeamGame.plays.length === 0) {
-                histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
-                return;
-            }
-            
-            const recentPlays = currentTeamGame.plays.slice().reverse().slice(0, 10);
-            histEl.innerHTML = '<div style="margin-bottom: 10px; font-size: 0.9em; color: #666; font-weight: bold;">最新のプレイ（最大10件） - タップで削除</div>' +
-                recentPlays.map(function(play) {
-                    const p = players.find(function(pl) {
-                        return pl.id === play.playerId;
-                    });
-                    return '<div class="play-item">' +
-                        '<div>' +
-                        '<strong>' + play.period + 'Q | #' + p.number + ' ' + p.name + '</strong>' +
-                        '<div style="font-size: 0.85em; color: #666; margin-top: 2px;">' + getPlayLabel(play.playType) + '</div>' +
-                        '</div>' +
-                        '<button class="undo-btn" onclick="deletePlay(' + play.timestamp + ')">削除</button>' +
-                        '</div>';
-                }).join('');
-        }
+    const histEl = document.getElementById('playHistory');
+    
+    // ========== 追加：存在チェック ==========
+    if (!currentTeamGame || !currentTeamGame.plays) {
+        histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
+        return;
+    }
+    // ========================================
+    
+    if (currentTeamGame.plays.length === 0) {
+        histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
+        return;
+    }
+    
+    const recentPlays = currentTeamGame.plays.slice().reverse().slice(0, 10);
+    histEl.innerHTML = '<div style="margin-bottom: 10px; font-size: 0.9em; color: #666; font-weight: bold;">最新のプレイ（最大10件） - タップで削除</div>' +
+        recentPlays.map(function(play) {
+            const p = players.find(function(pl) {
+                return pl.id === play.playerId;
+            });
+            return '<div class="play-item">' +
+                '<div>' +
+                '<strong>' + play.period + 'Q | #' + p.number + ' ' + p.name + '</strong>' +
+                '<div style="font-size: 0.85em; color: #666; margin-top: 2px;">' + getPlayLabel(play.playType) + '</div>' +
+                '</div>' +
+                '<button class="undo-btn" onclick="deletePlay(' + play.timestamp + ')">削除</button>' +
+                '</div>';
+        }).join('');
+}
 
         function updateTeamStats() {
             const el = document.getElementById('teamStats');
