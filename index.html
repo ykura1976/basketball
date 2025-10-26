@@ -1270,12 +1270,12 @@
                         <div class="score-input-container">
                             <div class="score-input-box">
                                 <label>自チーム</label>
-                                <input type="number" id="ourScoreQ1" min="0" max="99" value="0" onchange="updateQuarterScore(1, 'our')">
+                                <input type="number" id="ourScoreInput" min="0" max="99" value="0" onchange="updateQuarterScore(currentPeriod, 'our')">
                             </div>
                             <div class="score-vs">-</div>
                             <div class="score-input-box">
                                 <label>相手</label>
-                                <input type="number" id="oppScoreQ1" min="0" max="99" value="0" onchange="updateQuarterScore(1, 'opp')">
+                                <input type="number" id="oppScoreInput" min="0" max="99" value="0" onchange="updateQuarterScore(currentPeriod, 'opp')">
                             </div>
                         </div>
                     </div>
@@ -1594,21 +1594,27 @@
                 }
             }
             
-            // スコア入力欄のIDを更新
-            document.getElementById('ourScoreQ1').id = 'ourScoreQ' + period;
-            document.getElementById('oppScoreQ1').id = 'oppScoreQ' + period;
+            // スコア入力欄の値を更新（IDは固定）
+            const ourScoreInput = document.querySelector('.score-input-container input[id^="ourScore"]');
+            const oppScoreInput = document.querySelector('.score-input-container input[id^="oppScore"]');
             
-            // 現在のクォーターのスコアを表示
-            if (currentTeamGame && currentTeamGame.scores) {
-                document.getElementById('ourScoreQ' + period).value = currentTeamGame.scores.our['q' + period] || 0;
-                document.getElementById('oppScoreQ' + period).value = currentTeamGame.scores.opp['q' + period] || 0;
+            if (ourScoreInput && oppScoreInput) {
+                // onchangeイベントを設定し直し
+                ourScoreInput.onchange = function() { updateQuarterScore(period, 'our'); };
+                oppScoreInput.onchange = function() { updateQuarterScore(period, 'opp'); };
+                
+                // 現在のクォーターのスコアを表示
+                if (currentTeamGame && currentTeamGame.scores) {
+                    ourScoreInput.value = currentTeamGame.scores.our['q' + period] || 0;
+                    oppScoreInput.value = currentTeamGame.scores.opp['q' + period] || 0;
+                }
             }
         }
 
         function updateQuarterScore(quarter, team) {
             if (!currentTeamGame) return;
             
-            const inputId = team === 'our' ? 'ourScoreQ' + quarter : 'oppScoreQ' + quarter;
+            const inputId = team === 'our' ? 'ourScoreInput' : 'oppScoreInput';
             const value = parseInt(document.getElementById(inputId).value) || 0;
             
             currentTeamGame.scores[team]['q' + quarter] = value;
@@ -1882,6 +1888,7 @@
                 opponent: currentTeamGame.opponent,
                 plays: currentTeamGame.plays.slice(), // コピーを作成
                 playerStats: JSON.parse(JSON.stringify(currentTeamGame.playerStats)), // 深いコピー
+                scores: JSON.parse(JSON.stringify(currentTeamGame.scores)), // スコアデータも保存
                 currentPeriod: currentPeriod, // 現在のピリオドも保存
                 savedAt: new Date().toISOString() // 保存日時
             };
@@ -1920,7 +1927,11 @@
                 date: draftTeamGame.date,
                 opponent: draftTeamGame.opponent,
                 plays: draftTeamGame.plays.slice(),
-                playerStats: JSON.parse(JSON.stringify(draftTeamGame.playerStats))
+                playerStats: JSON.parse(JSON.stringify(draftTeamGame.playerStats)),
+                scores: draftTeamGame.scores ? JSON.parse(JSON.stringify(draftTeamGame.scores)) : {
+                    our: { q1: 0, q2: 0, q3: 0, q4: 0 },
+                    opp: { q1: 0, q2: 0, q3: 0, q4: 0 }
+                }
             };
             
             // ピリオドも復元
