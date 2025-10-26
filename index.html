@@ -65,7 +65,8 @@
         }
 
         .mode-switch {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
             margin-bottom: 20px;
         }
@@ -804,8 +805,9 @@
         </div>
 
         <div class="mode-switch">
-            <button class="mode-btn active" onclick="switchMode('personal')">👤 個人</button>
-            <button class="mode-btn" onclick="switchMode('team')">⚡ チーム</button>
+           <button class="mode-btn active" onclick="switchMode('personal')">👤 個人</button>
+           <button class="mode-btn" onclick="switchMode('team')">⚡ チーム</button>
+           <button class="mode-btn" onclick="switchMode('settings')">⚙️ 設定</button>
         </div>
 
         <div id="personalMode">
@@ -814,7 +816,6 @@
                 <button class="tab" onclick="switchTab('list')">📊 履歴</button>
                 <button class="tab" onclick="switchTab('ranking')">🏆 ランキング</button>
                 <button class="tab" onclick="switchTab('graph')">📈 グラフ</button>
-                <button class="tab" onclick="switchTab('settings')">⚙️ 設定</button>
             </div>
 
             <div id="inputTab" class="tab-content active">
@@ -1033,7 +1034,9 @@
                 </div>
             </div>
 
-            <div id="settingsTab" class="tab-content">
+            
+        </div>
+        <div id="settingsMode" style="display: none;">
                 <div class="card">
                     <h2 style="margin-bottom: 20px;">🔗 チーム連携</h2>
                     <div id="teamStatus"></div>
@@ -1102,8 +1105,6 @@
                     
                 </div>
             </div>
-        </div>
-
         <div id="teamMode" style="display: none;">
             <div class="tab-bar">
                 <button class="tab active" onclick="switchTeamTab('record')">⚡ 記録</button>
@@ -2375,28 +2376,38 @@ async function syncAll() {
         document.getElementById('teamGameDate').valueAsDate = new Date();
 
         function switchMode(mode) {
-            currentMode = mode;
+           currentMode = mode;
+            
+            // すべてのボタンのアクティブ状態をリセット
             document.querySelectorAll('.mode-btn').forEach(function(btn) {
-                btn.classList.remove('active');
-                btn.classList.remove('team-mode');
-            });
+               btn.classList.remove('active');
+               btn.classList.remove('team-mode');
+           });
             
-            document.body.classList.remove('personal-mode', 'team-mode');
+            // 背景色をリセット
+           document.body.classList.remove('personal-mode', 'team-mode');
+           
+            // すべてのモードを非表示
+            document.getElementById('personalMode').style.display = 'none';
+            document.getElementById('teamMode').style.display = 'none';
+            document.getElementById('settingsMode').style.display = 'none';
             
-            if (mode === 'personal') {
+            // 選択されたモードを表示
+           if (mode === 'personal') {
                 document.querySelector('.mode-btn:nth-child(1)').classList.add('active');
                 document.getElementById('personalMode').style.display = 'block';
-                document.getElementById('teamMode').style.display = 'none';
                 document.body.classList.add('personal-mode');
                 displayGames();
             } else if (mode === 'team') {
                 const teamBtn = document.querySelector('.mode-btn:nth-child(2)');
                 teamBtn.classList.add('active');
                 teamBtn.classList.add('team-mode');
-                document.getElementById('personalMode').style.display = 'none';
                 document.getElementById('teamMode').style.display = 'block';
                 document.body.classList.add('team-mode');
-            }
+            } else if (mode === 'settings') {
+                document.querySelector('.mode-btn:nth-child(3)').classList.add('active');
+                document.getElementById('settingsMode').style.display = 'block';
+           }
         }
         
         function switchTab(tab) {
