@@ -2944,16 +2944,16 @@ async function syncAll() {
     });
 }
                     
-                    // 試合データを取得してpersonalGamesに変換
-                    if (result.games) {
-                        result.games.forEach(function(game) {
-                            // この試合がすでに存在するかチェック
-                            const gameExists = teamGames.some(function(g) {
-                                return g.id === game.id;
-                            });
-                            
-                            if (!gameExists) {
-                                teamGames.push(game);
+                   // 試合データを取得してpersonalGamesに変換
+if (result.games) {
+    // サーバーのデータで完全に上書きする
+    teamGames = [];
+    personalGames = personalGames.filter(function(g) {
+        return g.source !== 'team';
+    });
+    
+    result.games.forEach(function(game) {
+        teamGames.push(game);
                                 
                                 // 各選手のデータをpersonalGamesに追加
                                 Object.keys(game.playerStats).forEach(function(playerId) {
