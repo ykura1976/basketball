@@ -1504,18 +1504,7 @@
             }, 2000);
         }
 
-        function selectPeriod(period) {
-            currentPeriod = period;
-            for (let i = 1; i <= 4; i++) {
-                const btn = document.getElementById('period' + i);
-                if (i === period) {
-                    btn.classList.add('selected');
-                } else {
-                    btn.classList.remove('selected');
-                }
-            }
-        }
-
+        
         function startTeamGame() {
             // 途中保存データがある場合は警告
             if (draftTeamGame) {
