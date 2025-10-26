@@ -286,6 +286,12 @@
             color: #667eea;
         }
 
+        .stat-box .fraction {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 2px;
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px;
@@ -2581,9 +2587,9 @@ async function syncAll() {
                     '</div>' +
                     '<div class="game-stats">' +
                     '<div class="stat-box"><div class="label">総得点</div><div class="value">' + g.totalPoints + '点</div></div>' +
-                    '<div class="stat-box"><div class="label">2P率</div><div class="value">' + g.twoPointPercentage + '%</div></div>' +
-                    '<div class="stat-box"><div class="label">3P率</div><div class="value">' + g.threePointPercentage + '%</div></div>' +
-                    '<div class="stat-box"><div class="label">FT率</div><div class="value">' + g.freeThrowPercentage + '%</div></div>' +
+                    '<div class="stat-box"><div class="label">2P率</div><div class="value">' + g.twoPointPercentage + '%</div><div class="fraction">(' + g.twoPointsMade + '/' + g.twoPointsAttempted + ')</div></div>' +
+                    '<div class="stat-box"><div class="label">3P率</div><div class="value">' + g.threePointPercentage + '%</div><div class="fraction">(' + g.threePointsMade + '/' + g.threePointsAttempted + ')</div></div>' +
+                    '<div class="stat-box"><div class="label">FT率</div><div class="value">' + g.freeThrowPercentage + '%</div><div class="fraction">(' + g.freeThrowsMade + '/' + g.freeThrowsAttempted + ')</div></div>' +
                     '<div class="stat-box"><div class="label">リバウンド</div><div class="value">' + g.totalRebounds + '</div></div>' +
                     '<div class="stat-box"><div class="label">アシスト</div><div class="value">' + g.assists + '</div></div>' +
                     '</div>' +
