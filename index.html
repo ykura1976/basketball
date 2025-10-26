@@ -1174,7 +1174,15 @@
                 <div class="card">
                     <h2 style="margin-bottom: 15px;">試合統計</h2>
                     <div id="teamStats"></div>
-                    <button class="save-btn" style="margin-top: 20px;" onclick="saveTeamGame()">試合終了・保存</button>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                        <button class="primary-btn" style="background: #3498db;" onclick="saveDraftTeamGame()">
+                            💾 途中保存
+                        </button>
+                        <button class="save-btn" onclick="saveTeamGame()">
+                            ✅ 試合終了・保存
+                        </button>
+                    </div>
                 </div>
             </div>
      </div>
@@ -1299,6 +1307,7 @@
         };
 
         let currentTeamGame = null;
+        let draftTeamGame = null;
         let selectedPlayer = null;
         let currentPeriod = 1;
 
@@ -1324,6 +1333,7 @@
                     players = data.players || [];
                     myPlayerId = data.myPlayerId || null;
                     teamData = data.teamData || null;
+                    draftTeamGame = data.draftTeamGame || null;
                 }
             } catch (e) {
                 console.error('データ読み込みエラー:', e);
@@ -1336,7 +1346,8 @@
                 teamGames: teamGames,
                 players: players,
                 myPlayerId: myPlayerId,
-                teamData: teamData
+                teamData: teamData,
+                draftTeamGame: draftTeamGame
             };
             localStorage.setItem('basketballData', JSON.stringify(data));
             showSavedIndicator();
@@ -1363,6 +1374,13 @@
         }
 
         function startTeamGame() {
+            // 途中保存データがある場合は警告
+            if (draftTeamGame) {
+                if (!confirm('⚠️ 未完了の試合記録があります\n\n新しい試合を開始すると、途中保存データは上書きされます。\n続けますか？')) {
+                    return;
+                }
+            }
+            
             if (players.length === 0) { 
                 alert('先に選手を登録してください（設定タブ）'); 
                 return; 
@@ -1643,6 +1661,15 @@
             if (teamData) {
                 syncGamesOnly();
             }
+
+            // 途中保存データを削除（試合完了したので不要）
+            clearDraftTeamGame();
+            
+            // 警告ボックスも削除
+            const alertBox = document.getElementById('draftGameAlert');
+            if (alertBox) {
+                alertBox.remove();
+            }
             
             currentTeamGame = null;
             selectedPlayer = null;
@@ -1653,6 +1680,151 @@
             
             alert('✅ 試合記録を保存しました！\n\n全選手のデータが個人モードに反映されます。');
         }
+
+        // ========== 途中保存機能 ==========
+        function saveDraftTeamGame() {
+            if (!currentTeamGame) {
+                alert('❌ 記録中の試合がありません');
+                return;
+            }
+            
+            // 現在の試合データを途中保存用に保存
+            draftTeamGame = {
+                id: currentTeamGame.id,
+                date: currentTeamGame.date,
+                opponent: currentTeamGame.opponent,
+                plays: currentTeamGame.plays.slice(), // コピーを作成
+                playerStats: JSON.parse(JSON.stringify(currentTeamGame.playerStats)), // 深いコピー
+                currentPeriod: currentPeriod, // 現在のピリオドも保存
+                savedAt: new Date().toISOString() // 保存日時
+            };
+            
+            // データを保存
+            saveData();
+            
+            alert('✅ 途中保存しました！\n\n記録を続けるか、後から「続きから記録」で再開できます。');
+        }
+
+        // ========== 続きから記録（再開）機能 ==========
+        function resumeDraftGame() {
+            if (!draftTeamGame) {
+                alert('❌ 途中保存されたデータがありません');
+                return;
+            }
+            
+            // 確認メッセージ
+            const dateStr = new Date(draftTeamGame.date).toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            if (!confirm('📋 未完了の試合記録があります\n\n' +
+                        '日付: ' + dateStr + '\n' +
+                        '対戦相手: ' + (draftTeamGame.opponent || '未設定') + '\n' +
+                        '保存日時: ' + new Date(draftTeamGame.savedAt).toLocaleString('ja-JP') + '\n\n' +
+                        '続きから記録しますか？')) {
+                return;
+            }
+            
+            // 保存されていたデータを復元
+            currentTeamGame = {
+                id: draftTeamGame.id,
+                date: draftTeamGame.date,
+                opponent: draftTeamGame.opponent,
+                plays: draftTeamGame.plays.slice(),
+                playerStats: JSON.parse(JSON.stringify(draftTeamGame.playerStats))
+            };
+            
+            // ピリオドも復元
+            currentPeriod = draftTeamGame.currentPeriod || 1;
+            selectPeriod(currentPeriod);
+            
+            // 日付と対戦相手を画面に表示
+            document.getElementById('teamGameDate').value = draftTeamGame.date;
+            document.getElementById('teamOpponent').value = draftTeamGame.opponent || '';
+            
+            // 記録画面を表示
+            document.getElementById('teamRecording').style.display = 'block';
+            displayPlayerSelector();
+            updateTeamStats();
+            displayPlayHistory();
+            
+            alert('✅ 試合記録を再開しました！\n\n前回の続きから記録できます。');
+        }
+
+        // ========== 途中保存データの削除（試合完了時）==========
+        function clearDraftTeamGame() {
+            draftTeamGame = null;
+            saveData();
+        }
+
+        // ========== 起動時に途中保存データがあるかチェック ==========
+        function checkAndShowDraftGame() {
+            // 途中保存データがなければ何もしない
+            if (!draftTeamGame) {
+                return;
+            }
+            
+            // チーム記録タブの一番上に「続きから記録」ボタンを表示
+            const teamRecordTab = document.getElementById('teamRecordTab');
+            
+            // 既に表示されているなら何もしない
+            if (document.getElementById('draftGameAlert')) {
+                return;
+            }
+            
+            // 日付を見やすく整形
+            const dateStr = new Date(draftTeamGame.date).toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // アラートボックスを作成
+            const alertBox = document.createElement('div');
+            alertBox.id = 'draftGameAlert';
+            alertBox.className = 'card';
+            alertBox.style.background = 'linear-gradient(135deg, #ffd93d 0%, #ffb03a 100%)';
+            alertBox.style.color = '#333';
+            alertBox.style.marginBottom = '20px';
+            alertBox.innerHTML = 
+                '<div style="display: flex; align-items: center; margin-bottom: 15px;">' +
+                '<span style="font-size: 2em; margin-right: 10px;">⚠️</span>' +
+                '<h2 style="margin: 0;">未完了の試合記録があります</h2>' +
+                '</div>' +
+                '<div style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 10px; margin-bottom: 15px;">' +
+                '<div style="margin-bottom: 8px;"><strong>📅 試合日:</strong> ' + dateStr + '</div>' +
+                '<div style="margin-bottom: 8px;"><strong>🏀 対戦相手:</strong> ' + (draftTeamGame.opponent || '未設定') + '</div>' +
+                '<div><strong>💾 保存日時:</strong> ' + new Date(draftTeamGame.savedAt).toLocaleString('ja-JP') + '</div>' +
+                '</div>' +
+                '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">' +
+                '<button class="primary-btn" style="background: #2ecc71;" onclick="resumeDraftGame()">▶️ 続きから記録</button>' +
+                '<button class="primary-btn" style="background: #e74c3c;" onclick="deleteDraftGame()">🗑️ 削除して新規作成</button>' +
+                '</div>';
+            
+            // タブの最初に挿入
+            teamRecordTab.insertBefore(alertBox, teamRecordTab.firstChild);
+        }
+
+        // ========== 途中保存データを削除して新規作成 ==========
+        function deleteDraftGame() {
+            if (!confirm('⚠️ 途中保存されたデータを削除します\n\n削除すると復元できません。\n本当によろしいですか？')) {
+                return;
+            }
+            
+            clearDraftTeamGame();
+            
+            // 警告ボックスを削除
+            const alertBox = document.getElementById('draftGameAlert');
+            if (alertBox) {
+                alertBox.remove();
+            }
+            
+            alert('✅ 途中保存データを削除しました\n\n新しい試合を記録できます。');
+        }
+
+        
 
         function switchTeamTab(tab) {
             // タブボタンの切り替え
@@ -1665,6 +1837,7 @@
                 tabs[0].classList.add('active');
                 document.getElementById('teamRecordTab').style.display = 'block';
                 document.getElementById('teamHistoryTab').style.display = 'none';
+                checkAndShowDraftGame();
             } else if (tab === 'history') {
                 tabs[1].classList.add('active');
                 document.getElementById('teamRecordTab').style.display = 'none';
@@ -2891,6 +3064,7 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         displayTeamStatus();
         updatePlayerBanners();
         loadTeamData();
+        checkAndShowDraftGame();
     </script>
 </body>
 </html>
