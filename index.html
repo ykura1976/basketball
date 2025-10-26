@@ -2350,7 +2350,7 @@ async function syncAll() {
                 '<div style="font-size: 1.3em; font-weight: bold; color: #667eea; margin: 10px 0;">' + teamData.name + '</div>' +
                 '<div style="font-size: 0.9em; color: #666;">チームコード</div>' +
                 '<div class="code">' + teamData.code + '</div>' +
-                '<button class="primary-btn" style="background: ... margin-top: 15px;" onclick="syncAll()">今すぐ同期（送受信）</button>' +
+                '<button class="primary-btn" style="background: #2ecc71; margin-top: 15px;" onclick="syncAll()">今すぐ同期（送受信）</button>' +
                 '<button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="leaveTeam()">チームから退出</button>' +
                 '</div>';
         }
@@ -2522,16 +2522,19 @@ async function syncAll() {
         }
 
         function displayGames() {
-            const gameList = document.getElementById('gameList');
-            
-            const myGames = personalGames.filter(function(g) {
-                return !g.playerId || g.playerId === myPlayerId;
-            });
-            
-            if (myGames.length === 0) {
-                gameList.innerHTML = '<div class="empty-state"><div class="icon">🏀</div><h3>まだ記録がありません</h3><p>最初の試合を記録しましょう！</p></div>';
-                return;
-            }
+    const gameList = document.getElementById('gameList');
+    
+    // myPlayerIdが設定されていない場合は全データを表示
+    const myGames = myPlayerId 
+        ? personalGames.filter(function(g) {
+            return !g.playerId || g.playerId === myPlayerId;
+          })
+        : personalGames;
+    
+    if (myGames.length === 0) {
+        gameList.innerHTML = '<div class="empty-state"><div class="icon">🏀</div><h3>まだ記録がありません</h3><p>最初の試合を記録しましょう！</p></div>';
+        return;
+    }
 
             gameList.innerHTML = myGames.map(function(g) {
                 const dateObj = new Date(g.date);
@@ -2557,9 +2560,11 @@ async function syncAll() {
         }
 
         function displayRankings() {
-            const myGames = personalGames.filter(function(g) {
-                return !g.playerId || g.playerId === myPlayerId;
-            });
+            const myGames = myPlayerId 
+    ? personalGames.filter(function(g) {
+        return !g.playerId || g.playerId === myPlayerId;
+      })
+    : personalGames;
             
             if (myGames.length === 0) {
                 document.getElementById('topPoints').innerHTML = '<p style="text-align: center; color: #999;">記録がありません</p>';
@@ -2592,9 +2597,11 @@ async function syncAll() {
         }
 
         function updateCharts() {
-            const myGames = personalGames.filter(function(g) {
-                return !g.playerId || g.playerId === myPlayerId;
-            });
+            const myGames = myPlayerId 
+    ? personalGames.filter(function(g) {
+        return !g.playerId || g.playerId === myPlayerId;
+      })
+    : personalGames;
             
             if (myGames.length === 0) return;
 
