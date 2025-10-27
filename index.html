@@ -2881,16 +2881,13 @@ async function syncGamesOnly() {
         // ▼▼▼ ここから追加：送受信まとめて行う ▼▼▼
 async function syncAll() {
   if (!teamData) { alert('チームに参加していません'); return; }
-  showSyncIndicator('syncing', '送受信中…');
+  showSyncIndicator('syncing', '同期中…');
 
   try {
-    // 1) まず送る（試合のみ）
-    await syncWithServer({ pushPlayers: false, pushGames: true });
-
-    // 2) 次に受け取る（最新を取り込む）
+    // 1) まずサーバーから最新データを取得（受信優先）
     await loadTeamData();
 
-    // 3) 画面を最新化
+    // 2) 画面を最新化
     displayPlayers();
     updateMyPlayerSelect();
     displayGames();
