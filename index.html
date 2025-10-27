@@ -2027,7 +2027,8 @@
                         threePointPercentage: st.threePointsAttempted > 0 ? ((st.threePointsMade / st.threePointsAttempted) * 100).toFixed(1) : '0',
                         freeThrowPercentage: st.freeThrowsAttempted > 0 ? ((st.freeThrowsMade / st.freeThrowsAttempted) * 100).toFixed(1) : '0',
                         totalPoints: totalPts,
-                        source: 'team'
+                        source: 'team',
+                        teamGameId: currentTeamGame.id
                     };
 
                     personalGames.unshift(personalGame);
@@ -2667,9 +2668,9 @@
     // ローカルのチームデータから削除
     teamGames.splice(currentEditingGameIndex, 1);
     
-    // 個人データからも削除
-    personalGames = personalGames.filter(function(g) {
-    return !(g.source === 'team' && g.date === game.date && g.opponent === game.opponent);
+    // 個人データからも削除(試合IDで確実に削除)
+personalGames = personalGames.filter(function(g) {
+    return !(g.source === 'team' && g.teamGameId === game.id);
 });
     
     saveData();
@@ -3022,7 +3023,8 @@ if (result.players) {
                             threePointPercentage: stats.threePointsAttempted > 0 ? ((stats.threePointsMade / stats.threePointsAttempted) * 100).toFixed(1) : '0',
                             freeThrowPercentage: stats.freeThrowsAttempted > 0 ? ((stats.freeThrowsMade / stats.freeThrowsAttempted) * 100).toFixed(1) : '0',
                             totalPoints: totalPts,
-                            source: 'team'
+                            source: 'team',
+                            teamGameId: game.id  // ← この行を追加
                         };
                         
                         personalGames.unshift(personalGame);
