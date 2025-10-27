@@ -1659,6 +1659,20 @@
                     myPlayerId = data.myPlayerId || null;
                     teamData = data.teamData || null;
                     draftTeamGame = data.draftTeamGame || null;
+                    // ▼▼▼ ここから追加 ▼▼▼
+                    // myPlayerIdが存在しない選手を指している場合、修正する
+                    if (myPlayerId && players.length > 0) {
+                        const playerExists = players.find(function(p) {
+                            return p.id === myPlayerId;
+                        });
+                
+                        if (!playerExists) {
+                            console.warn('選択中の選手が見つかりません。最初の選手を自動選択します。');
+                            myPlayerId = players[0].id;
+                            saveData();
+                        }
+                    }
+                    // ▲▲▲ ここまで追加 ▲▲▲
                 }
             } catch (e) {
                 console.error('データ読み込みエラー:', e);
