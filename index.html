@@ -2607,53 +2607,53 @@
         }
 
         function updatePersonalGamesFromTeamGame(teamGame) {
-            // この試合に関連する個人データを全て削除
-            personalGames = personalGames.filter(function(g) {
-                return g.source !== 'team' || g.date !== teamGame.date || g.opponent !== teamGame.opponent;
-            });
-            
-            // 新しい個人データを作成
-            Object.keys(teamGame.playerStats).forEach(function(playerId) {
-                const stats = teamGame.playerStats[playerId];
-                const totalReb = stats.offensiveRebounds + stats.defensiveRebounds;
-                const totalPts = (stats.twoPointsMade * 2) + (stats.threePointsMade * 3) + stats.freeThrowsMade;
-                
-                const personalGame = {
-                    id: Date.now() + Math.random(),
-                    date: teamGame.date,
-                    opponent: teamGame.opponent,
-                    playTime: 0,
-                    playerId: playerId,
-                    twoPointsMade: stats.twoPointsMade,
-                    twoPointsAttempted: stats.twoPointsAttempted,
-                    threePointsMade: stats.threePointsMade,
-                    threePointsAttempted: stats.threePointsAttempted,
-                    freeThrowsMade: stats.freeThrowsMade,
-                    freeThrowsAttempted: stats.freeThrowsAttempted,
-                    offensiveRebounds: stats.offensiveRebounds,
-                    defensiveRebounds: stats.defensiveRebounds,
-                    assists: stats.assists,
-                    steals: stats.steals,
-                    blocks: stats.blocks,
-                    turnovers: stats.turnovers,
-                    fouls: stats.fouls,
-                    totalRebounds: totalReb,
-                    twoPointPercentage: stats.twoPointsAttempted > 0 ? ((stats.twoPointsMade / stats.twoPointsAttempted) * 100).toFixed(1) : '0',
-                    threePointPercentage: stats.threePointsAttempted > 0 ? ((stats.threePointsMade / stats.threePointsAttempted) * 100).toFixed(1) : '0',
-                    freeThrowPercentage: stats.freeThrowsAttempted > 0 ? ((stats.freeThrowsMade / stats.freeThrowsAttempted) * 100).toFixed(1) : '0',
-                    totalPoints: totalPts,
-                    source: 'team'
-                };
-                
-                personalGames.unshift(personalGame);
-            });
-            
-            // 履歴やグラフを更新
-            displayGames();
-            displayRankings();
-            updateCharts();
-        }
-
+    // この試合に関連する個人データを全て削除(試合IDで確実に削除)
+    personalGames = personalGames.filter(function(g) {
+        return !(g.source === 'team' && g.teamGameId === teamGame.id);
+    });
+    
+    // 新しい個人データを作成
+    Object.keys(teamGame.playerStats).forEach(function(playerId) {
+        const stats = teamGame.playerStats[playerId];
+        const totalReb = stats.offensiveRebounds + stats.defensiveRebounds;
+        const totalPts = (stats.twoPointsMade * 2) + (stats.threePointsMade * 3) + stats.freeThrowsMade;
+        
+        const personalGame = {
+            id: Date.now() + Math.random(),
+            date: teamGame.date,
+            opponent: teamGame.opponent,
+            playTime: 0,
+            playerId: playerId,
+            twoPointsMade: stats.twoPointsMade,
+            twoPointsAttempted: stats.twoPointsAttempted,
+            threePointsMade: stats.threePointsMade,
+            threePointsAttempted: stats.threePointsAttempted,
+            freeThrowsMade: stats.freeThrowsMade,
+            freeThrowsAttempted: stats.freeThrowsAttempted,
+            offensiveRebounds: stats.offensiveRebounds,
+            defensiveRebounds: stats.defensiveRebounds,
+            assists: stats.assists,
+            steals: stats.steals,
+            blocks: stats.blocks,
+            turnovers: stats.turnovers,
+            fouls: stats.fouls,
+            totalRebounds: totalReb,
+            twoPointPercentage: stats.twoPointsAttempted > 0 ? ((stats.twoPointsMade / stats.twoPointsAttempted) * 100).toFixed(1) : '0',
+            threePointPercentage: stats.threePointsAttempted > 0 ? ((stats.threePointsMade / stats.threePointsAttempted) * 100).toFixed(1) : '0',
+            freeThrowPercentage: stats.freeThrowsAttempted > 0 ? ((stats.freeThrowsMade / stats.freeThrowsAttempted) * 100).toFixed(1) : '0',
+            totalPoints: totalPts,
+            source: 'team',
+            teamGameId: teamGame.id  // ← ★ここが重要!チームゲームIDを保存
+        };
+        
+        personalGames.unshift(personalGame);
+    });
+    
+    // 履歴やグラフを更新
+    displayGames();
+    displayRankings();
+    updateCharts();
+}
         async function deleteGame() {
     if (currentEditingGameIndex === null) return;
     
@@ -2669,8 +2669,8 @@
     
     // 個人データからも削除
     personalGames = personalGames.filter(function(g) {
-        return !(g.source === 'team' && g.date === game.date && g.opponent === game.opponent);
-    });
+    return !(g.source === 'team' && g.date === game.date && g.opponent === game.opponent);
+});
     
     saveData();
     
