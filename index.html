@@ -2929,9 +2929,10 @@ async function syncAll() {
             let addedCount = 0;
             
             // 管理者パスワードをteamDataに保存
-            if (result.teamData && result.teamData.adminPassword) {
-                teamData.adminPassword = result.teamData.adminPassword;
-            }
+if (result.teamData && result.teamData.adminPassword) {
+    teamData.adminPassword = result.teamData.adminPassword;
+    saveData();  // すぐに保存
+}
             
             // 選手データを取得
             if (result.players) {
