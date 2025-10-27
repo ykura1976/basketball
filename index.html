@@ -2931,20 +2931,15 @@ if (result.teamData && result.teamData.adminPassword) {
     saveData();  // すぐに保存
 }
             
-            // 選手データを取得
-            if (result.players) {
-                result.players.forEach(function(serverPlayer) {
-                    serverPlayer._localNew = false;
-                    
-                    const local = players.find(function(p) { return p.id === serverPlayer.id; });
-                    if (!local) {
-                        players.push(serverPlayer);
-                        addedCount++;
-                    } else {
-                        local._localNew = false;
-                    }
-                });
-            }
+            // 選手データを取得（サーバーのデータで完全に上書き）
+if (result.players) {
+    // サーバーのデータを信頼して完全に置き換える
+    players = result.players.map(function(serverPlayer) {
+        serverPlayer._localNew = false;
+        return serverPlayer;
+    });
+    addedCount = players.length;
+}
             
             // 試合データを取得してpersonalGamesに変換
             if (result.games) {
