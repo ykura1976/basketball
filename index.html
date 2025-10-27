@@ -2640,44 +2640,70 @@
             updateCharts();
         }
 
-        function deleteGame() {
-            if (currentEditingGameIndex === null) return;
+        async function deleteGame() {
+    if (currentEditingGameIndex === null) return;
+    
+    const game = teamGames[currentEditingGameIndex];
+    const dateStr = new Date(game.date).toLocaleDateString('ja-JP');
+    
+    if (!confirm('⚠️ 本当にこの試合を削除しますか？\n\n' + dateStr + ' vs ' + game.opponent + '\n\nこの操作は取り消せません！')) {
+        return;
+    }
+    
+    // ローカルのチームデータから削除
+    teamGames.splice(currentEditingGameIndex, 1);
+    
+    // 個人データからも削除
+    personalGames = personalGames.filter(function(g) {
+        return !(g.source === 'team' && g.date === game.date && g.opponent === game.opponent);
+    });
+    
+    saveData();
+    
+    // サーバーからも削除
+    if (teamData && teamData.adminPassword) {
+        try {
+            showSyncIndicator('syncing', 'サーバーから削除中...');
             
-            const game = teamGames[currentEditingGameIndex];
-            const dateStr = new Date(game.date).toLocaleDateString('ja-JP');
-            
-            if (!confirm('⚠️ 本当にこの試合を削除しますか？\n\n' + dateStr + ' vs ' + game.opponent + '\n\nこの操作は取り消せません！')) {
-                return;
-            }
-            
-            // チームデータから削除
-            teamGames.splice(currentEditingGameIndex, 1);
-            
-            // 個人データからも削除
-            personalGames = personalGames.filter(function(g) {
-                return !(g.source === 'team' && g.date === game.date && g.opponent === game.opponent);
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain',
+                },
+                body: JSON.stringify({
+                    action: 'deleteGame',
+                    teamCode: teamData.code,
+                    gameId: game.id,
+                    adminPassword: teamData.adminPassword
+                })
             });
             
-            // データを保存
-            saveData();
+            const result = await response.json();
             
-            // 同期
-            if (teamData) {
-                syncGamesOnly();
+            if (result.success) {
+                showSyncIndicator('success', '削除完了！');
+            } else {
+                showSyncIndicator('error', result.error || '削除失敗');
+                alert('⚠️ サーバーからの削除に失敗しました：' + (result.error || '不明なエラー'));
             }
-            
-            // 表示を更新
-            displayTeamGamesHistory();
-            displayGames();
-            displayRankings();
-            updateCharts();
-            
-            // モーダルを閉じる
-            closeModal('editGameModal');
-            
-            alert('✅ 試合記録を削除しました');
+        } catch (error) {
+            console.error('削除エラー:', error);
+            showSyncIndicator('error', '削除失敗');
+            alert('⚠️ エラーが発生しました：' + error.message);
         }
-
+    }
+    
+    // 画面を更新
+    displayGames();
+    displayRankings();
+    updateCharts();
+    if (typeof displayTeamGamesHistory === 'function') {
+        displayTeamGamesHistory();
+    }
+    
+    closeModal('editGameModal');
+    currentEditingGameIndex = null;
+}
 
         
         function showJoinTeamModal() {
