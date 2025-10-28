@@ -3559,26 +3559,6 @@ if (teamData) {
                     if (bannerEl && nameEl) {
                         bannerEl.style.display = 'flex';
                         nameEl.textContent = playerText;
-                        
-                        // ========== クリック機能を追加 ==========
-                        // クリックできるようにする
-                        bannerEl.style.cursor = 'pointer';
-                        bannerEl.style.transition = 'all 0.3s';
-                        
-                        // クリックイベントを設定
-                        bannerEl.onclick = showPlayerSelectDialog;
-                        
-                        // マウスを乗せたときの効果
-                        bannerEl.onmouseenter = function() {
-                            this.style.transform = 'scale(1.02)';
-                            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-                        };
-                        
-                        bannerEl.onmouseleave = function() {
-                            this.style.transform = 'scale(1)';
-                            this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                        };
-                        // ========== クリック機能ここまで ==========
                     }
                 });
             } else {
@@ -3591,7 +3571,6 @@ if (teamData) {
                 });
             }
         }
-
         / ========== 選手選択ダイアログを表示する関数 ==========
         function showPlayerSelectDialog() {
             if (players.length === 0) {
