@@ -3560,10 +3560,12 @@ if (teamData) {
                         bannerEl.style.display = 'flex';
                         nameEl.textContent = playerText;
                         
-                        // クリック機能を追加
+                        // クリック機能を追加（テスト版）
                         bannerEl.style.cursor = 'pointer';
                         bannerEl.style.transition = 'all 0.3s';
-                        bannerEl.onclick = showPlayerSelectDialog;
+                        bannerEl.onclick = function() {
+                            alert('バナーがクリックされました！');
+                        };
                         
                         // マウスを乗せたときの効果
                         bannerEl.onmouseenter = function() {
