@@ -1179,6 +1179,32 @@
         .confirm-btn:active {
             transform: translateY(0);
         }
+        /* ========== チーム名表示のスタイル ========== */
+        .team-names {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+        
+        .our-team-name {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .vs-label {
+            color: #999;
+            font-size: 0.85em;
+            font-weight: normal;
+        }
+        
+        .opp-team-name {
+            color: #e74c3c;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -2442,9 +2468,22 @@
             const isWin = ourTotal > oppTotal;
             const outcome = ourTotal === oppTotal ? '引き分け' : (isWin ? '勝利' : '敗北');
             
+            // チーム名を取得
+            const ourTeamName = teamData ? teamData.name : '自チーム';
+            const oppTeamName = game.opponent || '対戦相手';
+            
             let html = '<div class="game-result' + (isWin ? '' : ' loss') + '">';
             html += '<div class="result-label">試合結果</div>';
             html += '<div class="result-score">' + ourTotal + ' - ' + oppTotal + '</div>';
+            
+            // ========== チーム名を追加 ==========
+            html += '<div class="team-names">';
+            html += '<span class="our-team-name">' + ourTeamName + '</span>';
+            html += '<span class="vs-label">VS</span>';
+            html += '<span class="opp-team-name">' + oppTeamName + '</span>';
+            html += '</div>';
+            // ===================================
+            
             html += '<div class="result-outcome">' + outcome + '</div>';
             html += '</div>';
             
