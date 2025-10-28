@@ -655,7 +655,8 @@
 
         .game-history-item .game-date {
             font-size: 1em;
-            opacity: 0.9;
+            color: #333;
+            font-weight: 600;
             margin-bottom: 5px;
         }
 
@@ -2386,7 +2387,17 @@
             
             let html = '<div class="card"><h2 style="margin-bottom: 20px;">📊 試合履歴</h2></div>';
             
-            teamGames.forEach(function(game, index) {
+            // ========== 最新の試合が上に来るようにソート ==========
+            const sortedGames = teamGames.slice().sort(function(a, b) {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateB - dateA; // 新しい順（降順）
+            });
+            // ====================================================
+            
+            sortedGames.forEach(function(game, index) {
+                // 元のインデックスを取得（編集・削除用）
+                const originalIndex = teamGames.indexOf(game);
                 const dateObj = new Date(game.date);
                 const dateStr = dateObj.toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'});
                 
@@ -2403,14 +2414,14 @@
                         '</div>';
                 }
                 
-                html += '<div class="game-history-item" onclick="toggleGameDetail(' + index + ')">' +
+                html += '<div class="game-history-item" onclick="toggleGameDetail(' + originalIndex + ')">' +
                     '<div class="game-date">' + dateStr + '</div>' +
                     '<div class="game-opponent">vs ' + (game.opponent || '対戦相手なし') + '</div>' +
                     scoreHtml +
                     '</div>' +
-                    '<div class="game-detail" id="gameDetail' + index + '">' +
+                    '<div class="game-detail" id="gameDetail' + originalIndex + '">' +
                     generateScoreDetail(game) +
-                    '<button class="edit-game-btn" onclick="event.stopPropagation(); openEditGameModal(' + index + ')">🔒 試合記録を編集（管理者のみ）</button>' +
+                    '<button class="edit-game-btn" onclick="event.stopPropagation(); openEditGameModal(' + originalIndex + ')">📝 試合記録を編集（管理者のみ）</button>' +
                     generateGameRankings(game) +
                     '</div>';
             });
