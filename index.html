@@ -1032,6 +1032,152 @@
         .current-player-banner .player-name {
             font-size: 1.2em;
         }
+         /* ========== 選手選択モーダルのスタイル ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.3em;
+            color: #333;
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2em;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .player-select-dropdown {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .player-select-dropdown:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .player-select-dropdown option {
+            padding: 10px;
+            font-size: 1em;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            padding: 20px 25px;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cancel-btn {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .confirm-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .confirm-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -3590,40 +3736,66 @@ if (teamData) {
         
         // 選手選択ダイアログを表示する関数
         function showPlayerSelectDialog() {
-            if (players.length === 0) {
+            if (!players || players.length === 0) {
                 alert('選手が登録されていません。\n先に「選手管理」で選手を追加してください。');
                 return;
             }
             
-            // 選手一覧を作成
-            let message = '🏀 個人モードで表示する選手を選んでください\n\n';
-            message += '【登録されている選手】\n';
-            players.forEach(function(p, index) {
-                const mark = (p.id === myPlayerId) ? '★ ' : '   ';
-                message += mark + (index + 1) + '. ' + p.name + ' #' + p.number + '\n';
+            // ドロップダウンに選手を追加
+            const dropdown = document.getElementById('playerSelectDropdown');
+            dropdown.innerHTML = '<option value="">選手を選択...</option>';
+            
+            players.forEach(function(p) {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = p.name + ' #' + p.number;
+                
+                // 現在選択中の選手にマークを付ける
+                if (p.id === myPlayerId) {
+                    option.textContent = '★ ' + option.textContent;
+                    option.selected = true;
+                }
+                
+                dropdown.appendChild(option);
             });
-            message += '\n番号を入力してください（1〜' + players.length + '）:';
             
-            // 番号を入力してもらう
-            const input = prompt(message);
+            // モーダルを表示
+            const modal = document.getElementById('playerSelectModal');
+            modal.style.display = 'flex';
+        }
+        
+        // ダイアログを閉じる関数
+        function closePlayerSelectDialog() {
+            const modal = document.getElementById('playerSelectModal');
+            modal.style.display = 'none';
+        }
+        
+        // 選手選択を確定する関数
+        function confirmPlayerSelection() {
+            const dropdown = document.getElementById('playerSelectDropdown');
+            const selectedPlayerId = dropdown.value;
             
-            // キャンセルした場合
-            if (input === null) {
+            if (!selectedPlayerId || selectedPlayerId === '') {
+                alert('❌ 選手を選択してください');
                 return;
             }
             
-            // 番号をチェック
-            const selectedIndex = parseInt(input) - 1;
+            // 選択した選手を探す
+            const selectedPlayer = players.find(function(p) {
+                return p.id === selectedPlayerId;
+            });
             
-            if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= players.length) {
-                alert('❌ 正しい番号を入力してください');
+            if (!selectedPlayer) {
+                alert('❌ 選手が見つかりませんでした');
                 return;
             }
             
-            // 選択した選手に切り替え
-            const selectedPlayer = players[selectedIndex];
+            // 選手を切り替え
             myPlayerId = selectedPlayer.id;
             saveData();
+            
+            // ダイアログを閉じる
+            closePlayerSelectDialog();
             
             // 画面を更新
             updateDisplay();
@@ -3634,7 +3806,6 @@ if (teamData) {
             
             alert('✅ ' + selectedPlayer.name + ' #' + selectedPlayer.number + ' を選択しました！');
         }
-
         function updateMyPlayerSelect() {
             const sel = document.getElementById('myPlayerSelect');
             sel.innerHTML = '<option value="">選手を選択してください</option>';
@@ -3854,6 +4025,34 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         updatePlayerBanners();
         loadTeamData();
         checkAndShowDraftGame();
+        
+        // ========== 選手選択ダイアログのHTML作成 ==========
+        function createPlayerSelectDialog() {
+            const dialogHTML = `
+                <div id="playerSelectModal" class="modal-overlay" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>🏀 選手を選択</h2>
+                            <button class="modal-close" onclick="closePlayerSelectDialog()">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <p style="margin-bottom: 15px; color: #666;">個人モードで表示する選手を選んでください</p>
+                            <select id="playerSelectDropdown" class="player-select-dropdown">
+                                <option value="">選手を選択...</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="modal-btn cancel-btn" onclick="closePlayerSelectDialog()">キャンセル</button>
+                            <button class="modal-btn confirm-btn" onclick="confirmPlayerSelection()">選択</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', dialogHTML);
+        }
+        
+        // ページ読み込み時にダイアログを作成
+        createPlayerSelectDialog();
     </script>
 </body>
 </html>
