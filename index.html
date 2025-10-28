@@ -3559,6 +3559,22 @@ if (teamData) {
                     if (bannerEl && nameEl) {
                         bannerEl.style.display = 'flex';
                         nameEl.textContent = playerText;
+                        
+                        // クリック機能を追加
+                        bannerEl.style.cursor = 'pointer';
+                        bannerEl.style.transition = 'all 0.3s';
+                        bannerEl.onclick = showPlayerSelectDialog;
+                        
+                        // マウスを乗せたときの効果
+                        bannerEl.onmouseenter = function() {
+                            this.style.transform = 'scale(1.02)';
+                            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                        };
+                        
+                        bannerEl.onmouseleave = function() {
+                            this.style.transform = 'scale(1)';
+                            this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                        };
                     }
                 });
             } else {
@@ -3572,6 +3588,52 @@ if (teamData) {
             }
         }
         
+        // 選手選択ダイアログを表示する関数
+        function showPlayerSelectDialog() {
+            if (players.length === 0) {
+                alert('選手が登録されていません。\n先に「選手管理」で選手を追加してください。');
+                return;
+            }
+            
+            // 選手一覧を作成
+            let message = '🏀 個人モードで表示する選手を選んでください\n\n';
+            message += '【登録されている選手】\n';
+            players.forEach(function(p, index) {
+                const mark = (p.id === myPlayerId) ? '★ ' : '   ';
+                message += mark + (index + 1) + '. ' + p.name + ' #' + p.number + '\n';
+            });
+            message += '\n番号を入力してください（1〜' + players.length + '）:';
+            
+            // 番号を入力してもらう
+            const input = prompt(message);
+            
+            // キャンセルした場合
+            if (input === null) {
+                return;
+            }
+            
+            // 番号をチェック
+            const selectedIndex = parseInt(input) - 1;
+            
+            if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= players.length) {
+                alert('❌ 正しい番号を入力してください');
+                return;
+            }
+            
+            // 選択した選手に切り替え
+            const selectedPlayer = players[selectedIndex];
+            myPlayerId = selectedPlayer.id;
+            saveData();
+            
+            // 画面を更新
+            updateDisplay();
+            updatePlayerBanners();
+            displayGames();
+            displayRankings();
+            updateCharts();
+            
+            alert('✅ ' + selectedPlayer.name + ' #' + selectedPlayer.number + ' を選択しました！');
+        }
 
         function updateMyPlayerSelect() {
             const sel = document.getElementById('myPlayerSelect');
