@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏀 バスケ記録</title>
+    <title>ðŸ€ ãƒã‚¹ã‚±è¨˜éŒ²</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
@@ -96,12 +96,12 @@
             color: #f39c12;
         }
 
-        /* 個人モードの時の全体背景 */
+        /* å€‹äººãƒ¢ãƒ¼ãƒ‰ã®æ™‚ã®å…¨ä½“èƒŒæ™¯ */
         body.personal-mode {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        /* チームモードの時の全体背景 */
+        /* ãƒãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰ã®æ™‚ã®å…¨ä½“èƒŒæ™¯ */
         body.team-mode {
             background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
         }
@@ -727,7 +727,7 @@
             color: white;
         }
 
-        /* スコア入力欄 */
+        /* ã‚¹ã‚³ã‚¢å…¥åŠ›æ¬„ */
         .score-input-container {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
@@ -766,7 +766,7 @@
             color: #999;
         }
 
-        /* 試合結果表示 */
+        /* è©¦åˆçµæžœè¡¨ç¤º */
         .game-result {
             background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
             border-radius: 15px;
@@ -837,7 +837,7 @@
             color: #e74c3c;
         }
 
-        /* 試合編集機能 */
+        /* è©¦åˆç·¨é›†æ©Ÿèƒ½ */
         .edit-game-btn {
             background: #f39c12;
             color: white;
@@ -952,7 +952,7 @@
             background: #c0392b;
         }
 
-        /* ボタンフィードバックアニメーション */
+        /* ãƒœã‚¿ãƒ³ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ */
         @keyframes button-press {
             0% { transform: scale(1); }
             50% { transform: scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
@@ -963,7 +963,7 @@
             animation: button-press 0.3s ease;
         }
 
-        /* フィードバック通知 */
+        /* ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯é€šçŸ¥ */
         .feedback-notification {
             position: fixed;
             top: 50%;
@@ -998,7 +998,7 @@
         .feedback-notification.other {
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
         }
-        /* 現在選択中の選手表示 */
+        /* ç¾åœ¨é¸æŠžä¸­ã®é¸æ‰‹è¡¨ç¤º */
         .current-player-banner {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -1033,7 +1033,7 @@
         .current-player-banner .player-name {
             font-size: 1.2em;
         }
-         /* ========== 選手選択モーダルのスタイル ========== */
+         /* ========== é¸æ‰‹é¸æŠžãƒ¢ãƒ¼ãƒ€ãƒ«ã®ã‚¹ã‚¿ã‚¤ãƒ« ========== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1179,7 +1179,7 @@
         .confirm-btn:active {
             transform: translateY(0);
         }
-        /* ========== チーム名表示のスタイル ========== */
+        /* ========== ãƒãƒ¼ãƒ åè¡¨ç¤ºã®ã‚¹ã‚¿ã‚¤ãƒ« ========== */
         .team-names {
             display: flex;
             justify-content: center;
@@ -1213,208 +1213,208 @@
     </style>
 </head>
 <body>
-    <div class="sync-indicator" id="syncIndicator">同期中...</div>
+    <div class="sync-indicator" id="syncIndicator">åŒæœŸä¸­...</div>
     
     <div class="container">
         <div class="header">
-            <h1>🏀 バスケ記録</h1>
-            <p>成長を記録しましょう</p>
+            <h1>ðŸ€ ãƒã‚¹ã‚±è¨˜éŒ²</h1>
+            <p>æˆé•·ã‚’è¨˜éŒ²ã—ã¾ã—ã‚‡ã†</p>
         </div>
 
         <div class="mode-switch">
-           <button class="mode-btn active" onclick="switchMode('personal')">👤 個人</button>
-           <button class="mode-btn" onclick="switchMode('team')">⚡ チーム</button>
-           <button class="mode-btn" onclick="switchMode('settings')">⚙️ 設定</button>
+           <button class="mode-btn active" onclick="switchMode('personal')">ðŸ‘¤ å€‹äºº</button>
+           <button class="mode-btn" onclick="switchMode('team')">âš¡ ãƒãƒ¼ãƒ </button>
+           <button class="mode-btn" onclick="switchMode('settings')">âš™ï¸ è¨­å®š</button>
         </div>
 
         <div id="personalMode">
             <div class="tab-bar">
-                <button class="tab active" onclick="switchTab('input')">📝 記録</button>
-                <button class="tab" onclick="switchTab('list')">📊 履歴</button>
-                <button class="tab" onclick="switchTab('ranking')">🏆 ランキング</button>
-                <button class="tab" onclick="switchTab('graph')">📈 グラフ</button>
+                <button class="tab active" onclick="switchTab('input')">ðŸ“ è¨˜éŒ²</button>
+                <button class="tab" onclick="switchTab('list')">ðŸ“Š å±¥æ­´</button>
+                <button class="tab" onclick="switchTab('ranking')">ðŸ† ãƒ©ãƒ³ã‚­ãƒ³ã‚°</button>
+                <button class="tab" onclick="switchTab('graph')">ðŸ“ˆ ã‚°ãƒ©ãƒ•</button>
             </div>
 
             <div id="inputTab" class="tab-content active">
                 <div id="inputPlayerBanner" class="current-player-banner" style="display: none;">
-                    <span class="player-icon">👤</span>
+                    <span class="player-icon">ðŸ‘¤</span>
                     <div class="player-info">
-                        <span class="player-label">現在表示中</span>
+                        <span class="player-label">ç¾åœ¨è¡¨ç¤ºä¸­</span>
                         <span class="player-name" id="inputPlayerName"></span>
                     </div>
                 </div>
                 <div class="card">
-                    <h2 style="margin-bottom: 20px;">新しい試合を記録</h2>
+                    <h2 style="margin-bottom: 20px;">æ–°ã—ã„è©¦åˆã‚’è¨˜éŒ²</h2>
                     
                     <div class="input-group">
-                        <label>試合日</label>
+                        <label>è©¦åˆæ—¥</label>
                         <input type="date" id="gameDate">
                     </div>
 
                     <div class="input-group">
-                        <label>対戦相手</label>
-                        <input type="text" id="opponent" placeholder="相手チーム名を入力">
+                        <label>å¯¾æˆ¦ç›¸æ‰‹</label>
+                        <input type="text" id="opponent" placeholder="ç›¸æ‰‹ãƒãƒ¼ãƒ åã‚’å…¥åŠ›">
                     </div>
 
                     <div class="input-group">
-                        <label>プレイ時間（分）</label>
+                        <label>ãƒ—ãƒ¬ã‚¤æ™‚é–“ï¼ˆåˆ†ï¼‰</label>
                         <input type="number" id="playTime" value="0" min="0" max="200">
                     </div>
 
-                    <div class="section-title">🏀 シュート</div>
+                    <div class="section-title">ðŸ€ ã‚·ãƒ¥ãƒ¼ãƒˆ</div>
                     
                     <div class="input-group">
-                        <label>2ポイント成功</label>
+                        <label>2ãƒã‚¤ãƒ³ãƒˆæˆåŠŸ</label>
                         <div class="stepper">
-                            <button onclick="changeValue('twoPointsMade', -1)">−</button>
+                            <button onclick="changeValue('twoPointsMade', -1)">âˆ’</button>
                             <div class="value" id="twoPointsMade">0</div>
-                            <button onclick="changeValue('twoPointsMade', 1)">＋</button>
+                            <button onclick="changeValue('twoPointsMade', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>2ポイント試投</label>
+                        <label>2ãƒã‚¤ãƒ³ãƒˆè©¦æŠ•</label>
                         <div class="stepper">
-                            <button onclick="changeValue('twoPointsAttempted', -1)">−</button>
+                            <button onclick="changeValue('twoPointsAttempted', -1)">âˆ’</button>
                             <div class="value" id="twoPointsAttempted">0</div>
-                            <button onclick="changeValue('twoPointsAttempted', 1)">＋</button>
+                            <button onclick="changeValue('twoPointsAttempted', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>3ポイント成功</label>
+                        <label>3ãƒã‚¤ãƒ³ãƒˆæˆåŠŸ</label>
                         <div class="stepper">
-                            <button onclick="changeValue('threePointsMade', -1)">−</button>
+                            <button onclick="changeValue('threePointsMade', -1)">âˆ’</button>
                             <div class="value" id="threePointsMade">0</div>
-                            <button onclick="changeValue('threePointsMade', 1)">＋</button>
+                            <button onclick="changeValue('threePointsMade', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>3ポイント試投</label>
+                        <label>3ãƒã‚¤ãƒ³ãƒˆè©¦æŠ•</label>
                         <div class="stepper">
-                            <button onclick="changeValue('threePointsAttempted', -1)">−</button>
+                            <button onclick="changeValue('threePointsAttempted', -1)">âˆ’</button>
                             <div class="value" id="threePointsAttempted">0</div>
-                            <button onclick="changeValue('threePointsAttempted', 1)">＋</button>
+                            <button onclick="changeValue('threePointsAttempted', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>フリースロー成功</label>
+                        <label>ãƒ•ãƒªãƒ¼ã‚¹ãƒ­ãƒ¼æˆåŠŸ</label>
                         <div class="stepper">
-                            <button onclick="changeValue('freeThrowsMade', -1)">−</button>
+                            <button onclick="changeValue('freeThrowsMade', -1)">âˆ’</button>
                             <div class="value" id="freeThrowsMade">0</div>
-                            <button onclick="changeValue('freeThrowsMade', 1)">＋</button>
+                            <button onclick="changeValue('freeThrowsMade', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>フリースロー試投</label>
+                        <label>ãƒ•ãƒªãƒ¼ã‚¹ãƒ­ãƒ¼è©¦æŠ•</label>
                         <div class="stepper">
-                            <button onclick="changeValue('freeThrowsAttempted', -1)">−</button>
+                            <button onclick="changeValue('freeThrowsAttempted', -1)">âˆ’</button>
                             <div class="value" id="freeThrowsAttempted">0</div>
-                            <button onclick="changeValue('freeThrowsAttempted', 1)">＋</button>
+                            <button onclick="changeValue('freeThrowsAttempted', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="stats-grid">
                         <div class="stats-display">
-                            <h3>2P成功率</h3>
+                            <h3>2PæˆåŠŸçŽ‡</h3>
                             <div class="percentage" id="twoPointPercentage">0%</div>
                             <div class="fraction" id="twoPointFraction">(0/0)</div>
                         </div>
                         <div class="stats-display">
-                            <h3>3P成功率</h3>
+                            <h3>3PæˆåŠŸçŽ‡</h3>
                             <div class="percentage" id="threePointPercentage">0%</div>
                             <div class="fraction" id="threePointFraction">(0/0)</div>
                         </div>
                         <div class="stats-display">
-                            <h3>FT成功率</h3>
+                            <h3>FTæˆåŠŸçŽ‡</h3>
                             <div class="percentage" id="freeThrowPercentage">0%</div>
                             <div class="fraction" id="freeThrowFraction">(0/0)</div>
                         </div>
                         <div class="stats-display">
-                            <h3>総得点</h3>
+                            <h3>ç·å¾—ç‚¹</h3>
                             <div class="percentage" id="totalPoints">0</div>
                         </div>
                     </div>
 
-                    <div class="section-title">🎯 リバウンド</div>
+                    <div class="section-title">ðŸŽ¯ ãƒªãƒã‚¦ãƒ³ãƒ‰</div>
 
                     <div class="input-group">
-                        <label>オフェンスリバウンド</label>
+                        <label>ã‚ªãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰</label>
                         <div class="stepper">
-                            <button onclick="changeValue('offensiveRebounds', -1)">−</button>
+                            <button onclick="changeValue('offensiveRebounds', -1)">âˆ’</button>
                             <div class="value" id="offensiveRebounds">0</div>
-                            <button onclick="changeValue('offensiveRebounds', 1)">＋</button>
+                            <button onclick="changeValue('offensiveRebounds', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>ディフェンスリバウンド</label>
+                        <label>ãƒ‡ã‚£ãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰</label>
                         <div class="stepper">
-                            <button onclick="changeValue('defensiveRebounds', -1)">−</button>
+                            <button onclick="changeValue('defensiveRebounds', -1)">âˆ’</button>
                             <div class="value" id="defensiveRebounds">0</div>
-                            <button onclick="changeValue('defensiveRebounds', 1)">＋</button>
+                            <button onclick="changeValue('defensiveRebounds', 1)">ï¼‹</button>
                         </div>
                     </div>
 
-                    <div class="section-title">📊 その他の統計</div>
+                    <div class="section-title">ðŸ“Š ãã®ä»–ã®çµ±è¨ˆ</div>
 
                     <div class="input-group">
-                        <label>アシスト</label>
+                        <label>ã‚¢ã‚·ã‚¹ãƒˆ</label>
                         <div class="stepper">
-                            <button onclick="changeValue('assists', -1)">−</button>
+                            <button onclick="changeValue('assists', -1)">âˆ’</button>
                             <div class="value" id="assists">0</div>
-                            <button onclick="changeValue('assists', 1)">＋</button>
+                            <button onclick="changeValue('assists', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>スティール</label>
+                        <label>ã‚¹ãƒ†ã‚£ãƒ¼ãƒ«</label>
                         <div class="stepper">
-                            <button onclick="changeValue('steals', -1)">−</button>
+                            <button onclick="changeValue('steals', -1)">âˆ’</button>
                             <div class="value" id="steals">0</div>
-                            <button onclick="changeValue('steals', 1)">＋</button>
+                            <button onclick="changeValue('steals', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>ブロック</label>
+                        <label>ãƒ–ãƒ­ãƒƒã‚¯</label>
                         <div class="stepper">
-                            <button onclick="changeValue('blocks', -1)">−</button>
+                            <button onclick="changeValue('blocks', -1)">âˆ’</button>
                             <div class="value" id="blocks">0</div>
-                            <button onclick="changeValue('blocks', 1)">＋</button>
+                            <button onclick="changeValue('blocks', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>ターンオーバー</label>
+                        <label>ã‚¿ãƒ¼ãƒ³ã‚ªãƒ¼ãƒãƒ¼</label>
                         <div class="stepper">
-                            <button onclick="changeValue('turnovers', -1)">−</button>
+                            <button onclick="changeValue('turnovers', -1)">âˆ’</button>
                             <div class="value" id="turnovers">0</div>
-                            <button onclick="changeValue('turnovers', 1)">＋</button>
+                            <button onclick="changeValue('turnovers', 1)">ï¼‹</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>ファウル</label>
+                        <label>ãƒ•ã‚¡ã‚¦ãƒ«</label>
                         <div class="stepper">
-                            <button onclick="changeValue('fouls', -1)">−</button>
+                            <button onclick="changeValue('fouls', -1)">âˆ’</button>
                             <div class="value" id="fouls">0</div>
-                            <button onclick="changeValue('fouls', 1)">＋</button>
+                            <button onclick="changeValue('fouls', 1)">ï¼‹</button>
                         </div>
                     </div>
 
-                    <button class="save-btn" id="saveGameBtn" onclick="savePersonalGame()">記録を保存</button>
+                    <button class="save-btn" id="saveGameBtn" onclick="savePersonalGame()">è¨˜éŒ²ã‚’ä¿å­˜</button>
                 </div>
             </div>
 
             <div id="listTab" class="tab-content">
                 <div id="listPlayerBanner" class="current-player-banner" style="display: none;">
-                    <span class="player-icon">👤</span>
+                    <span class="player-icon">ðŸ‘¤</span>
                     <div class="player-info">
-                        <span class="player-label">現在表示中</span>
+                        <span class="player-label">ç¾åœ¨è¡¨ç¤ºä¸­</span>
                         <span class="player-name" id="listPlayerName"></span>
                     </div>
                 </div>
@@ -1423,16 +1423,16 @@
 
             <div id="rankingTab" class="tab-content">
                 <div id="rankingPlayerBanner" class="current-player-banner" style="display: none;">
-                    <span class="player-icon">👤</span>
+                    <span class="player-icon">ðŸ‘¤</span>
                     <div class="player-info">
-                        <span class="player-label">現在表示中</span>
+                        <span class="player-label">ç¾åœ¨è¡¨ç¤ºä¸­</span>
                         <span class="player-name" id="rankingPlayerName"></span>
                     </div>
                 </div>
                 <div class="card">
-                    <h2 style="margin-bottom: 20px;">🏆 ベストパフォーマンス</h2>
+                    <h2 style="margin-bottom: 20px;">ðŸ† ãƒ™ã‚¹ãƒˆãƒ‘ãƒ•ã‚©ãƒ¼ãƒžãƒ³ã‚¹</h2>
                     <p style="color: #666; margin-bottom: 15px; font-size: 0.9em;">
-                        選択した選手の自己ベスト記録です
+                        é¸æŠžã—ãŸé¸æ‰‹ã®è‡ªå·±ãƒ™ã‚¹ãƒˆè¨˜éŒ²ã§ã™
                     </p>
                     <div id="topPoints"></div>
                 </div>
@@ -1440,14 +1440,14 @@
 
             <div id="graphTab" class="tab-content">
                 <div id="graphPlayerBanner" class="current-player-banner" style="display: none;">
-                    <span class="player-icon">👤</span>
+                    <span class="player-icon">ðŸ‘¤</span>
                     <div class="player-info">
-                        <span class="player-label">現在表示中</span>
+                        <span class="player-label">ç¾åœ¨è¡¨ç¤ºä¸­</span>
                         <span class="player-name" id="graphPlayerName"></span>
                     </div>
                 </div>
                 <div class="card">
-                    <h2 style="margin-bottom: 20px;">シュート成功率の推移</h2>
+                    <h2 style="margin-bottom: 20px;">ã‚·ãƒ¥ãƒ¼ãƒˆæˆåŠŸçŽ‡ã®æŽ¨ç§»</h2>
                     <div class="chart-container">
                         <canvas id="shootingChart"></canvas>
                     </div>
@@ -1458,99 +1458,100 @@
         </div>
         <div id="settingsMode" style="display: none;">
                 <div class="card">
-                    <h2 style="margin-bottom: 20px;">🔗 チーム連携</h2>
+                    <h2 style="margin-bottom: 20px;">ðŸ”— ãƒãƒ¼ãƒ é€£æº</h2>
                     <div id="teamStatus"></div>
                     
                     <button class="primary-btn" style="margin-bottom: 10px;" onclick="showCreateTeamModal()">
-                        🆕 新しいチームを作成
+                        ðŸ†• æ–°ã—ã„ãƒãƒ¼ãƒ ã‚’ä½œæˆ
                     </button>
                     
                     <button class="primary-btn" style="background: #3498db;" onclick="showJoinTeamModal()">
-                        👋 チームに参加
+                        ðŸ‘‹ ãƒãƒ¼ãƒ ã«å‚åŠ 
                     </button>
                     
                     <div style="margin-top: 15px; padding: 12px; background: #e3f2fd; border-radius: 8px; font-size: 0.9em; color: #1976d2;">
-                        💡 <strong>チーム機能:</strong> 記録係1人が全選手を記録→全員のスマホに自動同期
+                        ðŸ’¡ <strong>ãƒãƒ¼ãƒ æ©Ÿèƒ½:</strong> è¨˜éŒ²ä¿‚1äººãŒå…¨é¸æ‰‹ã‚’è¨˜éŒ²â†’å…¨å“¡ã®ã‚¹ãƒžãƒ›ã«è‡ªå‹•åŒæœŸ
                     </div>
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-bottom: 20px;">👤 個人モード表示設定</h2>
+                    <h2 style="margin-bottom: 20px;">ðŸ‘¤ å€‹äººãƒ¢ãƒ¼ãƒ‰è¡¨ç¤ºè¨­å®š</h2>
                     <div class="input-group">
-                        <label>個人モードで表示する選手</label>
+                        <label>å€‹äººãƒ¢ãƒ¼ãƒ‰ã§è¡¨ç¤ºã™ã‚‹é¸æ‰‹</label>
                         <select id="myPlayerSelect" onchange="changeMyPlayer()">
-                            <option value="">選手を選択してください</option>
+                            <option value="">é¸æ‰‹ã‚’é¸æŠžã—ã¦ãã ã•ã„</option>
                         </select>
                     </div>
                     <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
-                        選択した選手の個人成績が履歴・ランキング・グラフに表示されます
+                        é¸æŠžã—ãŸé¸æ‰‹ã®å€‹äººæˆç¸¾ãŒå±¥æ­´ãƒ»ãƒ©ãƒ³ã‚­ãƒ³ã‚°ãƒ»ã‚°ãƒ©ãƒ•ã«è¡¨ç¤ºã•ã‚Œã¾ã™
                     </p>
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-bottom: 20px;">👥 選手登録</h2>
+                    <h2 style="margin-bottom: 20px;">ðŸ‘¥ é¸æ‰‹ç™»éŒ²</h2>
                     <div class="input-group">
-                        <label>背番号</label>
-                        <input type="number" id="playerNumber" placeholder="例: 7" min="0" max="99">
+                        <label>èƒŒç•ªå·</label>
+                        <input type="number" id="playerNumber" placeholder="ä¾‹: 7" min="0" max="99">
                     </div>
                     <div class="input-group">
-                        <label>名前</label>
-                        <input type="text" id="playerName" placeholder="例: 山田 花子">
+                        <label>åå‰</label>
+                        <input type="text" id="playerName" placeholder="ä¾‹: å±±ç”° èŠ±å­">
                     </div>
-                    <button class="primary-btn" style="margin-top: 15px;" onclick="addPlayer()">選手を追加</button>
+                    <button class="primary-btn" style="margin-top: 15px;" onclick="addPlayer()">é¸æ‰‹ã‚’è¿½åŠ </button>
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-bottom: 20px;">登録済み選手</h2>
+                    <h2 style="margin-bottom: 20px;">ç™»éŒ²æ¸ˆã¿é¸æ‰‹</h2>
                     <div id="playerList"></div>
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-bottom: 20px;">📥 データ管理</h2>
+                    <h2 style="margin-bottom: 20px;">ðŸ“¥ ãƒ‡ãƒ¼ã‚¿ç®¡ç†</h2>
                     <button class="primary-btn" style="background: #2ecc71; margin-bottom: 10px;" onclick="exportData()">
-                        💾 データをバックアップ
+                        ðŸ’¾ ãƒ‡ãƒ¼ã‚¿ã‚’ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—
                     </button>
                     
                     <button class="primary-btn" style="background: #3498db;" onclick="document.getElementById('importFile').click()">
-                        📂 バックアップから復元
+                        ðŸ“‚ ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‹ã‚‰å¾©å…ƒ
                     </button>
                     <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
              <button class="primary-btn" style="background: #3498db; margin-top: 10px;" onclick="confirmClearLocalData()">
-    🗑️ このスマホのデータをクリア
+    ðŸ—‘ï¸ ã“ã®ã‚¹ãƒžãƒ›ã®ãƒ‡ãƒ¼ã‚¿ã‚’ã‚¯ãƒªã‚¢
 </button>
 
 <button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="confirmResetTeamData()">
-    ⚠️ チーム全体のデータをリセット
+    âš ï¸ ãƒãƒ¼ãƒ å…¨ä½“ã®ãƒ‡ãƒ¼ã‚¿ã‚’ãƒªã‚»ãƒƒãƒˆ
 </button>
                     
                 </div>
             </div>
         <div id="teamMode" style="display: none;">
             <div class="tab-bar">
-                <button class="tab active" onclick="switchTeamTab('record')">⚡ 記録</button>
-                <button class="tab" onclick="switchTeamTab('history')">📊 履歴</button>
+                <button class="tab active" onclick="switchTeamTab('record')">âš¡ è¨˜éŒ²</button>
+                <button class="tab" onclick="switchTeamTab('history')">ðŸ“Š å±¥æ­´</button>
             </div>
+                <button class="tab" onclick="switchTeamTab('ranking')">📈 ã©ãƒ³ã‚­ãƒ³ã‚°</button>
 
             <div id="teamRecordTab">
             <div class="card">
-                <h2 style="margin-bottom: 20px;">⚡ 試合記録</h2>
+                <h2 style="margin-bottom: 20px;">âš¡ è©¦åˆè¨˜éŒ²</h2>
                 
                 <div class="input-group">
-                    <label>試合日</label>
+                    <label>è©¦åˆæ—¥</label>
                     <input type="date" id="teamGameDate">
                 </div>
 
                 <div class="input-group">
-                    <label>対戦相手</label>
-                    <input type="text" id="teamOpponent" placeholder="相手チーム名を入力">
+                    <label>å¯¾æˆ¦ç›¸æ‰‹</label>
+                    <input type="text" id="teamOpponent" placeholder="ç›¸æ‰‹ãƒãƒ¼ãƒ åã‚’å…¥åŠ›">
                 </div>
 
-                <button class="primary-btn" onclick="startTeamGame()">試合開始</button>
+                <button class="primary-btn" onclick="startTeamGame()">è©¦åˆé–‹å§‹</button>
             </div>
 
             <div id="teamRecording" style="display: none;">
                 <div class="card">
-                    <h2 style="margin-bottom: 15px;">ピリオドを選択</h2>
+                    <h2 style="margin-bottom: 15px;">ãƒ”ãƒªã‚ªãƒ‰ã‚’é¸æŠž</h2>
                     <div class="period-selector">
                         <div class="period-btn selected" onclick="selectPeriod(1)" id="period1">1Q</div>
                         <div class="period-btn" onclick="selectPeriod(2)" id="period2">2Q</div>
@@ -1559,15 +1560,15 @@
                     </div>
                     
                     <div style="margin-top: 20px;">
-                        <h3 style="font-size: 1em; color: #666; margin-bottom: 10px;">このクォーターの得点</h3>
+                        <h3 style="font-size: 1em; color: #666; margin-bottom: 10px;">ã“ã®ã‚¯ã‚©ãƒ¼ã‚¿ãƒ¼ã®å¾—ç‚¹</h3>
                         <div class="score-input-container">
                             <div class="score-input-box">
-                                <label>自チーム</label>
+                                <label>è‡ªãƒãƒ¼ãƒ </label>
                                 <input type="number" id="ourScoreInput" min="0" max="99" value="0" onchange="updateQuarterScore(currentPeriod, 'our')">
                             </div>
                             <div class="score-vs">-</div>
                             <div class="score-input-box">
-                                <label>相手</label>
+                                <label>ç›¸æ‰‹</label>
                                 <input type="number" id="oppScoreInput" min="0" max="99" value="0" onchange="updateQuarterScore(currentPeriod, 'opp')">
                             </div>
                         </div>
@@ -1575,48 +1576,48 @@
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-bottom: 15px;">選手を選択</h2>
+                    <h2 style="margin-bottom: 15px;">é¸æ‰‹ã‚’é¸æŠž</h2>
                     <div id="playerSelector" class="player-grid"></div>
                 </div>
 
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h2 style="margin: 0;">プレイを記録</h2>
+                        <h2 style="margin: 0;">ãƒ—ãƒ¬ã‚¤ã‚’è¨˜éŒ²</h2>
                         <button class="primary-btn" style="background: #3498db; padding: 8px 16px; font-size: 0.9em;" onclick="openGlossary()">
-                            ❓ 用語解説
+                            â“ ç”¨èªžè§£èª¬
                         </button>
                     </div>
                     <div class="action-buttons">
-                        <button class="action-btn success" onclick="recordPlay('2p-made')">2P成功</button>
-                        <button class="action-btn miss" onclick="recordPlay('2p-miss')">2P失敗</button>
-                        <button class="action-btn success" onclick="recordPlay('3p-made')">3P成功</button>
-                        <button class="action-btn miss" onclick="recordPlay('3p-miss')">3P失敗</button>
-                        <button class="action-btn success" onclick="recordPlay('ft-made')">FT成功</button>
-                        <button class="action-btn miss" onclick="recordPlay('ft-miss')">FT失敗</button>
-                        <button class="action-btn other" onclick="recordPlay('oreb')">オフェンスリバウンド</button>
-                        <button class="action-btn other" onclick="recordPlay('dreb')">ディフェンスリバウンド</button>
-                        <button class="action-btn other" onclick="recordPlay('ast')">アシスト</button>
-                        <button class="action-btn other" onclick="recordPlay('stl')">スティール</button>
-                        <button class="action-btn other" onclick="recordPlay('blk')">ブロック</button>
-                        <button class="action-btn other" onclick="recordPlay('to')">ターンオーバー</button>
-                        <button class="action-btn other" onclick="recordPlay('foul')">ファウル</button>
+                        <button class="action-btn success" onclick="recordPlay('2p-made')">2PæˆåŠŸ</button>
+                        <button class="action-btn miss" onclick="recordPlay('2p-miss')">2På¤±æ•—</button>
+                        <button class="action-btn success" onclick="recordPlay('3p-made')">3PæˆåŠŸ</button>
+                        <button class="action-btn miss" onclick="recordPlay('3p-miss')">3På¤±æ•—</button>
+                        <button class="action-btn success" onclick="recordPlay('ft-made')">FTæˆåŠŸ</button>
+                        <button class="action-btn miss" onclick="recordPlay('ft-miss')">FTå¤±æ•—</button>
+                        <button class="action-btn other" onclick="recordPlay('oreb')">ã‚ªãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰</button>
+                        <button class="action-btn other" onclick="recordPlay('dreb')">ãƒ‡ã‚£ãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰</button>
+                        <button class="action-btn other" onclick="recordPlay('ast')">ã‚¢ã‚·ã‚¹ãƒˆ</button>
+                        <button class="action-btn other" onclick="recordPlay('stl')">ã‚¹ãƒ†ã‚£ãƒ¼ãƒ«</button>
+                        <button class="action-btn other" onclick="recordPlay('blk')">ãƒ–ãƒ­ãƒƒã‚¯</button>
+                        <button class="action-btn other" onclick="recordPlay('to')">ã‚¿ãƒ¼ãƒ³ã‚ªãƒ¼ãƒãƒ¼</button>
+                        <button class="action-btn other" onclick="recordPlay('foul')">ãƒ•ã‚¡ã‚¦ãƒ«</button>
                     </div>
 
                     <div class="play-history" id="playHistory">
-                        <div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>
+                        <div style="text-align: center; color: #999; font-size: 0.9em;">ãƒ—ãƒ¬ã‚¤å±¥æ­´ãŒã“ã“ã«è¡¨ç¤ºã•ã‚Œã¾ã™</div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-bottom: 15px;">試合統計</h2>
+                    <h2 style="margin-bottom: 15px;">è©¦åˆçµ±è¨ˆ</h2>
                     <div id="teamStats"></div>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
                         <button class="primary-btn" style="background: #3498db;" onclick="saveDraftTeamGame()">
-                            💾 途中保存
+                            ðŸ’¾ é€”ä¸­ä¿å­˜
                         </button>
                         <button class="save-btn" onclick="saveTeamGame()">
-                            ✅ 試合終了・保存
+                            âœ… è©¦åˆçµ‚äº†ãƒ»ä¿å­˜
                         </button>
                     </div>
                 </div>
@@ -1625,170 +1626,173 @@
      <div id="teamHistoryTab" style="display: none;">
          <div id="teamGamesList"></div>
      </div>           
+     <div id="teamRankingTab" style="display: none;">
+         <div id="teamRankingsDisplay"></div>
+     </div>
         </div>
     </div>
 
     <div id="createTeamModal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-title">🆕 チームを作成</h2>
+            <h2 class="modal-title">ðŸ†• ãƒãƒ¼ãƒ ã‚’ä½œæˆ</h2>
             <div class="input-group">
-                <label>チーム名</label>
-                <input type="text" id="newTeamName" placeholder="例: さくらバスケ部">
+                <label>ãƒãƒ¼ãƒ å</label>
+                <input type="text" id="newTeamName" placeholder="ä¾‹: ã•ãã‚‰ãƒã‚¹ã‚±éƒ¨">
             </div>
-            <button class="primary-btn" onclick="createTeam()">作成</button>
-            <button class="close-modal" onclick="closeModal('createTeamModal')">キャンセル</button>
+            <button class="primary-btn" onclick="createTeam()">ä½œæˆ</button>
+            <button class="close-modal" onclick="closeModal('createTeamModal')">ã‚­ãƒ£ãƒ³ã‚»ãƒ«</button>
         </div>
     </div>
 
     <div id="joinTeamModal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-title">👋 チームに参加</h2>
+            <h2 class="modal-title">ðŸ‘‹ ãƒãƒ¼ãƒ ã«å‚åŠ </h2>
             <div class="input-group">
-                <label>チームコード</label>
-                <input type="text" id="joinTeamCode" placeholder="6桁のコード" maxlength="6">
+                <label>ãƒãƒ¼ãƒ ã‚³ãƒ¼ãƒ‰</label>
+                <input type="text" id="joinTeamCode" placeholder="6æ¡ã®ã‚³ãƒ¼ãƒ‰" maxlength="6">
             </div>
-            <button class="primary-btn" onclick="joinTeam()">参加</button>
-            <button class="close-modal" onclick="closeModal('joinTeamModal')">キャンセル</button>
+            <button class="primary-btn" onclick="joinTeam()">å‚åŠ </button>
+            <button class="close-modal" onclick="closeModal('joinTeamModal')">ã‚­ãƒ£ãƒ³ã‚»ãƒ«</button>
         </div>
     </div>
-　　<div id="glossaryModal" class="modal">
+ã€€ã€€<div id="glossaryModal" class="modal">
         <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
-            <h2 class="modal-title">📚 バスケ用語解説</h2>
+            <h2 class="modal-title">ðŸ“š ãƒã‚¹ã‚±ç”¨èªžè§£èª¬</h2>
             
             <div style="text-align: left;">
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <h3 style="color: #2ecc71; margin-top: 0;">✅ 成功プレイ</h3>
+                    <h3 style="color: #2ecc71; margin-top: 0;">âœ… æˆåŠŸãƒ—ãƒ¬ã‚¤</h3>
                     
-                    <p style="margin: 10px 0;"><strong>2P成功（ツーポイント成功）</strong><br>
-                    2点シュートが入ったとき。ゴールに近い場所からのシュート。</p>
+                    <p style="margin: 10px 0;"><strong>2PæˆåŠŸï¼ˆãƒ„ãƒ¼ãƒã‚¤ãƒ³ãƒˆæˆåŠŸï¼‰</strong><br>
+                    2ç‚¹ã‚·ãƒ¥ãƒ¼ãƒˆãŒå…¥ã£ãŸã¨ãã€‚ã‚´ãƒ¼ãƒ«ã«è¿‘ã„å ´æ‰€ã‹ã‚‰ã®ã‚·ãƒ¥ãƒ¼ãƒˆã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>3P成功（スリーポイント成功）</strong><br>
-                    3点シュートが入ったとき。3点ラインの外側からのシュート。</p>
+                    <p style="margin: 10px 0;"><strong>3PæˆåŠŸï¼ˆã‚¹ãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆæˆåŠŸï¼‰</strong><br>
+                    3ç‚¹ã‚·ãƒ¥ãƒ¼ãƒˆãŒå…¥ã£ãŸã¨ãã€‚3ç‚¹ãƒ©ã‚¤ãƒ³ã®å¤–å´ã‹ã‚‰ã®ã‚·ãƒ¥ãƒ¼ãƒˆã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>FT成功（フリースロー成功）</strong><br>
-                    フリースロー（1点）が入ったとき。ファウルされた後の無妨害シュート。</p>
+                    <p style="margin: 10px 0;"><strong>FTæˆåŠŸï¼ˆãƒ•ãƒªãƒ¼ã‚¹ãƒ­ãƒ¼æˆåŠŸï¼‰</strong><br>
+                    ãƒ•ãƒªãƒ¼ã‚¹ãƒ­ãƒ¼ï¼ˆ1ç‚¹ï¼‰ãŒå…¥ã£ãŸã¨ãã€‚ãƒ•ã‚¡ã‚¦ãƒ«ã•ã‚ŒãŸå¾Œã®ç„¡å¦¨å®³ã‚·ãƒ¥ãƒ¼ãƒˆã€‚</p>
                 </div>
 
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <h3 style="color: #95a5a6; margin-top: 0;">❌ 失敗プレイ</h3>
+                    <h3 style="color: #95a5a6; margin-top: 0;">âŒ å¤±æ•—ãƒ—ãƒ¬ã‚¤</h3>
                     
-                    <p style="margin: 10px 0;"><strong>2P失敗</strong><br>
-                    2点シュートが外れたとき。</p>
+                    <p style="margin: 10px 0;"><strong>2På¤±æ•—</strong><br>
+                    2ç‚¹ã‚·ãƒ¥ãƒ¼ãƒˆãŒå¤–ã‚ŒãŸã¨ãã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>3P失敗</strong><br>
-                    3点シュートが外れたとき。</p>
+                    <p style="margin: 10px 0;"><strong>3På¤±æ•—</strong><br>
+                    3ç‚¹ã‚·ãƒ¥ãƒ¼ãƒˆãŒå¤–ã‚ŒãŸã¨ãã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>FT失敗</strong><br>
-                    フリースローが外れたとき。</p>
+                    <p style="margin: 10px 0;"><strong>FTå¤±æ•—</strong><br>
+                    ãƒ•ãƒªãƒ¼ã‚¹ãƒ­ãƒ¼ãŒå¤–ã‚ŒãŸã¨ãã€‚</p>
                 </div>
 
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <h3 style="color: #3498db; margin-top: 0;">📊 その他の記録</h3>
+                    <h3 style="color: #3498db; margin-top: 0;">ðŸ“Š ãã®ä»–ã®è¨˜éŒ²</h3>
                     
-                    <p style="margin: 10px 0;"><strong>オフェンスリバウンド（攻撃リバウンド）</strong><br>
-                    味方のシュートが外れた後、自分のチームが再びボールを取ったとき。</p>
+                    <p style="margin: 10px 0;"><strong>ã‚ªãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰ï¼ˆæ”»æ’ƒãƒªãƒã‚¦ãƒ³ãƒ‰ï¼‰</strong><br>
+                    å‘³æ–¹ã®ã‚·ãƒ¥ãƒ¼ãƒˆãŒå¤–ã‚ŒãŸå¾Œã€è‡ªåˆ†ã®ãƒãƒ¼ãƒ ãŒå†ã³ãƒœãƒ¼ãƒ«ã‚’å–ã£ãŸã¨ãã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>ディフェンスリバウンド（守備リバウンド）</strong><br>
-                    相手のシュートが外れた後、ボールを取ったとき。</p>
+                    <p style="margin: 10px 0;"><strong>ãƒ‡ã‚£ãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰ï¼ˆå®ˆå‚™ãƒªãƒã‚¦ãƒ³ãƒ‰ï¼‰</strong><br>
+                    ç›¸æ‰‹ã®ã‚·ãƒ¥ãƒ¼ãƒˆãŒå¤–ã‚ŒãŸå¾Œã€ãƒœãƒ¼ãƒ«ã‚’å–ã£ãŸã¨ãã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>アシスト</strong><br>
-                    パスを出して、そのパスを受けた味方がシュートを決めたとき。</p>
+                    <p style="margin: 10px 0;"><strong>ã‚¢ã‚·ã‚¹ãƒˆ</strong><br>
+                    ãƒ‘ã‚¹ã‚’å‡ºã—ã¦ã€ãã®ãƒ‘ã‚¹ã‚’å—ã‘ãŸå‘³æ–¹ãŒã‚·ãƒ¥ãƒ¼ãƒˆã‚’æ±ºã‚ãŸã¨ãã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>スティール</strong><br>
-                    相手からボールを奪ったとき。</p>
+                    <p style="margin: 10px 0;"><strong>ã‚¹ãƒ†ã‚£ãƒ¼ãƒ«</strong><br>
+                    ç›¸æ‰‹ã‹ã‚‰ãƒœãƒ¼ãƒ«ã‚’å¥ªã£ãŸã¨ãã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>ブロック</strong><br>
-                    相手のシュートを手で防いだとき。</p>
+                    <p style="margin: 10px 0;"><strong>ãƒ–ãƒ­ãƒƒã‚¯</strong><br>
+                    ç›¸æ‰‹ã®ã‚·ãƒ¥ãƒ¼ãƒˆã‚’æ‰‹ã§é˜²ã„ã ã¨ãã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>ターンオーバー</strong><br>
-                    ボールを失ったとき。パスミス、ドリブルミス、相手に奪われたときなど。</p>
+                    <p style="margin: 10px 0;"><strong>ã‚¿ãƒ¼ãƒ³ã‚ªãƒ¼ãƒãƒ¼</strong><br>
+                    ãƒœãƒ¼ãƒ«ã‚’å¤±ã£ãŸã¨ãã€‚ãƒ‘ã‚¹ãƒŸã‚¹ã€ãƒ‰ãƒªãƒ–ãƒ«ãƒŸã‚¹ã€ç›¸æ‰‹ã«å¥ªã‚ã‚ŒãŸã¨ããªã©ã€‚</p>
                     
-                    <p style="margin: 10px 0;"><strong>ファウル</strong><br>
-                    反則をしたとき。相手を押す、叩く、不正なブロックなど。</p>
+                    <p style="margin: 10px 0;"><strong>ãƒ•ã‚¡ã‚¦ãƒ«</strong><br>
+                    åå‰‡ã‚’ã—ãŸã¨ãã€‚ç›¸æ‰‹ã‚’æŠ¼ã™ã€å©ãã€ä¸æ­£ãªãƒ–ãƒ­ãƒƒã‚¯ãªã©ã€‚</p>
                 </div>
 
                 <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <h3 style="color: #f39c12; margin-top: 0;">💡 記録のコツ</h3>
+                    <h3 style="color: #f39c12; margin-top: 0;">ðŸ’¡ è¨˜éŒ²ã®ã‚³ãƒ„</h3>
                     <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>迷ったら記録しないより、記録した方がいい</li>
-                        <li>間違えたら「プレイ履歴」から削除できる</li>
-                        <li>シュートは「成功」または「失敗」の両方を必ず記録</li>
-                        <li>リバウンドは誰が取ったかが重要</li>
+                        <li>è¿·ã£ãŸã‚‰è¨˜éŒ²ã—ãªã„ã‚ˆã‚Šã€è¨˜éŒ²ã—ãŸæ–¹ãŒã„ã„</li>
+                        <li>é–“é•ãˆãŸã‚‰ã€Œãƒ—ãƒ¬ã‚¤å±¥æ­´ã€ã‹ã‚‰å‰Šé™¤ã§ãã‚‹</li>
+                        <li>ã‚·ãƒ¥ãƒ¼ãƒˆã¯ã€ŒæˆåŠŸã€ã¾ãŸã¯ã€Œå¤±æ•—ã€ã®ä¸¡æ–¹ã‚’å¿…ãšè¨˜éŒ²</li>
+                        <li>ãƒªãƒã‚¦ãƒ³ãƒ‰ã¯èª°ãŒå–ã£ãŸã‹ãŒé‡è¦</li>
                     </ul>
                 </div>
             </div>
             
-            <button class="primary-btn" onclick="closeModal('glossaryModal')">閉じる</button>
+            <button class="primary-btn" onclick="closeModal('glossaryModal')">é–‰ã˜ã‚‹</button>
         </div>
     </div>
 
-    <!-- 試合編集モーダル -->
+    <!-- è©¦åˆç·¨é›†ãƒ¢ãƒ¼ãƒ€ãƒ« -->
     <div id="editGameModal" class="modal">
         <div class="modal-content edit-modal-content">
-            <h2 class="modal-title">🔒 試合記録を編集</h2>
+            <h2 class="modal-title">ðŸ”’ è©¦åˆè¨˜éŒ²ã‚’ç·¨é›†</h2>
             
             <div class="edit-section">
-                <h3>📅 試合情報</h3>
+                <h3>ðŸ“… è©¦åˆæƒ…å ±</h3>
                 <div class="input-group">
-                    <label>試合日</label>
+                    <label>è©¦åˆæ—¥</label>
                     <input type="date" id="editGameDate">
                 </div>
                 <div class="input-group">
-                    <label>対戦相手</label>
-                    <input type="text" id="editOpponent" placeholder="相手チーム名">
+                    <label>å¯¾æˆ¦ç›¸æ‰‹</label>
+                    <input type="text" id="editOpponent" placeholder="ç›¸æ‰‹ãƒãƒ¼ãƒ å">
                 </div>
             </div>
 
             <div class="edit-section">
-                <h3>🏀 試合スコア</h3>
+                <h3>ðŸ€ è©¦åˆã‚¹ã‚³ã‚¢</h3>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                     <div class="input-group">
-                        <label>Q1 自チーム</label>
+                        <label>Q1 è‡ªãƒãƒ¼ãƒ </label>
                         <input type="number" id="editOurQ1" min="0" max="99" value="0">
                     </div>
                     <div class="input-group">
-                        <label>Q1 相手</label>
+                        <label>Q1 ç›¸æ‰‹</label>
                         <input type="number" id="editOppQ1" min="0" max="99" value="0">
                     </div>
                     <div class="input-group">
-                        <label>Q2 自チーム</label>
+                        <label>Q2 è‡ªãƒãƒ¼ãƒ </label>
                         <input type="number" id="editOurQ2" min="0" max="99" value="0">
                     </div>
                     <div class="input-group">
-                        <label>Q2 相手</label>
+                        <label>Q2 ç›¸æ‰‹</label>
                         <input type="number" id="editOppQ2" min="0" max="99" value="0">
                     </div>
                     <div class="input-group">
-                        <label>Q3 自チーム</label>
+                        <label>Q3 è‡ªãƒãƒ¼ãƒ </label>
                         <input type="number" id="editOurQ3" min="0" max="99" value="0">
                     </div>
                     <div class="input-group">
-                        <label>Q3 相手</label>
+                        <label>Q3 ç›¸æ‰‹</label>
                         <input type="number" id="editOppQ3" min="0" max="99" value="0">
                     </div>
                     <div class="input-group">
-                        <label>Q4 自チーム</label>
+                        <label>Q4 è‡ªãƒãƒ¼ãƒ </label>
                         <input type="number" id="editOurQ4" min="0" max="99" value="0">
                     </div>
                     <div class="input-group">
-                        <label>Q4 相手</label>
+                        <label>Q4 ç›¸æ‰‹</label>
                         <input type="number" id="editOppQ4" min="0" max="99" value="0">
                     </div>
                 </div>
             </div>
 
             <div class="edit-section" id="editPlayersSection">
-                <h3>👥 選手統計</h3>
+                <h3>ðŸ‘¥ é¸æ‰‹çµ±è¨ˆ</h3>
                 <div id="editPlayersList"></div>
             </div>
 
-            <button class="save-edit-btn" onclick="saveGameEdit()">✅ 変更を保存</button>
-            <button class="delete-game-btn" onclick="deleteGame()">🗑️ この試合を削除</button>
-            <button class="close-modal" onclick="closeModal('editGameModal')">キャンセル</button>
+            <button class="save-edit-btn" onclick="saveGameEdit()">âœ… å¤‰æ›´ã‚’ä¿å­˜</button>
+            <button class="delete-game-btn" onclick="deleteGame()">ðŸ—‘ï¸ ã“ã®è©¦åˆã‚’å‰Šé™¤</button>
+            <button class="close-modal" onclick="closeModal('editGameModal')">ã‚­ãƒ£ãƒ³ã‚»ãƒ«</button>
         </div>
     </div>
     
-    <div class="saved-indicator" id="savedIndicator">✓ 保存しました</div>
+    <div class="saved-indicator" id="savedIndicator">âœ“ ä¿å­˜ã—ã¾ã—ãŸ</div>
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbwbPUgd-QAVhwBmhyBwiCtS1GDvZks0imrC78ZsJu5dV-d-Zt6reEW0oi1Lkc_MbW_agQ/exec';
@@ -1837,23 +1841,23 @@
                     myPlayerId = data.myPlayerId || null;
                     teamData = data.teamData || null;
                     draftTeamGame = data.draftTeamGame || null;
-                    // ▼▼▼ ここから追加 ▼▼▼
-                    // myPlayerIdが存在しない選手を指している場合、修正する
+                    // â–¼â–¼â–¼ ã“ã“ã‹ã‚‰è¿½åŠ  â–¼â–¼â–¼
+                    // myPlayerIdãŒå­˜åœ¨ã—ãªã„é¸æ‰‹ã‚’æŒ‡ã—ã¦ã„ã‚‹å ´åˆã€ä¿®æ­£ã™ã‚‹
                     if (myPlayerId && players.length > 0) {
                         const playerExists = players.find(function(p) {
                             return p.id === myPlayerId;
                         });
                 
                         if (!playerExists) {
-                            console.warn('選択中の選手が見つかりません。最初の選手を自動選択します。');
+                            console.warn('é¸æŠžä¸­ã®é¸æ‰‹ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚æœ€åˆã®é¸æ‰‹ã‚’è‡ªå‹•é¸æŠžã—ã¾ã™ã€‚');
                             myPlayerId = players[0].id;
                             saveData();
                         }
                     }
-                    // ▲▲▲ ここまで追加 ▲▲▲
+                    // â–²â–²â–² ã“ã“ã¾ã§è¿½åŠ  â–²â–²â–²
                 }
             } catch (e) {
-                console.error('データ読み込みエラー:', e);
+                console.error('ãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿ã‚¨ãƒ©ãƒ¼:', e);
             }
         }
 
@@ -1880,21 +1884,21 @@
 
         
         function startTeamGame() {
-            // 途中保存データがある場合は警告
+            // é€”ä¸­ä¿å­˜ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹å ´åˆã¯è­¦å‘Š
             if (draftTeamGame) {
-                if (!confirm('⚠️ 未完了の試合記録があります\n\n新しい試合を開始すると、途中保存データは上書きされます。\n続けますか？')) {
+                if (!confirm('âš ï¸ æœªå®Œäº†ã®è©¦åˆè¨˜éŒ²ãŒã‚ã‚Šã¾ã™\n\næ–°ã—ã„è©¦åˆã‚’é–‹å§‹ã™ã‚‹ã¨ã€é€”ä¸­ä¿å­˜ãƒ‡ãƒ¼ã‚¿ã¯ä¸Šæ›¸ãã•ã‚Œã¾ã™ã€‚\nç¶šã‘ã¾ã™ã‹ï¼Ÿ')) {
                     return;
                 }
             }
             
             if (players.length === 0) { 
-                alert('先に選手を登録してください（設定タブ）'); 
+                alert('å…ˆã«é¸æ‰‹ã‚’ç™»éŒ²ã—ã¦ãã ã•ã„ï¼ˆè¨­å®šã‚¿ãƒ–ï¼‰'); 
                 return; 
             }
 
             const date = document.getElementById('teamGameDate').value;
             if (!date) { 
-                alert('試合日を選択してください'); 
+                alert('è©¦åˆæ—¥ã‚’é¸æŠžã—ã¦ãã ã•ã„'); 
                 return; 
             }
 
@@ -1947,7 +1951,7 @@
         function selectPeriod(period) {
             currentPeriod = period;
             
-            // ピリオドボタンの見た目を更新
+            // ãƒ”ãƒªã‚ªãƒ‰ãƒœã‚¿ãƒ³ã®è¦‹ãŸç›®ã‚’æ›´æ–°
             for (let i = 1; i <= 4; i++) {
                 const btn = document.getElementById('period' + i);
                 if (i === period) {
@@ -1957,16 +1961,16 @@
                 }
             }
             
-            // スコア入力欄の値を更新（IDは固定）
+            // ã‚¹ã‚³ã‚¢å…¥åŠ›æ¬„ã®å€¤ã‚’æ›´æ–°ï¼ˆIDã¯å›ºå®šï¼‰
             const ourScoreInput = document.querySelector('.score-input-container input[id^="ourScore"]');
             const oppScoreInput = document.querySelector('.score-input-container input[id^="oppScore"]');
             
             if (ourScoreInput && oppScoreInput) {
-                // onchangeイベントを設定し直し
+                // onchangeã‚¤ãƒ™ãƒ³ãƒˆã‚’è¨­å®šã—ç›´ã—
                 ourScoreInput.onchange = function() { updateQuarterScore(period, 'our'); };
                 oppScoreInput.onchange = function() { updateQuarterScore(period, 'opp'); };
                 
-                // 現在のクォーターのスコアを表示
+                // ç¾åœ¨ã®ã‚¯ã‚©ãƒ¼ã‚¿ãƒ¼ã®ã‚¹ã‚³ã‚¢ã‚’è¡¨ç¤º
                 if (currentTeamGame && currentTeamGame.scores) {
                     ourScoreInput.value = currentTeamGame.scores.our['q' + period] || 0;
                     oppScoreInput.value = currentTeamGame.scores.opp['q' + period] || 0;
@@ -1985,39 +1989,39 @@
 
         function getPlayLabel(type) {
             const labels = {
-                '2p-made': '2P成功', '2p-miss': '2P失敗',
-                '3p-made': '3P成功', '3p-miss': '3P失敗',
-                'ft-made': 'FT成功', 'ft-miss': 'FT失敗',
-                'oreb': 'オフェンスリバウンド', 'dreb': 'ディフェンスリバウンド',
-                'ast': 'アシスト', 'stl': 'スティール', 'blk': 'ブロック',
-                'to': 'ターンオーバー', 'foul': 'ファウル'
+                '2p-made': '2PæˆåŠŸ', '2p-miss': '2På¤±æ•—',
+                '3p-made': '3PæˆåŠŸ', '3p-miss': '3På¤±æ•—',
+                'ft-made': 'FTæˆåŠŸ', 'ft-miss': 'FTå¤±æ•—',
+                'oreb': 'ã‚ªãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰', 'dreb': 'ãƒ‡ã‚£ãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰',
+                'ast': 'ã‚¢ã‚·ã‚¹ãƒˆ', 'stl': 'ã‚¹ãƒ†ã‚£ãƒ¼ãƒ«', 'blk': 'ãƒ–ãƒ­ãƒƒã‚¯',
+                'to': 'ã‚¿ãƒ¼ãƒ³ã‚ªãƒ¼ãƒãƒ¼', 'foul': 'ãƒ•ã‚¡ã‚¦ãƒ«'
             };
             return labels[type] || type;
         }
 
         function recordPlay(type) {
             if (!selectedPlayer) { 
-                alert('先に選手を選択してください'); 
+                alert('å…ˆã«é¸æ‰‹ã‚’é¸æŠžã—ã¦ãã ã•ã„'); 
                 return; 
             }
 
             const st = currentTeamGame.playerStats[selectedPlayer];
             
-            // プレイタイプごとのラベル
+            // ãƒ—ãƒ¬ã‚¤ã‚¿ã‚¤ãƒ—ã”ã¨ã®ãƒ©ãƒ™ãƒ«
             const playLabels = {
-                '2p-made': '✓ 2P成功',
-                '2p-miss': '✗ 2P失敗',
-                '3p-made': '✓ 3P成功',
-                '3p-miss': '✗ 3P失敗',
-                'ft-made': '✓ FT成功',
-                'ft-miss': '✗ FT失敗',
-                'oreb': '📦 オフェンスリバウンド',
-                'dreb': '📦 ディフェンスリバウンド',
-                'ast': '🤝 アシスト',
-                'stl': '🛡️ スティール',
-                'blk': '🚫 ブロック',
-                'to': '⚠️ ターンオーバー',
-                'foul': '⚠️ ファウル'
+                '2p-made': 'âœ“ 2PæˆåŠŸ',
+                '2p-miss': 'âœ— 2På¤±æ•—',
+                '3p-made': 'âœ“ 3PæˆåŠŸ',
+                '3p-miss': 'âœ— 3På¤±æ•—',
+                'ft-made': 'âœ“ FTæˆåŠŸ',
+                'ft-miss': 'âœ— FTå¤±æ•—',
+                'oreb': 'ðŸ“¦ ã‚ªãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰',
+                'dreb': 'ðŸ“¦ ãƒ‡ã‚£ãƒ•ã‚§ãƒ³ã‚¹ãƒªãƒã‚¦ãƒ³ãƒ‰',
+                'ast': 'ðŸ¤ ã‚¢ã‚·ã‚¹ãƒˆ',
+                'stl': 'ðŸ›¡ï¸ ã‚¹ãƒ†ã‚£ãƒ¼ãƒ«',
+                'blk': 'ðŸš« ãƒ–ãƒ­ãƒƒã‚¯',
+                'to': 'âš ï¸ ã‚¿ãƒ¼ãƒ³ã‚ªãƒ¼ãƒãƒ¼',
+                'foul': 'âš ï¸ ãƒ•ã‚¡ã‚¦ãƒ«'
             };
             
             if (type === '2p-made') { st.twoPointsMade++; st.twoPointsAttempted++; }
@@ -2041,25 +2045,25 @@
                 timestamp: Date.now()
             });
 
-            // フィードバック表示
-            showPlayFeedback(playLabels[type] || 'プレイを記録', type);
+            // ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯è¡¨ç¤º
+            showPlayFeedback(playLabels[type] || 'ãƒ—ãƒ¬ã‚¤ã‚’è¨˜éŒ²', type);
 
             updateTeamStats();
             displayPlayHistory();
         }
 
         function showPlayFeedback(message, type) {
-            // 既存のフィードバックがあれば削除
+            // æ—¢å­˜ã®ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯ãŒã‚ã‚Œã°å‰Šé™¤
             const existing = document.querySelector('.feedback-notification');
             if (existing) {
                 existing.remove();
             }
 
-            // フィードバック通知を作成
+            // ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯é€šçŸ¥ã‚’ä½œæˆ
             const feedback = document.createElement('div');
             feedback.className = 'feedback-notification';
             
-            // タイプに応じてクラスを追加
+            // ã‚¿ã‚¤ãƒ—ã«å¿œã˜ã¦ã‚¯ãƒ©ã‚¹ã‚’è¿½åŠ 
             if (type.includes('made')) {
                 feedback.classList.add('success');
             } else if (type.includes('miss')) {
@@ -2071,14 +2075,14 @@
             feedback.textContent = message;
             document.body.appendChild(feedback);
 
-            // 1秒後に削除
+            // 1ç§’å¾Œã«å‰Šé™¤
             setTimeout(function() {
                 if (feedback && feedback.parentNode) {
                     feedback.remove();
                 }
             }, 1000);
 
-            // ボタンにアニメーションを追加
+            // ãƒœã‚¿ãƒ³ã«ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¿½åŠ 
             const buttons = document.querySelectorAll('.action-btn');
             buttons.forEach(function(btn) {
                 if (btn.textContent.toLowerCase().includes(type.split('-')[0])) {
@@ -2122,20 +2126,20 @@
         function displayPlayHistory() {
     const histEl = document.getElementById('playHistory');
     
-    // ========== 追加：存在チェック ==========
+    // ========== è¿½åŠ ï¼šå­˜åœ¨ãƒã‚§ãƒƒã‚¯ ==========
     if (!currentTeamGame || !currentTeamGame.plays) {
-        histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
+        histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">ãƒ—ãƒ¬ã‚¤å±¥æ­´ãŒã“ã“ã«è¡¨ç¤ºã•ã‚Œã¾ã™</div>';
         return;
     }
     // ========================================
     
     if (currentTeamGame.plays.length === 0) {
-        histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
+        histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">ãƒ—ãƒ¬ã‚¤å±¥æ­´ãŒã“ã“ã«è¡¨ç¤ºã•ã‚Œã¾ã™</div>';
         return;
     }
     
     const recentPlays = currentTeamGame.plays.slice().reverse().slice(0, 10);
-    histEl.innerHTML = '<div style="margin-bottom: 10px; font-size: 0.9em; color: #666; font-weight: bold;">最新のプレイ（最大10件） - タップで削除</div>' +
+    histEl.innerHTML = '<div style="margin-bottom: 10px; font-size: 0.9em; color: #666; font-weight: bold;">æœ€æ–°ã®ãƒ—ãƒ¬ã‚¤ï¼ˆæœ€å¤§10ä»¶ï¼‰ - ã‚¿ãƒƒãƒ—ã§å‰Šé™¤</div>' +
         recentPlays.map(function(play) {
             const p = players.find(function(pl) {
                 return pl.id === play.playerId;
@@ -2145,7 +2149,7 @@
                 '<strong>' + play.period + 'Q | #' + p.number + ' ' + p.name + '</strong>' +
                 '<div style="font-size: 0.85em; color: #666; margin-top: 2px;">' + getPlayLabel(play.playType) + '</div>' +
                 '</div>' +
-                '<button class="undo-btn" onclick="deletePlay(' + play.timestamp + ')">削除</button>' +
+                '<button class="undo-btn" onclick="deletePlay(' + play.timestamp + ')">å‰Šé™¤</button>' +
                 '</div>';
         }).join('');
 }
@@ -2162,7 +2166,7 @@
                 html += '<div style="padding: 10px; background: #f7f7f7; border-radius: 8px; margin-bottom: 10px;">' +
                     '<div style="font-weight: bold; margin-bottom: 5px;">#' + p.number + ' ' + p.name + '</div>' +
                     '<div style="font-size: 0.9em; color: #666;">' +
-                    pts + '点 | ' + reb + 'リバウンド | ' + st.assists + 'アシスト | ' + st.steals + 'スティール | ' + st.blocks + 'ブロック' +
+                    pts + 'ç‚¹ | ' + reb + 'ãƒªãƒã‚¦ãƒ³ãƒ‰ | ' + st.assists + 'ã‚¢ã‚·ã‚¹ãƒˆ | ' + st.steals + 'ã‚¹ãƒ†ã‚£ãƒ¼ãƒ« | ' + st.blocks + 'ãƒ–ãƒ­ãƒƒã‚¯' +
                     '</div>' +
                     '</div>';
             });
@@ -2219,10 +2223,10 @@
                 syncGamesOnly();
             }
 
-            // 途中保存データを削除（試合完了したので不要）
+            // é€”ä¸­ä¿å­˜ãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ï¼ˆè©¦åˆå®Œäº†ã—ãŸã®ã§ä¸è¦ï¼‰
             clearDraftTeamGame();
             
-            // 警告ボックスも削除
+            // è­¦å‘Šãƒœãƒƒã‚¯ã‚¹ã‚‚å‰Šé™¤
             const alertBox = document.getElementById('draftGameAlert');
             if (alertBox) {
                 alertBox.remove();
@@ -2235,57 +2239,57 @@
             document.getElementById('teamGameDate').valueAsDate = new Date();
             document.getElementById('teamOpponent').value = '';
             
-            alert('✅ 試合記録を保存しました！\n\n全選手のデータが個人モードに反映されます。');
+            alert('âœ… è©¦åˆè¨˜éŒ²ã‚’ä¿å­˜ã—ã¾ã—ãŸï¼\n\nå…¨é¸æ‰‹ã®ãƒ‡ãƒ¼ã‚¿ãŒå€‹äººãƒ¢ãƒ¼ãƒ‰ã«åæ˜ ã•ã‚Œã¾ã™ã€‚');
         }
 
-        // ========== 途中保存機能 ==========
+        // ========== é€”ä¸­ä¿å­˜æ©Ÿèƒ½ ==========
         function saveDraftTeamGame() {
             if (!currentTeamGame) {
-                alert('❌ 記録中の試合がありません');
+                alert('âŒ è¨˜éŒ²ä¸­ã®è©¦åˆãŒã‚ã‚Šã¾ã›ã‚“');
                 return;
             }
             
-            // 現在の試合データを途中保存用に保存
+            // ç¾åœ¨ã®è©¦åˆãƒ‡ãƒ¼ã‚¿ã‚’é€”ä¸­ä¿å­˜ç”¨ã«ä¿å­˜
             draftTeamGame = {
                 id: currentTeamGame.id,
                 date: currentTeamGame.date,
                 opponent: currentTeamGame.opponent,
-                plays: currentTeamGame.plays.slice(), // コピーを作成
-                playerStats: JSON.parse(JSON.stringify(currentTeamGame.playerStats)), // 深いコピー
-                scores: JSON.parse(JSON.stringify(currentTeamGame.scores)), // スコアデータも保存
-                currentPeriod: currentPeriod, // 現在のピリオドも保存
-                savedAt: new Date().toISOString() // 保存日時
+                plays: currentTeamGame.plays.slice(), // ã‚³ãƒ”ãƒ¼ã‚’ä½œæˆ
+                playerStats: JSON.parse(JSON.stringify(currentTeamGame.playerStats)), // æ·±ã„ã‚³ãƒ”ãƒ¼
+                scores: JSON.parse(JSON.stringify(currentTeamGame.scores)), // ã‚¹ã‚³ã‚¢ãƒ‡ãƒ¼ã‚¿ã‚‚ä¿å­˜
+                currentPeriod: currentPeriod, // ç¾åœ¨ã®ãƒ”ãƒªã‚ªãƒ‰ã‚‚ä¿å­˜
+                savedAt: new Date().toISOString() // ä¿å­˜æ—¥æ™‚
             };
             
-            // データを保存
+            // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
             saveData();
             
-            alert('✅ 途中保存しました！\n\n記録を続けるか、後から「続きから記録」で再開できます。');
+            alert('âœ… é€”ä¸­ä¿å­˜ã—ã¾ã—ãŸï¼\n\nè¨˜éŒ²ã‚’ç¶šã‘ã‚‹ã‹ã€å¾Œã‹ã‚‰ã€Œç¶šãã‹ã‚‰è¨˜éŒ²ã€ã§å†é–‹ã§ãã¾ã™ã€‚');
         }
 
-        // ========== 続きから記録（再開）機能 ==========
+        // ========== ç¶šãã‹ã‚‰è¨˜éŒ²ï¼ˆå†é–‹ï¼‰æ©Ÿèƒ½ ==========
         function resumeDraftGame() {
             if (!draftTeamGame) {
-                alert('❌ 途中保存されたデータがありません');
+                alert('âŒ é€”ä¸­ä¿å­˜ã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Šã¾ã›ã‚“');
                 return;
             }
             
-            // 確認メッセージ
+            // ç¢ºèªãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
             const dateStr = new Date(draftTeamGame.date).toLocaleDateString('ja-JP', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
             
-            if (!confirm('📋 未完了の試合記録があります\n\n' +
-                        '日付: ' + dateStr + '\n' +
-                        '対戦相手: ' + (draftTeamGame.opponent || '未設定') + '\n' +
-                        '保存日時: ' + new Date(draftTeamGame.savedAt).toLocaleString('ja-JP') + '\n\n' +
-                        '続きから記録しますか？')) {
+            if (!confirm('ðŸ“‹ æœªå®Œäº†ã®è©¦åˆè¨˜éŒ²ãŒã‚ã‚Šã¾ã™\n\n' +
+                        'æ—¥ä»˜: ' + dateStr + '\n' +
+                        'å¯¾æˆ¦ç›¸æ‰‹: ' + (draftTeamGame.opponent || 'æœªè¨­å®š') + '\n' +
+                        'ä¿å­˜æ—¥æ™‚: ' + new Date(draftTeamGame.savedAt).toLocaleString('ja-JP') + '\n\n' +
+                        'ç¶šãã‹ã‚‰è¨˜éŒ²ã—ã¾ã™ã‹ï¼Ÿ')) {
                 return;
             }
             
-            // 保存されていたデータを復元
+            // ä¿å­˜ã•ã‚Œã¦ã„ãŸãƒ‡ãƒ¼ã‚¿ã‚’å¾©å…ƒ
             currentTeamGame = {
                 id: draftTeamGame.id,
                 date: draftTeamGame.date,
@@ -2298,52 +2302,52 @@
                 }
             };
             
-            // ピリオドも復元
+            // ãƒ”ãƒªã‚ªãƒ‰ã‚‚å¾©å…ƒ
             currentPeriod = draftTeamGame.currentPeriod || 1;
             selectPeriod(currentPeriod);
             
-            // 日付と対戦相手を画面に表示
+            // æ—¥ä»˜ã¨å¯¾æˆ¦ç›¸æ‰‹ã‚’ç”»é¢ã«è¡¨ç¤º
             document.getElementById('teamGameDate').value = draftTeamGame.date;
             document.getElementById('teamOpponent').value = draftTeamGame.opponent || '';
             
-            // 記録画面を表示
+            // è¨˜éŒ²ç”»é¢ã‚’è¡¨ç¤º
             document.getElementById('teamRecording').style.display = 'block';
             displayPlayerSelector();
             updateTeamStats();
             displayPlayHistory();
             
-            alert('✅ 試合記録を再開しました！\n\n前回の続きから記録できます。');
+            alert('âœ… è©¦åˆè¨˜éŒ²ã‚’å†é–‹ã—ã¾ã—ãŸï¼\n\nå‰å›žã®ç¶šãã‹ã‚‰è¨˜éŒ²ã§ãã¾ã™ã€‚');
         }
 
-        // ========== 途中保存データの削除（試合完了時）==========
+        // ========== é€”ä¸­ä¿å­˜ãƒ‡ãƒ¼ã‚¿ã®å‰Šé™¤ï¼ˆè©¦åˆå®Œäº†æ™‚ï¼‰==========
         function clearDraftTeamGame() {
             draftTeamGame = null;
             saveData();
         }
 
-        // ========== 起動時に途中保存データがあるかチェック ==========
+        // ========== èµ·å‹•æ™‚ã«é€”ä¸­ä¿å­˜ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ ==========
         function checkAndShowDraftGame() {
-            // 途中保存データがなければ何もしない
+            // é€”ä¸­ä¿å­˜ãƒ‡ãƒ¼ã‚¿ãŒãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„
             if (!draftTeamGame) {
                 return;
             }
             
-            // チーム記録タブの一番上に「続きから記録」ボタンを表示
+            // ãƒãƒ¼ãƒ è¨˜éŒ²ã‚¿ãƒ–ã®ä¸€ç•ªä¸Šã«ã€Œç¶šãã‹ã‚‰è¨˜éŒ²ã€ãƒœã‚¿ãƒ³ã‚’è¡¨ç¤º
             const teamRecordTab = document.getElementById('teamRecordTab');
             
-            // 既に表示されているなら何もしない
+            // æ—¢ã«è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹ãªã‚‰ä½•ã‚‚ã—ãªã„
             if (document.getElementById('draftGameAlert')) {
                 return;
             }
             
-            // 日付を見やすく整形
+            // æ—¥ä»˜ã‚’è¦‹ã‚„ã™ãæ•´å½¢
             const dateStr = new Date(draftTeamGame.date).toLocaleDateString('ja-JP', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
             
-            // アラートボックスを作成
+            // ã‚¢ãƒ©ãƒ¼ãƒˆãƒœãƒƒã‚¯ã‚¹ã‚’ä½œæˆ
             const alertBox = document.createElement('div');
             alertBox.id = 'draftGameAlert';
             alertBox.className = 'card';
@@ -2352,44 +2356,44 @@
             alertBox.style.marginBottom = '20px';
             alertBox.innerHTML = 
                 '<div style="display: flex; align-items: center; margin-bottom: 15px;">' +
-                '<span style="font-size: 2em; margin-right: 10px;">⚠️</span>' +
-                '<h2 style="margin: 0;">未完了の試合記録があります</h2>' +
+                '<span style="font-size: 2em; margin-right: 10px;">âš ï¸</span>' +
+                '<h2 style="margin: 0;">æœªå®Œäº†ã®è©¦åˆè¨˜éŒ²ãŒã‚ã‚Šã¾ã™</h2>' +
                 '</div>' +
                 '<div style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 10px; margin-bottom: 15px;">' +
-                '<div style="margin-bottom: 8px;"><strong>📅 試合日:</strong> ' + dateStr + '</div>' +
-                '<div style="margin-bottom: 8px;"><strong>🏀 対戦相手:</strong> ' + (draftTeamGame.opponent || '未設定') + '</div>' +
-                '<div><strong>💾 保存日時:</strong> ' + new Date(draftTeamGame.savedAt).toLocaleString('ja-JP') + '</div>' +
+                '<div style="margin-bottom: 8px;"><strong>ðŸ“… è©¦åˆæ—¥:</strong> ' + dateStr + '</div>' +
+                '<div style="margin-bottom: 8px;"><strong>ðŸ€ å¯¾æˆ¦ç›¸æ‰‹:</strong> ' + (draftTeamGame.opponent || 'æœªè¨­å®š') + '</div>' +
+                '<div><strong>ðŸ’¾ ä¿å­˜æ—¥æ™‚:</strong> ' + new Date(draftTeamGame.savedAt).toLocaleString('ja-JP') + '</div>' +
                 '</div>' +
                 '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">' +
-                '<button class="primary-btn" style="background: #2ecc71;" onclick="resumeDraftGame()">▶️ 続きから記録</button>' +
-                '<button class="primary-btn" style="background: #e74c3c;" onclick="deleteDraftGame()">🗑️ 削除して新規作成</button>' +
+                '<button class="primary-btn" style="background: #2ecc71;" onclick="resumeDraftGame()">â–¶ï¸ ç¶šãã‹ã‚‰è¨˜éŒ²</button>' +
+                '<button class="primary-btn" style="background: #e74c3c;" onclick="deleteDraftGame()">ðŸ—‘ï¸ å‰Šé™¤ã—ã¦æ–°è¦ä½œæˆ</button>' +
                 '</div>';
             
-            // タブの最初に挿入
+            // ã‚¿ãƒ–ã®æœ€åˆã«æŒ¿å…¥
             teamRecordTab.insertBefore(alertBox, teamRecordTab.firstChild);
         }
 
-        // ========== 途中保存データを削除して新規作成 ==========
+        // ========== é€”ä¸­ä¿å­˜ãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ã—ã¦æ–°è¦ä½œæˆ ==========
         function deleteDraftGame() {
-            if (!confirm('⚠️ 途中保存されたデータを削除します\n\n削除すると復元できません。\n本当によろしいですか？')) {
+            if (!confirm('âš ï¸ é€”ä¸­ä¿å­˜ã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ã—ã¾ã™\n\nå‰Šé™¤ã™ã‚‹ã¨å¾©å…ƒã§ãã¾ã›ã‚“ã€‚\næœ¬å½“ã«ã‚ˆã‚ã—ã„ã§ã™ã‹ï¼Ÿ')) {
                 return;
             }
             
             clearDraftTeamGame();
             
-            // 警告ボックスを削除
+            // è­¦å‘Šãƒœãƒƒã‚¯ã‚¹ã‚’å‰Šé™¤
             const alertBox = document.getElementById('draftGameAlert');
             if (alertBox) {
                 alertBox.remove();
             }
             
-            alert('✅ 途中保存データを削除しました\n\n新しい試合を記録できます。');
+            alert('âœ… é€”ä¸­ä¿å­˜ãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ã—ã¾ã—ãŸ\n\næ–°ã—ã„è©¦åˆã‚’è¨˜éŒ²ã§ãã¾ã™ã€‚');
         }
 
         
 
         function switchTeamTab(tab) {
-            // タブボタンの切り替え
+            // ã‚¿ãƒ–ãƒœã‚¿ãƒ³ã®åˆ‡ã‚Šæ›¿ãˆ
             const tabs = document.querySelectorAll('#teamMode .tab');
             tabs.forEach(function(t) {
                 t.classList.remove('active');
@@ -2399,46 +2403,56 @@
                 tabs[0].classList.add('active');
                 document.getElementById('teamRecordTab').style.display = 'block';
                 document.getElementById('teamHistoryTab').style.display = 'none';
+                document.getElementById('teamRankingTab').style.display = 'none';
                 checkAndShowDraftGame();
             } else if (tab === 'history') {
                 tabs[1].classList.add('active');
                 document.getElementById('teamRecordTab').style.display = 'none';
                 document.getElementById('teamHistoryTab').style.display = 'block';
+                document.getElementById('teamRankingTab').style.display = 'none';
                 displayTeamGamesHistory();
+            } else if (tab === 'ranking') {
+                tabs[2].classList.add('active');
+                document.getElementById('teamRecordTab').style.display = 'none';
+                document.getElementById('teamHistoryTab').style.display = 'none';
+                document.getElementById('teamRankingTab').style.display = 'block';
+                displayTeamRankings();
             }
+        }
+
         }
 
         function displayTeamGamesHistory() {
             const listEl = document.getElementById('teamGamesList');
             
             if (teamGames.length === 0) {
-                listEl.innerHTML = '<div class="empty-state"><div class="icon">🏀</div><h3>まだ試合記録がありません</h3><p>試合記録タブで記録を開始しましょう！</p></div>';
+                listEl.innerHTML = '<div class="empty-state"><div class="icon">ðŸ€</div><h3>ã¾ã è©¦åˆè¨˜éŒ²ãŒã‚ã‚Šã¾ã›ã‚“</h3><p>è©¦åˆè¨˜éŒ²ã‚¿ãƒ–ã§è¨˜éŒ²ã‚’é–‹å§‹ã—ã¾ã—ã‚‡ã†ï¼</p></div>';
                 return;
             }
             
-            let html = '<div class="card"><h2 style="margin-bottom: 20px;">📊 試合履歴</h2></div>';
+            let html = '<div class="card"><h2 style="margin-bottom: 20px;">ðŸ“Š è©¦åˆå±¥æ­´</h2></div>';
             
-            // ========== 最新の試合が上に来るようにソート ==========
+            // ========== æœ€æ–°ã®è©¦åˆãŒä¸Šã«æ¥ã‚‹ã‚ˆã†ã«ã‚½ãƒ¼ãƒˆ ==========
             const sortedGames = teamGames.slice().sort(function(a, b) {
                 const dateA = new Date(a.date);
                 const dateB = new Date(b.date);
-                return dateB - dateA; // 新しい順（降順）
+                return dateB - dateA; // æ–°ã—ã„é †ï¼ˆé™é †ï¼‰
             });
             // ====================================================
             
             sortedGames.forEach(function(game, index) {
-                // 元のインデックスを取得（編集・削除用）
+                // å…ƒã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ï¼ˆç·¨é›†ãƒ»å‰Šé™¤ç”¨ï¼‰
                 const originalIndex = teamGames.indexOf(game);
                 const dateObj = new Date(game.date);
                 const dateStr = dateObj.toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'});
                 
-                // スコア情報を計算
+                // ã‚¹ã‚³ã‚¢æƒ…å ±ã‚’è¨ˆç®—
                 let scoreHtml = '';
                 if (game.scores) {
                     const ourTotal = (game.scores.our.q1 || 0) + (game.scores.our.q2 || 0) + (game.scores.our.q3 || 0) + (game.scores.our.q4 || 0);
                     const oppTotal = (game.scores.opp.q1 || 0) + (game.scores.opp.q2 || 0) + (game.scores.opp.q3 || 0) + (game.scores.opp.q4 || 0);
                     const isWin = ourTotal > oppTotal;
-                    const outcome = ourTotal === oppTotal ? '引き分け' : (isWin ? '勝利' : '敗北');
+                    const outcome = ourTotal === oppTotal ? 'å¼•ãåˆ†ã‘' : (isWin ? 'å‹åˆ©' : 'æ•—åŒ—');
                     
                     scoreHtml = '<div style="font-size: 1.5em; font-weight: bold; margin-top: 5px;">' +
                         ourTotal + ' - ' + oppTotal + ' (' + outcome + ')' +
@@ -2447,12 +2461,12 @@
                 
                 html += '<div class="game-history-item" onclick="toggleGameDetail(' + originalIndex + ')">' +
                     '<div class="game-date">' + dateStr + '</div>' +
-                    '<div class="game-opponent">vs ' + (game.opponent || '対戦相手なし') + '</div>' +
+                    '<div class="game-opponent">vs ' + (game.opponent || 'å¯¾æˆ¦ç›¸æ‰‹ãªã—') + '</div>' +
                     scoreHtml +
                     '</div>' +
                     '<div class="game-detail" id="gameDetail' + originalIndex + '">' +
                     generateScoreDetail(game) +
-                    '<button class="edit-game-btn" onclick="event.stopPropagation(); openEditGameModal(' + originalIndex + ')">📝 試合記録を編集（管理者のみ）</button>' +
+                    '<button class="edit-game-btn" onclick="event.stopPropagation(); openEditGameModal(' + originalIndex + ')">ðŸ“ è©¦åˆè¨˜éŒ²ã‚’ç·¨é›†ï¼ˆç®¡ç†è€…ã®ã¿ï¼‰</button>' +
                     generateGameRankings(game) +
                     '</div>';
             });
@@ -2471,17 +2485,17 @@
             const ourTotal = (game.scores.our.q1 || 0) + (game.scores.our.q2 || 0) + (game.scores.our.q3 || 0) + (game.scores.our.q4 || 0);
             const oppTotal = (game.scores.opp.q1 || 0) + (game.scores.opp.q2 || 0) + (game.scores.opp.q3 || 0) + (game.scores.opp.q4 || 0);
             const isWin = ourTotal > oppTotal;
-            const outcome = ourTotal === oppTotal ? '引き分け' : (isWin ? '勝利' : '敗北');
+            const outcome = ourTotal === oppTotal ? 'å¼•ãåˆ†ã‘' : (isWin ? 'å‹åˆ©' : 'æ•—åŒ—');
             
-            // チーム名を取得
-            const ourTeamName = teamData ? teamData.name : '自チーム';
-            const oppTeamName = game.opponent || '対戦相手';
+            // ãƒãƒ¼ãƒ åã‚’å–å¾—
+            const ourTeamName = teamData ? teamData.name : 'è‡ªãƒãƒ¼ãƒ ';
+            const oppTeamName = game.opponent || 'å¯¾æˆ¦ç›¸æ‰‹';
             
             let html = '<div class="game-result' + (isWin ? '' : ' loss') + '">';
-            html += '<div class="result-label">試合結果</div>';
+            html += '<div class="result-label">è©¦åˆçµæžœ</div>';
             html += '<div class="result-score">' + ourTotal + ' - ' + oppTotal + '</div>';
             
-            // ========== チーム名を追加 ==========
+            // ========== ãƒãƒ¼ãƒ åã‚’è¿½åŠ  ==========
             html += '<div class="team-names">';
             html += '<span class="our-team-name">' + ourTeamName + '</span>';
             html += '<span class="vs-label">VS</span>';
@@ -2514,39 +2528,39 @@
         function generateGameRankings(game) {
             let html = '';
             
-            // 得点ランキング
-            html += generateRankingSection(game, 'points', '🏆 得点王', function(stats) {
+            // å¾—ç‚¹ãƒ©ãƒ³ã‚­ãƒ³ã‚°
+            html += generateRankingSection(game, 'points', 'ðŸ† å¾—ç‚¹çŽ‹', function(stats) {
                 return (stats.twoPointsMade * 2) + (stats.threePointsMade * 3) + stats.freeThrowsMade;
-            }, '点');
+            }, 'ç‚¹');
             
-            // シュート成功率ランキング
-            html += generateRankingSection(game, 'fieldGoalPct', '🎯 シュート成功率', function(stats) {
+            // ã‚·ãƒ¥ãƒ¼ãƒˆæˆåŠŸçŽ‡ãƒ©ãƒ³ã‚­ãƒ³ã‚°
+            html += generateRankingSection(game, 'fieldGoalPct', 'ðŸŽ¯ ã‚·ãƒ¥ãƒ¼ãƒˆæˆåŠŸçŽ‡', function(stats) {
                 const made = stats.twoPointsMade + stats.threePointsMade;
                 const attempted = stats.twoPointsAttempted + stats.threePointsAttempted;
                 return attempted > 0 ? ((made / attempted) * 100).toFixed(1) : 0;
             }, '%', true);
             
-            // リバウンドランキング
-            html += generateRankingSection(game, 'rebounds', '📦 リバウンド王', function(stats) {
+            // ãƒªãƒã‚¦ãƒ³ãƒ‰ãƒ©ãƒ³ã‚­ãƒ³ã‚°
+            html += generateRankingSection(game, 'rebounds', 'ðŸ“¦ ãƒªãƒã‚¦ãƒ³ãƒ‰çŽ‹', function(stats) {
                 return stats.offensiveRebounds + stats.defensiveRebounds;
-            }, '本');
+            }, 'æœ¬');
             
-            // アシストランキング
-            html += generateRankingSection(game, 'assists', '🤝 アシスト王', function(stats) {
+            // ã‚¢ã‚·ã‚¹ãƒˆãƒ©ãƒ³ã‚­ãƒ³ã‚°
+            html += generateRankingSection(game, 'assists', 'ðŸ¤ ã‚¢ã‚·ã‚¹ãƒˆçŽ‹', function(stats) {
                 return stats.assists;
-            }, '回');
+            }, 'å›ž');
             
-            // スティールランキング
-            html += generateRankingSection(game, 'steals', '🛡️ スティール王', function(stats) {
+            // ã‚¹ãƒ†ã‚£ãƒ¼ãƒ«ãƒ©ãƒ³ã‚­ãƒ³ã‚°
+            html += generateRankingSection(game, 'steals', 'ðŸ›¡ï¸ ã‚¹ãƒ†ã‚£ãƒ¼ãƒ«çŽ‹', function(stats) {
                 return stats.steals;
-            }, '回');
+            }, 'å›ž');
             
             return html;
         }
         
 
         function generateRankingSection(game, key, title, calcFunc, unit, isPercentage) {
-            // 選手データを配列に変換して値を計算
+            // é¸æ‰‹ãƒ‡ãƒ¼ã‚¿ã‚’é…åˆ—ã«å¤‰æ›ã—ã¦å€¤ã‚’è¨ˆç®—
             const playerData = [];
             Object.keys(game.playerStats).forEach(function(playerId) {
                 const player = players.find(function(p) { return p.id === playerId; });
@@ -2554,7 +2568,7 @@
                     const stats = game.playerStats[playerId];
                     const value = calcFunc(stats);
                     
-                    // シュート成功率の場合、試投数が0の選手は除外
+                    // ã‚·ãƒ¥ãƒ¼ãƒˆæˆåŠŸçŽ‡ã®å ´åˆã€è©¦æŠ•æ•°ãŒ0ã®é¸æ‰‹ã¯é™¤å¤–
                     if (isPercentage) {
                         const attempted = stats.twoPointsAttempted + stats.threePointsAttempted;
                         if (attempted > 0) {
@@ -2574,7 +2588,7 @@
                 }
             });
             
-            // 値でソート（降順）
+            // å€¤ã§ã‚½ãƒ¼ãƒˆï¼ˆé™é †ï¼‰
             playerData.sort(function(a, b) { return b.value - a.value; });
             
             if (playerData.length === 0) {
@@ -2584,9 +2598,9 @@
             let html = '<div class="ranking-section">';
             html += '<h3>' + title + '</h3>';
             
-            // TOP3を表示
+            // TOP3ã‚’è¡¨ç¤º
             html += '<div class="top3-container">';
-            const medals = ['🥇', '🥈', '🥉'];
+            const medals = ['ðŸ¥‡', 'ðŸ¥ˆ', 'ðŸ¥‰'];
             for (let i = 0; i < Math.min(3, playerData.length); i++) {
                 const data = playerData[i];
                 html += '<div class="ranking-card">' +
@@ -2599,17 +2613,17 @@
             }
             html += '</div>';
             
-            // 全選手ランキング（折りたたみ）
+            // å…¨é¸æ‰‹ãƒ©ãƒ³ã‚­ãƒ³ã‚°ï¼ˆæŠ˜ã‚ŠãŸãŸã¿ï¼‰
             if (playerData.length > 3) {
                 html += '<button class="toggle-rankings" onclick="toggleAllRankings(\'' + key + game.id + '\')">' +
-                    '▼ 全' + playerData.length + '名のランキングを表示' +
+                    'â–¼ å…¨' + playerData.length + 'åã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã‚’è¡¨ç¤º' +
                     '</button>';
                 
                 html += '<div class="all-rankings" id="allRankings' + key + game.id + '">';
                 playerData.forEach(function(data, index) {
                     html += '<div class="ranking-card">' +
                         '<div class="ranking-info">' +
-                        '<span class="rank">' + (index + 1) + '位</span>' +
+                        '<span class="rank">' + (index + 1) + 'ä½</span>' +
                         '<span class="player-name">#' + data.player.number + ' ' + data.player.name + '</span>' +
                         '<span class="stat-value">' + data.displayValue + unit + '</span>' +
                         '</div>' +
@@ -2630,12 +2644,295 @@
             if (el.classList.contains('active')) {
                 el.classList.remove('active');
                 btn.classList.remove('active');
-                btn.textContent = btn.textContent.replace('▲ 閉じる', '▼ 全' + btn.textContent.match(/\d+/)[0] + '名のランキングを表示');
+                btn.textContent = btn.textContent.replace('â–² é–‰ã˜ã‚‹', 'â–¼ å…¨' + btn.textContent.match(/\d+/)[0] + 'åã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã‚’è¡¨ç¤º');
             } else {
                 el.classList.add('active');
                 btn.classList.add('active');
-                btn.textContent = '▲ 閉じる';
+                btn.textContent = 'â–² é–‰ã˜ã‚‹';
             }
+        }
+        
+
+        // ========== ãƒãƒ¼ãƒ ãƒ©ãƒ³ã‚­ãƒ³ã‚°è¡¨ç¤ºé–¢æ•° ==========
+        function displayTeamRankings() {
+            const container = document.getElementById('teamRankingsDisplay');
+            
+            if (teamGames.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">ðŸ†</div><h3>ã¾ã è©¦åˆè¨˜éŒ²ãŒã‚ã‚Šã¾ã›ã‚"</h3><p>è©¦åˆè¨˜éŒ²ã‚¿ãƒ–ã§è¨˜éŒ²ã‚'é–‹å§‹ã—ã¾ã—ã‚‡ã†ï¼</p></div>';
+                return;
+            }
+            
+            let html = '';
+            
+            // ç›´è¿'3è©¦åˆã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°
+            html += '<div class="card">';
+            html += '<h2 style="margin-bottom: 20px;">ðŸ"Š ç›´è¿'3è©¦åˆã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°</h2>';
+            html += '<p style="color: #666; margin-bottom: 20px; font-size: 0.9em;">æœ€æ–°3è©¦åˆã®åˆè¨ˆå€¤ãƒ»å¹³å‡å€¤ã§ç®—å‡º</p>';
+            html += calculateRecentGamesRankings();
+            html += '</div>';
+            
+            // å…¨è©¦åˆã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°
+            html += '<div class="card">';
+            html += '<h2 style="margin-bottom: 20px;">ðŸ† å…¨è©¦åˆé€šç®—ãƒ©ãƒ³ã‚­ãƒ³ã‚°</h2>';
+            html += '<p style="color: #666; margin-bottom: 20px; font-size: 0.9em;">å…¨' + teamGames.length + 'è©¦åˆã®å¹³å‡å€¤ãƒ»åˆè¨ˆå€¤ã§ç®—å‡º</p>';
+            html += calculateAllGamesRankings();
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+        
+        function calculateRecentGamesRankings() {
+            // æœ€æ–°3è©¦åˆã‚'å–å¾—
+            const recentGames = teamGames.slice().sort(function(a, b) {
+                return new Date(b.date) - new Date(a.date);
+            }).slice(0, 3);
+            
+            if (recentGames.length === 0) return '';
+            
+            // å„é¸æ‰‹ã®çµ±è¨ˆã‚'é›†è¨ˆ
+            const playerStats = {};
+            
+            recentGames.forEach(function(game) {
+                Object.keys(game.playerStats).forEach(function(playerId) {
+                    const stats = game.playerStats[playerId];
+                    
+                    if (!playerStats[playerId]) {
+                        playerStats[playerId] = {
+                            gamesPlayed: 0,
+                            totalPoints: 0,
+                            totalRebounds: 0,
+                            totalAssists: 0,
+                            totalFGMade: 0,
+                            totalFGAttempted: 0
+                        };
+                    }
+                    
+                    playerStats[playerId].gamesPlayed++;
+                    playerStats[playerId].totalPoints += (stats.twoPointsMade * 2) + (stats.threePointsMade * 3) + stats.freeThrowsMade;
+                    playerStats[playerId].totalRebounds += stats.offensiveRebounds + stats.defensiveRebounds;
+                    playerStats[playerId].totalAssists += stats.assists;
+                    playerStats[playerId].totalFGMade += stats.twoPointsMade + stats.threePointsMade;
+                    playerStats[playerId].totalFGAttempted += stats.twoPointsAttempted + stats.threePointsAttempted;
+                });
+            });
+            
+            let html = '';
+            
+            // å¾—ç‚¹çŽ‹ï¼ˆåˆè¨ˆï¼‰
+            html += generateTeamRankingSection(
+                playerStats,
+                'ðŸ† å¾—ç‚¹çŽ‹ï¼ˆåˆè¨ˆï¼‰',
+                function(stats) { return stats.totalPoints; },
+                'ç‚¹',
+                false,
+                'recentPoints'
+            );
+            
+            // ã‚·ãƒ¥ãƒ¼ãƒˆæˆåŠŸçŽ‡ï¼ˆå¹³å‡ï¼‰
+            html += generateTeamRankingSection(
+                playerStats,
+                'ðŸŽ¯ ã‚·ãƒ¥ãƒ¼ãƒˆæˆåŠŸçŽ‡ï¼ˆå¹³å‡ï¼‰',
+                function(stats) { 
+                    return stats.totalFGAttempted > 0 ? (stats.totalFGMade / stats.totalFGAttempted * 100).toFixed(1) : 0;
+                },
+                '%',
+                true,
+                'recentFG'
+            );
+            
+            // ãƒªãƒã‚¦ãƒ³ãƒ‰çŽ‹ï¼ˆåˆè¨ˆï¼‰
+            html += generateTeamRankingSection(
+                playerStats,
+                'ðŸ"¦ ãƒªãƒã‚¦ãƒ³ãƒ‰çŽ‹ï¼ˆåˆè¨ˆï¼‰',
+                function(stats) { return stats.totalRebounds; },
+                'æœ¬',
+                false,
+                'recentReb'
+            );
+            
+            // ã‚¢ã‚·ã‚¹ãƒˆçŽ‹ï¼ˆåˆè¨ˆï¼‰
+            html += generateTeamRankingSection(
+                playerStats,
+                'ðŸ¤ ã‚¢ã‚·ã‚¹ãƒˆçŽ‹ï¼ˆåˆè¨ˆï¼‰',
+                function(stats) { return stats.totalAssists; },
+                'å›ž',
+                false,
+                'recentAst'
+            );
+            
+            return html;
+        }
+        
+        function calculateAllGamesRankings() {
+            if (teamGames.length === 0) return '';
+            
+            // å„é¸æ‰‹ã®çµ±è¨ˆã‚'é›†è¨ˆ
+            const playerStats = {};
+            
+            teamGames.forEach(function(game) {
+                Object.keys(game.playerStats).forEach(function(playerId) {
+                    const stats = game.playerStats[playerId];
+                    
+                    if (!playerStats[playerId]) {
+                        playerStats[playerId] = {
+                            gamesPlayed: 0,
+                            totalPoints: 0,
+                            totalRebounds: 0,
+                            totalAssists: 0,
+                            totalFGMade: 0,
+                            totalFGAttempted: 0
+                        };
+                    }
+                    
+                    playerStats[playerId].gamesPlayed++;
+                    playerStats[playerId].totalPoints += (stats.twoPointsMade * 2) + (stats.threePointsMade * 3) + stats.freeThrowsMade;
+                    playerStats[playerId].totalRebounds += stats.offensiveRebounds + stats.defensiveRebounds;
+                    playerStats[playerId].totalAssists += stats.assists;
+                    playerStats[playerId].totalFGMade += stats.twoPointsMade + stats.threePointsMade;
+                    playerStats[playerId].totalFGAttempted += stats.twoPointsAttempted + stats.threePointsAttempted;
+                });
+            });
+            
+            let html = '';
+            
+            // å¾—ç‚¹çŽ‹ï¼ˆå¹³å‡ + åˆè¨ˆï¼‰
+            html += generateTeamRankingSection(
+                playerStats,
+                'ðŸ† å¾—ç‚¹çŽ‹',
+                function(stats) { 
+                    const avg = (stats.totalPoints / stats.gamesPlayed).toFixed(1);
+                    return { value: parseFloat(avg), display: avg + 'ç‚¹ï¼ˆåˆè¨ˆ' + stats.totalPoints + 'ç‚¹ï¼‰' };
+                },
+                '',
+                false,
+                'allPoints',
+                true
+            );
+            
+            // ã‚·ãƒ¥ãƒ¼ãƒˆæˆåŠŸçŽ‡ï¼ˆå¹³å‡ï¼‰
+            html += generateTeamRankingSection(
+                playerStats,
+                'ðŸŽ¯ ã‚·ãƒ¥ãƒ¼ãƒˆæˆåŠŸçŽ‡',
+                function(stats) { 
+                    return stats.totalFGAttempted > 0 ? (stats.totalFGMade / stats.totalFGAttempted * 100).toFixed(1) : 0;
+                },
+                '%',
+                true,
+                'allFG'
+            );
+            
+            // ãƒªãƒã‚¦ãƒ³ãƒ‰çŽ‹ï¼ˆå¹³å‡ + åˆè¨ˆï¼‰
+            html += generateTeamRankingSection(
+                playerStats,
+                'ðŸ"¦ ãƒªãƒã‚¦ãƒ³ãƒ‰çŽ‹',
+                function(stats) { 
+                    const avg = (stats.totalRebounds / stats.gamesPlayed).toFixed(1);
+                    return { value: parseFloat(avg), display: avg + 'æœ¬ï¼ˆåˆè¨ˆ' + stats.totalRebounds + 'æœ¬ï¼‰' };
+                },
+                '',
+                false,
+                'allReb',
+                true
+            );
+            
+            // ã‚¢ã‚·ã‚¹ãƒˆçŽ‹ï¼ˆå¹³å‡ + åˆè¨ˆï¼‰
+            html += generateTeamRankingSection(
+                playerStats,
+                'ðŸ¤ ã‚¢ã‚·ã‚¹ãƒˆçŽ‹',
+                function(stats) { 
+                    const avg = (stats.totalAssists / stats.gamesPlayed).toFixed(1);
+                    return { value: parseFloat(avg), display: avg + 'å›žï¼ˆåˆè¨ˆ' + stats.totalAssists + 'å›žï¼‰' };
+                },
+                '',
+                false,
+                'allAst',
+                true
+            );
+            
+            return html;
+        }
+        
+        function generateTeamRankingSection(playerStats, title, calcFunc, unit, isPercentage, key, useCustomDisplay) {
+            const playerData = [];
+            
+            Object.keys(playerStats).forEach(function(playerId) {
+                const player = players.find(function(p) { return p.id === playerId; });
+                if (!player) return;
+                
+                const stats = playerStats[playerId];
+                const result = calcFunc(stats);
+                
+                let value, displayValue;
+                if (useCustomDisplay && typeof result === 'object') {
+                    value = result.value;
+                    displayValue = result.display;
+                } else {
+                    value = parseFloat(result);
+                    displayValue = result + unit;
+                }
+                
+                // ã‚·ãƒ¥ãƒ¼ãƒˆæˆåŠŸçŽ‡ã®å ´åˆã€è©¦æŠ•æ•°ãŒ0ã®é¸æ‰‹ã¯é™¤å¤–
+                if (isPercentage && stats.totalFGAttempted === 0) {
+                    return;
+                }
+                
+                // å€¤ãŒ0ä»¥ä¸Šã®å ´åˆã®ã¿è¿½åŠ 
+                if (value > 0 || !isPercentage) {
+                    playerData.push({
+                        player: player,
+                        value: value,
+                        displayValue: displayValue
+                    });
+                }
+            });
+            
+            // å€¤ã§ã‚½ãƒ¼ãƒˆï¼ˆé™é †ï¼‰
+            playerData.sort(function(a, b) { return b.value - a.value; });
+            
+            if (playerData.length === 0) {
+                return '';
+            }
+            
+            let html = '<div class="ranking-section">';
+            html += '<h3>' + title + '</h3>';
+            
+            // TOP3ã‚'è¡¨ç¤º
+            html += '<div class="top3-container">';
+            const medals = ['ðŸ¥‡', 'ðŸ¥ˆ', 'ðŸ¥‰'];
+            for (let i = 0; i < Math.min(3, playerData.length); i++) {
+                const data = playerData[i];
+                html += '<div class="ranking-card">' +
+                    '<span class="ranking-medal">' + medals[i] + '</span>' +
+                    '<div class="ranking-info">' +
+                    '<span class="player-name">#' + data.player.number + ' ' + data.player.name + '</span>' +
+                    '<span class="stat-value">' + data.displayValue + '</span>' +
+                    '</div>' +
+                    '</div>';
+            }
+            html += '</div>';
+            
+            // å…¨é¸æ‰‹ãƒ©ãƒ³ã‚­ãƒ³ã‚°ï¼ˆæŠ˜ã‚ŠãŸãŸã¿ï¼‰
+            if (playerData.length > 3) {
+                html += '<button class="toggle-rankings" onclick="toggleAllRankings('' + key + '')">' +
+                    'â–¼ å…¨' + playerData.length + 'åã®ãƒ©ãƒ³ã‚­ãƒ³ã‚°ã‚'è¡¨ç¤º' +
+                    '</button>';
+                
+                html += '<div class="all-rankings" id="allRankings' + key + '">';
+                playerData.forEach(function(data, index) {
+                    html += '<div class="ranking-card">' +
+                        '<div class="ranking-info">' +
+                        '<span class="rank">' + (index + 1) + 'ä½</span>' +
+                        '<span class="player-name">#' + data.player.number + ' ' + data.player.name + '</span>' +
+                        '<span class="stat-value">' + data.displayValue + '</span>' +
+                        '</div>' +
+                        '</div>';
+                });
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            
+            return html;
         }
         
         function showCreateTeamModal() {
@@ -2645,52 +2942,52 @@
         let currentEditingGameIndex = null;
 
         function openEditGameModal(gameIndex) {
-            // チームに参加していない場合
+            // ãƒãƒ¼ãƒ ã«å‚åŠ ã—ã¦ã„ãªã„å ´åˆ
             if (!teamData) {
-                alert('❌ チームに参加していません');
+                alert('âŒ ãƒãƒ¼ãƒ ã«å‚åŠ ã—ã¦ã„ã¾ã›ã‚“');
                 return;
             }
             
-            // デバッグ：管理者パスワードが取得できているか確認
+            // ãƒ‡ãƒãƒƒã‚°ï¼šç®¡ç†è€…ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒå–å¾—ã§ãã¦ã„ã‚‹ã‹ç¢ºèª
             console.log('teamData:', teamData);
-            console.log('管理者パスワード:', teamData.adminPassword);
+            console.log('ç®¡ç†è€…ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰:', teamData.adminPassword);
             
-            // 管理者パスワードが設定されていない場合
+            // ç®¡ç†è€…ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒè¨­å®šã•ã‚Œã¦ã„ãªã„å ´åˆ
             if (!teamData.adminPassword) {
-                alert('⚠️ 管理者パスワードが設定されていません\n\nスプレッドシートの「チーム情報」シートB4セルにパスワードを設定してください。\nその後、「今すぐ同期」ボタンを押してください。');
+                alert('âš ï¸ ç®¡ç†è€…ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“\n\nã‚¹ãƒ—ãƒ¬ãƒƒãƒ‰ã‚·ãƒ¼ãƒˆã®ã€Œãƒãƒ¼ãƒ æƒ…å ±ã€ã‚·ãƒ¼ãƒˆB4ã‚»ãƒ«ã«ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’è¨­å®šã—ã¦ãã ã•ã„ã€‚\nãã®å¾Œã€ã€Œä»Šã™ãåŒæœŸã€ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚');
                 return;
             }
             
-            // 管理者パスワードを確認
-            const password = prompt('🔒 管理者パスワードを入力してください\n\n※スプレッドシートの「チーム情報」シートB4セルで確認できます');
+            // ç®¡ç†è€…ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’ç¢ºèª
+            const password = prompt('ðŸ”’ ç®¡ç†è€…ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„\n\nâ€»ã‚¹ãƒ—ãƒ¬ãƒƒãƒ‰ã‚·ãƒ¼ãƒˆã®ã€Œãƒãƒ¼ãƒ æƒ…å ±ã€ã‚·ãƒ¼ãƒˆB4ã‚»ãƒ«ã§ç¢ºèªã§ãã¾ã™');
             
             if (!password) {
                 return;
             }
             
-            // 空白チェック
+            // ç©ºç™½ãƒã‚§ãƒƒã‚¯
             if (password.trim() === '') {
-                alert('❌ パスワードを入力してください');
+                alert('âŒ ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„');
                 return;
             }
             
-            // パスワードを検証
+            // ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’æ¤œè¨¼
             const correctPassword = teamData.adminPassword || '';
             
             if (password !== correctPassword) {
-                alert('❌ 管理者パスワードが正しくありません\n\nスプレッドシートの「チーム情報」シートB4セルを確認してください。');
+                alert('âŒ ç®¡ç†è€…ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“\n\nã‚¹ãƒ—ãƒ¬ãƒƒãƒ‰ã‚·ãƒ¼ãƒˆã®ã€Œãƒãƒ¼ãƒ æƒ…å ±ã€ã‚·ãƒ¼ãƒˆB4ã‚»ãƒ«ã‚’ç¢ºèªã—ã¦ãã ã•ã„ã€‚');
                 return;
             }
             
-            // パスワード認証成功
+            // ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰èªè¨¼æˆåŠŸ
             currentEditingGameIndex = gameIndex;
             const game = teamGames[gameIndex];
             
-            // 試合情報を入力欄に設定
+            // è©¦åˆæƒ…å ±ã‚’å…¥åŠ›æ¬„ã«è¨­å®š
             document.getElementById('editGameDate').value = game.date;
             document.getElementById('editOpponent').value = game.opponent || '';
             
-            // スコアを入力欄に設定
+            // ã‚¹ã‚³ã‚¢ã‚’å…¥åŠ›æ¬„ã«è¨­å®š
             if (game.scores) {
                 document.getElementById('editOurQ1').value = game.scores.our.q1 || 0;
                 document.getElementById('editOppQ1').value = game.scores.opp.q1 || 0;
@@ -2702,10 +2999,10 @@
                 document.getElementById('editOppQ4').value = game.scores.opp.q4 || 0;
             }
             
-            // 選手統計を表示
+            // é¸æ‰‹çµ±è¨ˆã‚’è¡¨ç¤º
             displayEditPlayerStats(game);
             
-            // モーダルを開く
+            // ãƒ¢ãƒ¼ãƒ€ãƒ«ã‚’é–‹ã
             document.getElementById('editGameModal').classList.add('active');
         }
 
@@ -2723,19 +3020,19 @@
                 html += '<div class="player-header">#' + player.number + ' ' + player.name + '</div>';
                 html += '<div class="stat-edit-grid">';
                 
-                html += '<div class="stat-edit-item"><label>2P成功</label><input type="number" min="0" id="edit_' + playerId + '_2pm" value="' + stats.twoPointsMade + '"></div>';
-                html += '<div class="stat-edit-item"><label>2P試投</label><input type="number" min="0" id="edit_' + playerId + '_2pa" value="' + stats.twoPointsAttempted + '"></div>';
-                html += '<div class="stat-edit-item"><label>3P成功</label><input type="number" min="0" id="edit_' + playerId + '_3pm" value="' + stats.threePointsMade + '"></div>';
-                html += '<div class="stat-edit-item"><label>3P試投</label><input type="number" min="0" id="edit_' + playerId + '_3pa" value="' + stats.threePointsAttempted + '"></div>';
-                html += '<div class="stat-edit-item"><label>FT成功</label><input type="number" min="0" id="edit_' + playerId + '_ftm" value="' + stats.freeThrowsMade + '"></div>';
-                html += '<div class="stat-edit-item"><label>FT試投</label><input type="number" min="0" id="edit_' + playerId + '_fta" value="' + stats.freeThrowsAttempted + '"></div>';
-                html += '<div class="stat-edit-item"><label>オフェンスRB</label><input type="number" min="0" id="edit_' + playerId + '_oreb" value="' + stats.offensiveRebounds + '"></div>';
-                html += '<div class="stat-edit-item"><label>ディフェンスRB</label><input type="number" min="0" id="edit_' + playerId + '_dreb" value="' + stats.defensiveRebounds + '"></div>';
-                html += '<div class="stat-edit-item"><label>アシスト</label><input type="number" min="0" id="edit_' + playerId + '_ast" value="' + stats.assists + '"></div>';
-                html += '<div class="stat-edit-item"><label>スティール</label><input type="number" min="0" id="edit_' + playerId + '_stl" value="' + stats.steals + '"></div>';
-                html += '<div class="stat-edit-item"><label>ブロック</label><input type="number" min="0" id="edit_' + playerId + '_blk" value="' + stats.blocks + '"></div>';
+                html += '<div class="stat-edit-item"><label>2PæˆåŠŸ</label><input type="number" min="0" id="edit_' + playerId + '_2pm" value="' + stats.twoPointsMade + '"></div>';
+                html += '<div class="stat-edit-item"><label>2Pè©¦æŠ•</label><input type="number" min="0" id="edit_' + playerId + '_2pa" value="' + stats.twoPointsAttempted + '"></div>';
+                html += '<div class="stat-edit-item"><label>3PæˆåŠŸ</label><input type="number" min="0" id="edit_' + playerId + '_3pm" value="' + stats.threePointsMade + '"></div>';
+                html += '<div class="stat-edit-item"><label>3Pè©¦æŠ•</label><input type="number" min="0" id="edit_' + playerId + '_3pa" value="' + stats.threePointsAttempted + '"></div>';
+                html += '<div class="stat-edit-item"><label>FTæˆåŠŸ</label><input type="number" min="0" id="edit_' + playerId + '_ftm" value="' + stats.freeThrowsMade + '"></div>';
+                html += '<div class="stat-edit-item"><label>FTè©¦æŠ•</label><input type="number" min="0" id="edit_' + playerId + '_fta" value="' + stats.freeThrowsAttempted + '"></div>';
+                html += '<div class="stat-edit-item"><label>ã‚ªãƒ•ã‚§ãƒ³ã‚¹RB</label><input type="number" min="0" id="edit_' + playerId + '_oreb" value="' + stats.offensiveRebounds + '"></div>';
+                html += '<div class="stat-edit-item"><label>ãƒ‡ã‚£ãƒ•ã‚§ãƒ³ã‚¹RB</label><input type="number" min="0" id="edit_' + playerId + '_dreb" value="' + stats.defensiveRebounds + '"></div>';
+                html += '<div class="stat-edit-item"><label>ã‚¢ã‚·ã‚¹ãƒˆ</label><input type="number" min="0" id="edit_' + playerId + '_ast" value="' + stats.assists + '"></div>';
+                html += '<div class="stat-edit-item"><label>ã‚¹ãƒ†ã‚£ãƒ¼ãƒ«</label><input type="number" min="0" id="edit_' + playerId + '_stl" value="' + stats.steals + '"></div>';
+                html += '<div class="stat-edit-item"><label>ãƒ–ãƒ­ãƒƒã‚¯</label><input type="number" min="0" id="edit_' + playerId + '_blk" value="' + stats.blocks + '"></div>';
                 html += '<div class="stat-edit-item"><label>TO</label><input type="number" min="0" id="edit_' + playerId + '_to" value="' + stats.turnovers + '"></div>';
-                html += '<div class="stat-edit-item"><label>ファウル</label><input type="number" min="0" id="edit_' + playerId + '_foul" value="' + stats.fouls + '"></div>';
+                html += '<div class="stat-edit-item"><label>ãƒ•ã‚¡ã‚¦ãƒ«</label><input type="number" min="0" id="edit_' + playerId + '_foul" value="' + stats.fouls + '"></div>';
                 
                 html += '</div></div>';
             });
@@ -2748,11 +3045,11 @@
             
             const game = teamGames[currentEditingGameIndex];
             
-            // 試合情報を更新
+            // è©¦åˆæƒ…å ±ã‚’æ›´æ–°
             game.date = document.getElementById('editGameDate').value;
             game.opponent = document.getElementById('editOpponent').value;
             
-            // スコアを更新
+            // ã‚¹ã‚³ã‚¢ã‚’æ›´æ–°
             if (!game.scores) {
                 game.scores = {
                     our: { q1: 0, q2: 0, q3: 0, q4: 0 },
@@ -2769,7 +3066,7 @@
             game.scores.our.q4 = parseInt(document.getElementById('editOurQ4').value) || 0;
             game.scores.opp.q4 = parseInt(document.getElementById('editOppQ4').value) || 0;
             
-            // 各選手の統計を更新
+            // å„é¸æ‰‹ã®çµ±è¨ˆã‚’æ›´æ–°
             Object.keys(game.playerStats).forEach(function(playerId) {
                 const stats = game.playerStats[playerId];
                 
@@ -2788,33 +3085,33 @@
                 stats.fouls = parseInt(document.getElementById('edit_' + playerId + '_foul').value) || 0;
             });
             
-            // 個人データも更新
+            // å€‹äººãƒ‡ãƒ¼ã‚¿ã‚‚æ›´æ–°
             updatePersonalGamesFromTeamGame(game);
             
-            // データを保存
+            // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜
             saveData();
             
-            // 同期
+            // åŒæœŸ
             if (teamData) {
                 syncGamesOnly();
             }
             
-            // 表示を更新
+            // è¡¨ç¤ºã‚’æ›´æ–°
             displayTeamGamesHistory();
             
-            // モーダルを閉じる
+            // ãƒ¢ãƒ¼ãƒ€ãƒ«ã‚’é–‰ã˜ã‚‹
             closeModal('editGameModal');
             
-            alert('✅ 試合記録を更新しました！');
+            alert('âœ… è©¦åˆè¨˜éŒ²ã‚’æ›´æ–°ã—ã¾ã—ãŸï¼');
         }
 
         function updatePersonalGamesFromTeamGame(teamGame) {
-    // この試合に関連する個人データを全て削除(試合IDで確実に削除)
+    // ã“ã®è©¦åˆã«é–¢é€£ã™ã‚‹å€‹äººãƒ‡ãƒ¼ã‚¿ã‚’å…¨ã¦å‰Šé™¤(è©¦åˆIDã§ç¢ºå®Ÿã«å‰Šé™¤)
     personalGames = personalGames.filter(function(g) {
         return !(g.source === 'team' && g.teamGameId === teamGame.id);
     });
     
-    // 新しい個人データを作成
+    // æ–°ã—ã„å€‹äººãƒ‡ãƒ¼ã‚¿ã‚’ä½œæˆ
     Object.keys(teamGame.playerStats).forEach(function(playerId) {
         const stats = teamGame.playerStats[playerId];
         const totalReb = stats.offensiveRebounds + stats.defensiveRebounds;
@@ -2845,13 +3142,13 @@
             freeThrowPercentage: stats.freeThrowsAttempted > 0 ? ((stats.freeThrowsMade / stats.freeThrowsAttempted) * 100).toFixed(1) : '0',
             totalPoints: totalPts,
             source: 'team',
-            teamGameId: teamGame.id  // ← ★ここが重要!チームゲームIDを保存
+            teamGameId: teamGame.id  // â† â˜…ã“ã“ãŒé‡è¦!ãƒãƒ¼ãƒ ã‚²ãƒ¼ãƒ IDã‚’ä¿å­˜
         };
         
         personalGames.unshift(personalGame);
     });
     
-    // 履歴やグラフを更新
+    // å±¥æ­´ã‚„ã‚°ãƒ©ãƒ•ã‚’æ›´æ–°
     displayGames();
     displayRankings();
     updateCharts();
@@ -2862,24 +3159,24 @@
     const game = teamGames[currentEditingGameIndex];
     const dateStr = new Date(game.date).toLocaleDateString('ja-JP');
     
-    if (!confirm('⚠️ 本当にこの試合を削除しますか？\n\n' + dateStr + ' vs ' + game.opponent + '\n\nこの操作は取り消せません！')) {
+    if (!confirm('âš ï¸ æœ¬å½“ã«ã“ã®è©¦åˆã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ\n\n' + dateStr + ' vs ' + game.opponent + '\n\nã“ã®æ“ä½œã¯å–ã‚Šæ¶ˆã›ã¾ã›ã‚“ï¼')) {
         return;
     }
     
-    // ローカルのチームデータから削除
+    // ãƒ­ãƒ¼ã‚«ãƒ«ã®ãƒãƒ¼ãƒ ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰å‰Šé™¤
     teamGames.splice(currentEditingGameIndex, 1);
     
-    // 個人データからも削除(試合IDで確実に削除)
+    // å€‹äººãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚‚å‰Šé™¤(è©¦åˆIDã§ç¢ºå®Ÿã«å‰Šé™¤)
 personalGames = personalGames.filter(function(g) {
     return !(g.source === 'team' && g.teamGameId === game.id);
 });
     
     saveData();
     
-    // サーバーからも削除
+    // ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã‚‚å‰Šé™¤
     if (teamData && teamData.adminPassword) {
         try {
-            showSyncIndicator('syncing', 'サーバーから削除中...');
+            showSyncIndicator('syncing', 'ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰å‰Šé™¤ä¸­...');
             
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -2897,19 +3194,19 @@ personalGames = personalGames.filter(function(g) {
             const result = await response.json();
             
             if (result.success) {
-                showSyncIndicator('success', '削除完了！');
+                showSyncIndicator('success', 'å‰Šé™¤å®Œäº†ï¼');
             } else {
-                showSyncIndicator('error', result.error || '削除失敗');
-                alert('⚠️ サーバーからの削除に失敗しました：' + (result.error || '不明なエラー'));
+                showSyncIndicator('error', result.error || 'å‰Šé™¤å¤±æ•—');
+                alert('âš ï¸ ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã®å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸï¼š' + (result.error || 'ä¸æ˜Žãªã‚¨ãƒ©ãƒ¼'));
             }
         } catch (error) {
-            console.error('削除エラー:', error);
-            showSyncIndicator('error', '削除失敗');
-            alert('⚠️ エラーが発生しました：' + error.message);
+            console.error('å‰Šé™¤ã‚¨ãƒ©ãƒ¼:', error);
+            showSyncIndicator('error', 'å‰Šé™¤å¤±æ•—');
+            alert('âš ï¸ ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸï¼š' + error.message);
         }
     }
     
-    // 画面を更新
+    // ç”»é¢ã‚’æ›´æ–°
     displayGames();
     displayRankings();
     updateCharts();
@@ -2946,11 +3243,11 @@ personalGames = personalGames.filter(function(g) {
         async function createTeam() {
             const teamName = document.getElementById('newTeamName').value.trim();
             if (!teamName) {
-                alert('チーム名を入力してください');
+                alert('ãƒãƒ¼ãƒ åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„');
                 return;
             }
 
-            showSyncIndicator('syncing', 'チームを作成中...');
+            showSyncIndicator('syncing', 'ãƒãƒ¼ãƒ ã‚’ä½œæˆä¸­...');
             
             const teamCode = generateTeamCode();
             
@@ -2979,27 +3276,27 @@ personalGames = personalGames.filter(function(g) {
                     saveData();
                     closeModal('createTeamModal');
                     displayTeamStatus();
-                    showSyncIndicator('success', 'チーム作成完了!');
+                    showSyncIndicator('success', 'ãƒãƒ¼ãƒ ä½œæˆå®Œäº†!');
                     
-                    alert('✅ チーム「' + teamName + '」を作成しました！\n\nチームコード: ' + teamCode + '\n\nこのコードを友達に共有してください。\n\nスプレッドシート: ' + result.spreadsheetUrl);
+                    alert('âœ… ãƒãƒ¼ãƒ ã€Œ' + teamName + 'ã€ã‚’ä½œæˆã—ã¾ã—ãŸï¼\n\nãƒãƒ¼ãƒ ã‚³ãƒ¼ãƒ‰: ' + teamCode + '\n\nã“ã®ã‚³ãƒ¼ãƒ‰ã‚’å‹é”ã«å…±æœ‰ã—ã¦ãã ã•ã„ã€‚\n\nã‚¹ãƒ—ãƒ¬ãƒƒãƒ‰ã‚·ãƒ¼ãƒˆ: ' + result.spreadsheetUrl);
                 } else {
-                    throw new Error(result.error || 'チーム作成に失敗しました');
+                    throw new Error(result.error || 'ãƒãƒ¼ãƒ ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸ');
                 }
             } catch (error) {
-                console.error('エラー:', error);
-                showSyncIndicator('error', 'エラーが発生しました');
-                alert('❌ エラー: ' + error.message + '\n\nもう一度お試しください。');
+                console.error('ã‚¨ãƒ©ãƒ¼:', error);
+                showSyncIndicator('error', 'ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ');
+                alert('âŒ ã‚¨ãƒ©ãƒ¼: ' + error.message + '\n\nã‚‚ã†ä¸€åº¦ãŠè©¦ã—ãã ã•ã„ã€‚');
             }
         }
 
         async function joinTeam() {
             const teamCode = document.getElementById('joinTeamCode').value.trim().toUpperCase();
             if (!teamCode || teamCode.length !== 6) {
-                alert('正しい6桁のチームコードを入力してください');
+                alert('æ­£ã—ã„6æ¡ã®ãƒãƒ¼ãƒ ã‚³ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„');
                 return;
             }
 
-            showSyncIndicator('syncing', 'チームに参加中...');
+            showSyncIndicator('syncing', 'ãƒãƒ¼ãƒ ã«å‚åŠ ä¸­...');
             
             try {
                 const response = await fetch(API_URL, {
@@ -3017,7 +3314,7 @@ personalGames = personalGames.filter(function(g) {
                 
                 if (result.success) {
                     teamData = {
-                        name: result.teamData ? result.teamData.name : 'チーム',
+                        name: result.teamData ? result.teamData.name : 'ãƒãƒ¼ãƒ ',
                         code: teamCode,
                         spreadsheetId: result.spreadsheetId,
                         joinedAt: new Date().toISOString()
@@ -3026,30 +3323,30 @@ personalGames = personalGames.filter(function(g) {
                     saveData();
                     closeModal('joinTeamModal');
                     
-                    // データを取得
+                    // ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
                     await loadTeamData();
                     
-                    // 表示を更新
+                    // è¡¨ç¤ºã‚’æ›´æ–°
                     displayTeamStatus();
                     displayPlayers();
                     updateMyPlayerSelect();
                     
-                    showSyncIndicator('success', 'チーム参加完了!');
-                    alert('✅ チームに参加しました！\n\nチーム名: ' + teamData.name + '\nチームコード: ' + teamCode + '\n\n選手データを取得しました。\n設定タブの「個人モード表示設定」で選手を選択してください。');
+                    showSyncIndicator('success', 'ãƒãƒ¼ãƒ å‚åŠ å®Œäº†!');
+                    alert('âœ… ãƒãƒ¼ãƒ ã«å‚åŠ ã—ã¾ã—ãŸï¼\n\nãƒãƒ¼ãƒ å: ' + teamData.name + '\nãƒãƒ¼ãƒ ã‚³ãƒ¼ãƒ‰: ' + teamCode + '\n\né¸æ‰‹ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã—ã¾ã—ãŸã€‚\nè¨­å®šã‚¿ãƒ–ã®ã€Œå€‹äººãƒ¢ãƒ¼ãƒ‰è¡¨ç¤ºè¨­å®šã€ã§é¸æ‰‹ã‚’é¸æŠžã—ã¦ãã ã•ã„ã€‚');
                 } else {
-                    throw new Error(result.error || 'チーム参加に失敗しました');
+                    throw new Error(result.error || 'ãƒãƒ¼ãƒ å‚åŠ ã«å¤±æ•—ã—ã¾ã—ãŸ');
                 }
             } catch (error) {
-                console.error('エラー:', error);
-                showSyncIndicator('error', 'エラーが発生しました');
-                alert('❌ エラー: ' + error.message);
+                console.error('ã‚¨ãƒ©ãƒ¼:', error);
+                showSyncIndicator('error', 'ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ');
+                alert('âŒ ã‚¨ãƒ©ãƒ¼: ' + error.message);
             }
         }
 
         async function syncWithServer(options = { pushPlayers: false, pushGames: true }) {
     if (!teamData) return;
 
-    showSyncIndicator('syncing', '同期中...');
+    showSyncIndicator('syncing', 'åŒæœŸä¸­...');
 
     try {
         const payload = {
@@ -3057,7 +3354,7 @@ personalGames = personalGames.filter(function(g) {
             teamCode: teamData.code
         };
 
-        // 新規追加した選手だけ送る（後述の addPlayer で _localNew を付ける）
+        // æ–°è¦è¿½åŠ ã—ãŸé¸æ‰‹ã ã‘é€ã‚‹ï¼ˆå¾Œè¿°ã® addPlayer ã§ _localNew ã‚’ä»˜ã‘ã‚‹ï¼‰
         if (options.pushPlayers) {
             const newPlayers = players.filter(p => p && p._localNew === true);
             if (newPlayers.length > 0) payload.players = newPlayers;
@@ -3076,30 +3373,30 @@ personalGames = personalGames.filter(function(g) {
         const result = await response.json();
         if (!result.success) throw new Error(result.error || 'syncData failed');
 
-        // 送信に成功した“新規選手”はフラグを外しておく
+        // é€ä¿¡ã«æˆåŠŸã—ãŸâ€œæ–°è¦é¸æ‰‹â€ã¯ãƒ•ãƒ©ã‚°ã‚’å¤–ã—ã¦ãŠã
         if (options.pushPlayers) {
             players.forEach(p => { if (p._localNew) p._localNew = false; });
         }
 
-        showSyncIndicator('success', '送信完了');
+        showSyncIndicator('success', 'é€ä¿¡å®Œäº†');
     } catch (e) {
         console.error(e);
-        showSyncIndicator('error', '同期失敗：' + e.message);
+        showSyncIndicator('error', 'åŒæœŸå¤±æ•—ï¼š' + e.message);
     }
 }
 
-// ▼▼▼ 追加：試合だけを送る同期（選手は送らない） ▼▼▼
+// â–¼â–¼â–¼ è¿½åŠ ï¼šè©¦åˆã ã‘ã‚’é€ã‚‹åŒæœŸï¼ˆé¸æ‰‹ã¯é€ã‚‰ãªã„ï¼‰ â–¼â–¼â–¼
 async function syncGamesOnly() {
   if (!teamData) return;
 
-  showSyncIndicator('syncing', '同期中...');
+  showSyncIndicator('syncing', 'åŒæœŸä¸­...');
 
   try {
     const payload = {
       action: 'syncData',
       teamCode: teamData.code,
-      // ← 選手は送らない
-      games: teamGames       // ← 試合だけ送る
+      // â† é¸æ‰‹ã¯é€ã‚‰ãªã„
+      games: teamGames       // â† è©¦åˆã ã‘é€ã‚‹
     };
 
     const response = await fetch(API_URL, {
@@ -3111,44 +3408,44 @@ async function syncGamesOnly() {
     const result = await response.json();
     if (!result.success) throw new Error(result.error || 'syncData failed');
 
-    showSyncIndicator('success', '送信完了');
+    showSyncIndicator('success', 'é€ä¿¡å®Œäº†');
   } catch (e) {
     console.error(e);
-    showSyncIndicator('error', '同期失敗：' + e.message);
+    showSyncIndicator('error', 'åŒæœŸå¤±æ•—ï¼š' + e.message);
   }
 }
-// ▲▲▲ 追加ここまで ▲▲▲
+// â–²â–²â–² è¿½åŠ ã“ã“ã¾ã§ â–²â–²â–²
         
         
-        // ▼▼▼ ここから追加：送受信まとめて行う ▼▼▼
+        // â–¼â–¼â–¼ ã“ã“ã‹ã‚‰è¿½åŠ ï¼šé€å—ä¿¡ã¾ã¨ã‚ã¦è¡Œã† â–¼â–¼â–¼
 async function syncAll() {
-  if (!teamData) { alert('チームに参加していません'); return; }
-  showSyncIndicator('syncing', '同期中…');
+  if (!teamData) { alert('ãƒãƒ¼ãƒ ã«å‚åŠ ã—ã¦ã„ã¾ã›ã‚“'); return; }
+  showSyncIndicator('syncing', 'åŒæœŸä¸­â€¦');
 
   try {
-    // 1) まずサーバーから最新データを取得（受信優先）
+    // 1) ã¾ãšã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰æœ€æ–°ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ï¼ˆå—ä¿¡å„ªå…ˆï¼‰
     await loadTeamData();
 
-    // 2) 画面を最新化
+    // 2) ç”»é¢ã‚’æœ€æ–°åŒ–
     displayPlayers();
     updateMyPlayerSelect();
     displayGames();
     displayRankings();
     updateCharts();
 
-    showSyncIndicator('success', '同期完了！');
+    showSyncIndicator('success', 'åŒæœŸå®Œäº†ï¼');
   } catch (e) {
     console.error(e);
-    showSyncIndicator('error', '同期失敗：' + e.message);
+    showSyncIndicator('error', 'åŒæœŸå¤±æ•—ï¼š' + e.message);
   }
 }
-// ▲▲▲ 追加ここまで ▲▲▲
+// â–²â–²â–² è¿½åŠ ã“ã“ã¾ã§ â–²â–²â–²
 
 
         async function loadTeamData() {
     if (!teamData) return;
     
-    showSyncIndicator('syncing', 'データ取得中...');
+    showSyncIndicator('syncing', 'ãƒ‡ãƒ¼ã‚¿å–å¾—ä¸­...');
     
     try {
         const response = await fetch(API_URL, {
@@ -3167,15 +3464,15 @@ async function syncAll() {
         if (result.success) {
             let addedCount = 0;
             
-            // 管理者パスワードをteamDataに保存
+            // ç®¡ç†è€…ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’teamDataã«ä¿å­˜
 if (result.teamData && result.teamData.adminPassword) {
     teamData.adminPassword = result.teamData.adminPassword;
-    saveData();  // すぐに保存
+    saveData();  // ã™ãã«ä¿å­˜
 }
             
-            // 選手データを取得（サーバーのデータで完全に上書き）
+            // é¸æ‰‹ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ï¼ˆã‚µãƒ¼ãƒãƒ¼ã®ãƒ‡ãƒ¼ã‚¿ã§å®Œå…¨ã«ä¸Šæ›¸ãï¼‰
 if (result.players) {
-    // サーバーのデータを信頼して完全に置き換える
+    // ã‚µãƒ¼ãƒãƒ¼ã®ãƒ‡ãƒ¼ã‚¿ã‚’ä¿¡é ¼ã—ã¦å®Œå…¨ã«ç½®ãæ›ãˆã‚‹
     players = result.players.map(function(serverPlayer) {
         serverPlayer._localNew = false;
         return serverPlayer;
@@ -3183,9 +3480,9 @@ if (result.players) {
     addedCount = players.length;
 }
             
-            // 試合データを取得してpersonalGamesに変換
+            // è©¦åˆãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã—ã¦personalGamesã«å¤‰æ›
             if (result.games) {
-                // サーバーのデータで完全に上書きする
+                // ã‚µãƒ¼ãƒãƒ¼ã®ãƒ‡ãƒ¼ã‚¿ã§å®Œå…¨ã«ä¸Šæ›¸ãã™ã‚‹
                 teamGames = [];
                 personalGames = personalGames.filter(function(g) {
                     return g.source !== 'team';
@@ -3194,7 +3491,7 @@ if (result.players) {
                 result.games.forEach(function(game) {
                     teamGames.push(game);
                     
-                    // 各選手のデータをpersonalGamesに追加
+                    // å„é¸æ‰‹ã®ãƒ‡ãƒ¼ã‚¿ã‚’personalGamesã«è¿½åŠ 
                     Object.keys(game.playerStats).forEach(function(playerId) {
                         const stats = game.playerStats[playerId];
                         const totalReb = stats.offensiveRebounds + stats.defensiveRebounds;
@@ -3225,7 +3522,7 @@ if (result.players) {
                             freeThrowPercentage: stats.freeThrowsAttempted > 0 ? ((stats.freeThrowsMade / stats.freeThrowsAttempted) * 100).toFixed(1) : '0',
                             totalPoints: totalPts,
                             source: 'team',
-                            teamGameId: game.id  // ← この行を追加
+                            teamGameId: game.id  // â† ã“ã®è¡Œã‚’è¿½åŠ 
                         };
                         
                         personalGames.unshift(personalGame);
@@ -3236,42 +3533,42 @@ if (result.players) {
             saveData();
             
             const gameCount = result.games ? result.games.length : 0;
-            showSyncIndicator('success', addedCount + '人の選手、' + gameCount + '試合のデータを取得');
+            showSyncIndicator('success', addedCount + 'äººã®é¸æ‰‹ã€' + gameCount + 'è©¦åˆã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—');
             
             return addedCount;
         } else {
-            showSyncIndicator('error', 'データ取得失敗');
+            showSyncIndicator('error', 'ãƒ‡ãƒ¼ã‚¿å–å¾—å¤±æ•—');
         }
     } catch (error) {
-        console.error('データ取得エラー:', error);
-        showSyncIndicator('error', 'データ取得失敗');
+        console.error('ãƒ‡ãƒ¼ã‚¿å–å¾—ã‚¨ãƒ©ãƒ¼:', error);
+        showSyncIndicator('error', 'ãƒ‡ãƒ¼ã‚¿å–å¾—å¤±æ•—');
     }
 }
         function displayTeamStatus() {
             const statusEl = document.getElementById('teamStatus');
             
             if (!teamData) {
-                statusEl.innerHTML = '<p style="color: #999; text-align: center;">チームに参加していません</p>';
+                statusEl.innerHTML = '<p style="color: #999; text-align: center;">ãƒãƒ¼ãƒ ã«å‚åŠ ã—ã¦ã„ã¾ã›ã‚“</p>';
                 return;
             }
             
             statusEl.innerHTML = 
                 '<div class="team-code-display">' +
-                '<div style="font-size: 0.9em; color: #666;">現在のチーム</div>' +
+                '<div style="font-size: 0.9em; color: #666;">ç¾åœ¨ã®ãƒãƒ¼ãƒ </div>' +
                 '<div style="font-size: 1.3em; font-weight: bold; color: #667eea; margin: 10px 0;">' + teamData.name + '</div>' +
-                '<div style="font-size: 0.9em; color: #666;">チームコード</div>' +
+                '<div style="font-size: 0.9em; color: #666;">ãƒãƒ¼ãƒ ã‚³ãƒ¼ãƒ‰</div>' +
                 '<div class="code">' + teamData.code + '</div>' +
-                '<button class="primary-btn" style="background: #2ecc71; margin-top: 15px;" onclick="syncAll()">今すぐ同期（送受信）</button>' +
-                '<button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="leaveTeam()">チームから退出</button>' +
+                '<button class="primary-btn" style="background: #2ecc71; margin-top: 15px;" onclick="syncAll()">ä»Šã™ãåŒæœŸï¼ˆé€å—ä¿¡ï¼‰</button>' +
+                '<button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="leaveTeam()">ãƒãƒ¼ãƒ ã‹ã‚‰é€€å‡º</button>' +
                 '</div>';
         }
 
         function leaveTeam() {
-            if (confirm('本当にチームから退出しますか？')) {
+            if (confirm('æœ¬å½“ã«ãƒãƒ¼ãƒ ã‹ã‚‰é€€å‡ºã—ã¾ã™ã‹ï¼Ÿ')) {
                 teamData = null;
                 saveData();
                 displayTeamStatus();
-                alert('✅ チームから退出しました');
+                alert('âœ… ãƒãƒ¼ãƒ ã‹ã‚‰é€€å‡ºã—ã¾ã—ãŸ');
             }
         }
 
@@ -3281,21 +3578,21 @@ if (result.players) {
         function switchMode(mode) {
            currentMode = mode;
             
-            // すべてのボタンのアクティブ状態をリセット
+            // ã™ã¹ã¦ã®ãƒœã‚¿ãƒ³ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆ
             document.querySelectorAll('.mode-btn').forEach(function(btn) {
                btn.classList.remove('active');
                btn.classList.remove('team-mode');
            });
             
-            // 背景色をリセット
+            // èƒŒæ™¯è‰²ã‚’ãƒªã‚»ãƒƒãƒˆ
            document.body.classList.remove('personal-mode', 'team-mode');
            
-            // すべてのモードを非表示
+            // ã™ã¹ã¦ã®ãƒ¢ãƒ¼ãƒ‰ã‚’éžè¡¨ç¤º
             document.getElementById('personalMode').style.display = 'none';
             document.getElementById('teamMode').style.display = 'none';
             document.getElementById('settingsMode').style.display = 'none';
             
-            // 選択されたモードを表示
+            // é¸æŠžã•ã‚ŒãŸãƒ¢ãƒ¼ãƒ‰ã‚’è¡¨ç¤º
            if (mode === 'personal') {
                 document.querySelector('.mode-btn:nth-child(1)').classList.add('active');
                 document.getElementById('personalMode').style.display = 'block';
@@ -3377,7 +3674,7 @@ if (result.players) {
             document.getElementById('freeThrowPercentage').textContent = ft + '%';
             document.getElementById('totalPoints').textContent = totalPoints;
             
-            // 分数を表示
+            // åˆ†æ•°ã‚’è¡¨ç¤º
             document.getElementById('twoPointFraction').textContent = '(' + stats.twoPointsMade + '/' + stats.twoPointsAttempted + ')';
             document.getElementById('threePointFraction').textContent = '(' + stats.threePointsMade + '/' + stats.threePointsAttempted + ')';
             document.getElementById('freeThrowFraction').textContent = '(' + stats.freeThrowsMade + '/' + stats.freeThrowsAttempted + ')';
@@ -3385,13 +3682,13 @@ if (result.players) {
         function savePersonalGame() {
             const date = document.getElementById('gameDate').value;
             if (!date) {
-                alert('試合日を選択してください');
+                alert('è©¦åˆæ—¥ã‚’é¸æŠžã—ã¦ãã ã•ã„');
                 return;
             }
 
             const saveBtn = document.getElementById('saveGameBtn');
             saveBtn.disabled = true;
-            saveBtn.textContent = '保存中...';
+            saveBtn.textContent = 'ä¿å­˜ä¸­...';
 
             const game = {
                 id: Date.now(),
@@ -3431,9 +3728,9 @@ if (result.players) {
             resetForm();
             
             saveBtn.disabled = false;
-            saveBtn.textContent = '記録を保存';
+            saveBtn.textContent = 'è¨˜éŒ²ã‚’ä¿å­˜';
             
-            alert('✅ 試合記録を保存しました！');
+            alert('âœ… è©¦åˆè¨˜éŒ²ã‚’ä¿å­˜ã—ã¾ã—ãŸï¼');
         }
 
         function resetForm() {
@@ -3449,7 +3746,7 @@ if (result.players) {
         function displayGames() {
     const gameList = document.getElementById('gameList');
     
-    // myPlayerIdが設定されていない場合は全データを表示
+    // myPlayerIdãŒè¨­å®šã•ã‚Œã¦ã„ãªã„å ´åˆã¯å…¨ãƒ‡ãƒ¼ã‚¿ã‚’è¡¨ç¤º
     const myGames = myPlayerId 
         ? personalGames.filter(function(g) {
             return !g.playerId || g.playerId === myPlayerId;
@@ -3457,28 +3754,28 @@ if (result.players) {
         : personalGames;
     
     if (myGames.length === 0) {
-        gameList.innerHTML = '<div class="empty-state"><div class="icon">🏀</div><h3>まだ記録がありません</h3><p>最初の試合を記録しましょう！</p></div>';
+        gameList.innerHTML = '<div class="empty-state"><div class="icon">ðŸ€</div><h3>ã¾ã è¨˜éŒ²ãŒã‚ã‚Šã¾ã›ã‚“</h3><p>æœ€åˆã®è©¦åˆã‚’è¨˜éŒ²ã—ã¾ã—ã‚‡ã†ï¼</p></div>';
         return;
     }
 
             gameList.innerHTML = myGames.map(function(g) {
                 const dateObj = new Date(g.date);
                 const dateStr = dateObj.toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'});
-                const sourceLabel = g.source === 'team' ? ' <span style="background: #2ecc71; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8em;">試合記録</span>' : '';
+                const sourceLabel = g.source === 'team' ? ' <span style="background: #2ecc71; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8em;">è©¦åˆè¨˜éŒ²</span>' : '';
                 
                 return '<div class="game-item">' +
                     '<div class="game-date">' + dateStr + 
                     (g.opponent ? ' vs ' + g.opponent : '') + 
-                    (g.playTime ? ' (' + g.playTime + '分)' : '') + 
+                    (g.playTime ? ' (' + g.playTime + 'åˆ†)' : '') + 
                     sourceLabel +
                     '</div>' +
                     '<div class="game-stats">' +
-                    '<div class="stat-box"><div class="label">総得点</div><div class="value">' + g.totalPoints + '点</div></div>' +
-                    '<div class="stat-box"><div class="label">2P率</div><div class="value">' + g.twoPointPercentage + '%</div><div class="fraction">(' + g.twoPointsMade + '/' + g.twoPointsAttempted + ')</div></div>' +
-                    '<div class="stat-box"><div class="label">3P率</div><div class="value">' + g.threePointPercentage + '%</div><div class="fraction">(' + g.threePointsMade + '/' + g.threePointsAttempted + ')</div></div>' +
-                    '<div class="stat-box"><div class="label">FT率</div><div class="value">' + g.freeThrowPercentage + '%</div><div class="fraction">(' + g.freeThrowsMade + '/' + g.freeThrowsAttempted + ')</div></div>' +
-                    '<div class="stat-box"><div class="label">リバウンド</div><div class="value">' + g.totalRebounds + '</div></div>' +
-                    '<div class="stat-box"><div class="label">アシスト</div><div class="value">' + g.assists + '</div></div>' +
+                    '<div class="stat-box"><div class="label">ç·å¾—ç‚¹</div><div class="value">' + g.totalPoints + 'ç‚¹</div></div>' +
+                    '<div class="stat-box"><div class="label">2PçŽ‡</div><div class="value">' + g.twoPointPercentage + '%</div><div class="fraction">(' + g.twoPointsMade + '/' + g.twoPointsAttempted + ')</div></div>' +
+                    '<div class="stat-box"><div class="label">3PçŽ‡</div><div class="value">' + g.threePointPercentage + '%</div><div class="fraction">(' + g.threePointsMade + '/' + g.threePointsAttempted + ')</div></div>' +
+                    '<div class="stat-box"><div class="label">FTçŽ‡</div><div class="value">' + g.freeThrowPercentage + '%</div><div class="fraction">(' + g.freeThrowsMade + '/' + g.freeThrowsAttempted + ')</div></div>' +
+                    '<div class="stat-box"><div class="label">ãƒªãƒã‚¦ãƒ³ãƒ‰</div><div class="value">' + g.totalRebounds + '</div></div>' +
+                    '<div class="stat-box"><div class="label">ã‚¢ã‚·ã‚¹ãƒˆ</div><div class="value">' + g.assists + '</div></div>' +
                     '</div>' +
                     '</div>';
             }).join('');
@@ -3492,7 +3789,7 @@ if (result.players) {
     : personalGames;
             
             if (myGames.length === 0) {
-                document.getElementById('topPoints').innerHTML = '<p style="text-align: center; color: #999;">記録がありません</p>';
+                document.getElementById('topPoints').innerHTML = '<p style="text-align: center; color: #999;">è¨˜éŒ²ãŒã‚ã‚Šã¾ã›ã‚“</p>';
                 return;
             }
 
@@ -3506,9 +3803,9 @@ if (result.players) {
                 const dateStr = dateObj.toLocaleDateString('ja-JP', {year: 'numeric', month: 'long', day: 'numeric'});
                 
                 let html = '<div class="top-record">' +
-                    '<div class="trophy">🏆</div>' +
-                    '<div style="font-size: 1.2em; margin-bottom: 10px;">最高得点</div>' +
-                    '<div class="value">' + top.totalPoints + '点</div>' +
+                    '<div class="trophy">ðŸ†</div>' +
+                    '<div style="font-size: 1.2em; margin-bottom: 10px;">æœ€é«˜å¾—ç‚¹</div>' +
+                    '<div class="value">' + top.totalPoints + 'ç‚¹</div>' +
                     '<div style="font-size: 1.1em; opacity: 0.95;">' + dateStr;
                 
                 if (top.opponent) {
@@ -3542,19 +3839,19 @@ if (result.players) {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: '2P成功率',
+                        label: '2PæˆåŠŸçŽ‡',
                         data: sorted.map(function(g) { return parseFloat(g.twoPointPercentage); }),
                         borderColor: '#667eea',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         tension: 0.4
                     }, {
-                        label: '3P成功率',
+                        label: '3PæˆåŠŸçŽ‡',
                         data: sorted.map(function(g) { return parseFloat(g.threePointPercentage); }),
                         borderColor: '#f093fb',
                         backgroundColor: 'rgba(240, 147, 251, 0.1)',
                         tension: 0.4
                     }, {
-                        label: 'FT成功率',
+                        label: 'FTæˆåŠŸçŽ‡',
                         data: sorted.map(function(g) { return parseFloat(g.freeThrowPercentage); }),
                         borderColor: '#4facfe',
                         backgroundColor: 'rgba(79, 172, 254, 0.1)',
@@ -3581,7 +3878,7 @@ if (result.players) {
             const name = document.getElementById('playerName').value.trim();
 
             if (!num || !name) { 
-                alert('背番号と名前を入力してください'); 
+                alert('èƒŒç•ªå·ã¨åå‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„'); 
                 return; 
             }
             
@@ -3590,7 +3887,7 @@ if (result.players) {
             });
             
             if (exists) { 
-                alert('この背番号は既に登録されています'); 
+                alert('ã“ã®èƒŒç•ªå·ã¯æ—¢ã«ç™»éŒ²ã•ã‚Œã¦ã„ã¾ã™'); 
                 return; 
             }
 
@@ -3606,11 +3903,11 @@ if (result.players) {
             saveData();
 
 if (teamData) {
-    // 新規追加フラグをつける
-    // （この行は、プレイヤーオブジェクト生成直後でもOK）
+    // æ–°è¦è¿½åŠ ãƒ•ãƒ©ã‚°ã‚’ã¤ã‘ã‚‹
+    // ï¼ˆã“ã®è¡Œã¯ã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”Ÿæˆç›´å¾Œã§ã‚‚OKï¼‰
     player._localNew = true;
 
-    // 選手だけ送信（試合は送らない）
+    // é¸æ‰‹ã ã‘é€ä¿¡ï¼ˆè©¦åˆã¯é€ã‚‰ãªã„ï¼‰
     syncWithServer({ pushPlayers: true, pushGames: false });
 }
             
@@ -3620,7 +3917,7 @@ if (teamData) {
             document.getElementById('playerNumber').value = '';
             document.getElementById('playerName').value = '';
             
-            alert('✅ ' + name + ' #' + num + ' を登録しました！');
+            alert('âœ… ' + name + ' #' + num + ' ã‚’ç™»éŒ²ã—ã¾ã—ãŸï¼');
         }
 
         function editPlayer(playerId) {
@@ -3630,11 +3927,11 @@ if (teamData) {
             
             if (!player) return;
             
-            const newNumber = prompt('新しい背番号を入力してください（現在: #' + player.number + '）', player.number);
+            const newNumber = prompt('æ–°ã—ã„èƒŒç•ªå·ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ï¼ˆç¾åœ¨: #' + player.number + 'ï¼‰', player.number);
             if (newNumber === null) return;
             
             if (!newNumber || newNumber.trim() === '') {
-                alert('背番号を入力してください');
+                alert('èƒŒç•ªå·ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„');
                 return;
             }
             
@@ -3643,15 +3940,15 @@ if (teamData) {
             });
             
             if (duplicate) {
-                alert('この背番号は既に他の選手が使用しています');
+                alert('ã“ã®èƒŒç•ªå·ã¯æ—¢ã«ä»–ã®é¸æ‰‹ãŒä½¿ç”¨ã—ã¦ã„ã¾ã™');
                 return;
             }
             
-            const newName = prompt('新しい名前を入力してください（現在: ' + player.name + '）', player.name);
+            const newName = prompt('æ–°ã—ã„åå‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ï¼ˆç¾åœ¨: ' + player.name + 'ï¼‰', player.name);
             if (newName === null) return;
             
             if (!newName || newName.trim() === '') {
-                alert('名前を入力してください');
+                alert('åå‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„');
                 return;
             }
             
@@ -3660,7 +3957,7 @@ if (teamData) {
             
             saveData();
 
-// サーバへは送らない（編集/削除は手動でシートを直す運用）
+// ã‚µãƒ¼ãƒã¸ã¯é€ã‚‰ãªã„ï¼ˆç·¨é›†/å‰Šé™¤ã¯æ‰‹å‹•ã§ã‚·ãƒ¼ãƒˆã‚’ç›´ã™é‹ç”¨ï¼‰
 /* if (teamData) {
     syncWithServer();
 } */
@@ -3671,7 +3968,7 @@ if (teamData) {
             displayRankings();
             updateCharts();
             
-            alert('✅ 選手情報を更新しました！\n\n#' + player.number + ' ' + player.name);
+            alert('âœ… é¸æ‰‹æƒ…å ±ã‚’æ›´æ–°ã—ã¾ã—ãŸï¼\n\n#' + player.number + ' ' + player.name);
         }
 
         function deletePlayer(playerId) {
@@ -3681,7 +3978,7 @@ if (teamData) {
             
             if (!player) return;
             
-            if (!confirm('「#' + player.number + ' ' + player.name + '」を削除しますか？\n\n⚠️ この選手の試合記録も全て削除されます。')) {
+            if (!confirm('ã€Œ#' + player.number + ' ' + player.name + 'ã€ã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ\n\nâš ï¸ ã“ã®é¸æ‰‹ã®è©¦åˆè¨˜éŒ²ã‚‚å…¨ã¦å‰Šé™¤ã•ã‚Œã¾ã™ã€‚')) {
                 return;
             }
             
@@ -3720,7 +4017,7 @@ if (teamData) {
             displayRankings();
             updateCharts();
             
-            alert('✅ 選手を削除しました');
+            alert('âœ… é¸æ‰‹ã‚’å‰Šé™¤ã—ã¾ã—ãŸ');
         }
         
         function changeMyPlayer() {
@@ -3730,21 +4027,21 @@ if (teamData) {
             displayRankings();
             updateCharts();
             
-            updatePlayerBanners();  // ← 追加
+            updatePlayerBanners();  // â† è¿½åŠ 
             
             if (myPlayerId) {
                 const p = players.find(function(pl) {
                     return pl.id === myPlayerId;
                 });
-                alert('✅ 個人モード表示を「' + p.name + ' #' + p.number + '」に設定しました\n\n履歴・ランキング・グラフが更新されました！');
+                alert('âœ… å€‹äººãƒ¢ãƒ¼ãƒ‰è¡¨ç¤ºã‚’ã€Œ' + p.name + ' #' + p.number + 'ã€ã«è¨­å®šã—ã¾ã—ãŸ\n\nå±¥æ­´ãƒ»ãƒ©ãƒ³ã‚­ãƒ³ã‚°ãƒ»ã‚°ãƒ©ãƒ•ãŒæ›´æ–°ã•ã‚Œã¾ã—ãŸï¼');
             }
         }
 
         function updatePlayerBanners() {
-            // 選手が選択されているかチェック
+            // é¸æ‰‹ãŒé¸æŠžã•ã‚Œã¦ã„ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
             if (myPlayerId && players.length > 0) {
                 const player = players.find(function(p) { return p.id === myPlayerId; });
-                const playerText = player ? player.name + ' #' + player.number : '選手が見つかりません';
+                const playerText = player ? player.name + ' #' + player.number : 'é¸æ‰‹ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“';
 
                 const banners = [
                     { banner: 'inputPlayerBanner', name: 'inputPlayerName' },
@@ -3761,12 +4058,12 @@ if (teamData) {
                         bannerEl.style.display = 'flex';
                         nameEl.textContent = playerText;
                         
-                        // クリック機能を追加
+                        // ã‚¯ãƒªãƒƒã‚¯æ©Ÿèƒ½ã‚’è¿½åŠ 
                         bannerEl.style.cursor = 'pointer';
                         bannerEl.style.transition = 'all 0.3s';
                         bannerEl.onclick = showPlayerSelectDialog;
                         
-                        // マウスを乗せたときの効果
+                        // ãƒžã‚¦ã‚¹ã‚’ä¹—ã›ãŸã¨ãã®åŠ¹æžœ
                         bannerEl.onmouseenter = function() {
                             this.style.transform = 'scale(1.02)';
                             this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
@@ -3779,7 +4076,7 @@ if (teamData) {
                     }
                 });
             } else {
-                // 選手が選択されていない場合は非表示
+                // é¸æ‰‹ãŒé¸æŠžã•ã‚Œã¦ã„ãªã„å ´åˆã¯éžè¡¨ç¤º
                 ['inputPlayerBanner', 'listPlayerBanner', 'rankingPlayerBanner', 'graphPlayerBanner'].forEach(function(id) {
                     const el = document.getElementById(id);
                     if (el) {
@@ -3789,81 +4086,81 @@ if (teamData) {
             }
         }
         
-        // 選手選択ダイアログを表示する関数
+        // é¸æ‰‹é¸æŠžãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°
         function showPlayerSelectDialog() {
             if (!players || players.length === 0) {
-                alert('選手が登録されていません。\n先に「選手管理」で選手を追加してください。');
+                alert('é¸æ‰‹ãŒç™»éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚\nå…ˆã«ã€Œé¸æ‰‹ç®¡ç†ã€ã§é¸æ‰‹ã‚’è¿½åŠ ã—ã¦ãã ã•ã„ã€‚');
                 return;
             }
             
-            // ドロップダウンに選手を追加
+            // ãƒ‰ãƒ­ãƒƒãƒ—ãƒ€ã‚¦ãƒ³ã«é¸æ‰‹ã‚’è¿½åŠ 
             const dropdown = document.getElementById('playerSelectDropdown');
-            dropdown.innerHTML = '<option value="">選手を選択...</option>';
+            dropdown.innerHTML = '<option value="">é¸æ‰‹ã‚’é¸æŠž...</option>';
             
             players.forEach(function(p) {
                 const option = document.createElement('option');
                 option.value = p.id;
                 option.textContent = p.name + ' #' + p.number;
                 
-                // 現在選択中の選手にマークを付ける
+                // ç¾åœ¨é¸æŠžä¸­ã®é¸æ‰‹ã«ãƒžãƒ¼ã‚¯ã‚’ä»˜ã‘ã‚‹
                 if (p.id === myPlayerId) {
-                    option.textContent = '★ ' + option.textContent;
+                    option.textContent = 'â˜… ' + option.textContent;
                     option.selected = true;
                 }
                 
                 dropdown.appendChild(option);
             });
             
-            // モーダルを表示
+            // ãƒ¢ãƒ¼ãƒ€ãƒ«ã‚’è¡¨ç¤º
             const modal = document.getElementById('playerSelectModal');
             modal.style.display = 'flex';
         }
         
-        // ダイアログを閉じる関数
+        // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’é–‰ã˜ã‚‹é–¢æ•°
         function closePlayerSelectDialog() {
             const modal = document.getElementById('playerSelectModal');
             modal.style.display = 'none';
         }
         
-        // 選手選択を確定する関数
+        // é¸æ‰‹é¸æŠžã‚’ç¢ºå®šã™ã‚‹é–¢æ•°
         function confirmPlayerSelection() {
             const dropdown = document.getElementById('playerSelectDropdown');
             const selectedPlayerId = dropdown.value;
             
             if (!selectedPlayerId || selectedPlayerId === '') {
-                alert('❌ 選手を選択してください');
+                alert('âŒ é¸æ‰‹ã‚’é¸æŠžã—ã¦ãã ã•ã„');
                 return;
             }
             
-            // 選択した選手を探す
+            // é¸æŠžã—ãŸé¸æ‰‹ã‚’æŽ¢ã™
             const selectedPlayer = players.find(function(p) {
                 return p.id === selectedPlayerId;
             });
             
             if (!selectedPlayer) {
-                alert('❌ 選手が見つかりませんでした');
+                alert('âŒ é¸æ‰‹ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ');
                 return;
             }
             
-            // 選手を切り替え
+            // é¸æ‰‹ã‚’åˆ‡ã‚Šæ›¿ãˆ
             myPlayerId = selectedPlayer.id;
             saveData();
             
-            // ダイアログを閉じる
+            // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’é–‰ã˜ã‚‹
             closePlayerSelectDialog();
             
-            // 画面を更新
+            // ç”»é¢ã‚’æ›´æ–°
             updateDisplay();
             updatePlayerBanners();
             displayGames();
             displayRankings();
             updateCharts();
             
-            alert('✅ ' + selectedPlayer.name + ' #' + selectedPlayer.number + ' を選択しました！');
+            alert('âœ… ' + selectedPlayer.name + ' #' + selectedPlayer.number + ' ã‚’é¸æŠžã—ã¾ã—ãŸï¼');
         }
         function updateMyPlayerSelect() {
             const sel = document.getElementById('myPlayerSelect');
-            sel.innerHTML = '<option value="">選手を選択してください</option>';
+            sel.innerHTML = '<option value="">é¸æ‰‹ã‚’é¸æŠžã—ã¦ãã ã•ã„</option>';
             players.forEach(function(p) {
                 const opt = document.createElement('option');
                 opt.value = p.id;
@@ -3877,7 +4174,7 @@ if (teamData) {
             const playerList = document.getElementById('playerList');
             
             if (players.length === 0) {
-                playerList.innerHTML = '<p style="text-align: center; color: #999;">まだ選手が登録されていません</p>';
+                playerList.innerHTML = '<p style="text-align: center; color: #999;">ã¾ã é¸æ‰‹ãŒç™»éŒ²ã•ã‚Œã¦ã„ã¾ã›ã‚“</p>';
                 return;
             }
 
@@ -3891,12 +4188,12 @@ if (teamData) {
                     '<span style="font-weight: bold; margin-left: 10px;">' + p.name + '</span>' +
                     '</div>' +
                     '<div>' +
-                    (isMyPlayer ? '<span class="my-data-badge">個人モード表示中</span>' : '') +
+                    (isMyPlayer ? '<span class="my-data-badge">å€‹äººãƒ¢ãƒ¼ãƒ‰è¡¨ç¤ºä¸­</span>' : '') +
                     '</div>' +
                     '</div>' +
                     '<div style="display: flex; gap: 10px; margin-top: 10px;">' +
-                    '<button class="primary-btn" style="flex: 1; padding: 10px; font-size: 0.9em; background: #3498db;" onclick="editPlayer(\'' + p.id + '\')">編集</button>' +
-                    '<button class="primary-btn" style="flex: 1; padding: 10px; font-size: 0.9em; background: #e74c3c;" onclick="deletePlayer(\'' + p.id + '\')">削除</button>' +
+                    '<button class="primary-btn" style="flex: 1; padding: 10px; font-size: 0.9em; background: #3498db;" onclick="editPlayer(\'' + p.id + '\')">ç·¨é›†</button>' +
+                    '<button class="primary-btn" style="flex: 1; padding: 10px; font-size: 0.9em; background: #e74c3c;" onclick="deletePlayer(\'' + p.id + '\')">å‰Šé™¤</button>' +
                     '</div>' +
                     '</div>';
             }).join('');
@@ -3917,11 +4214,11 @@ if (teamData) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'バスケ記録_' + new Date().toISOString().split('T')[0] + '.json';
+            a.download = 'ãƒã‚¹ã‚±è¨˜éŒ²_' + new Date().toISOString().split('T')[0] + '.json';
             a.click();
             URL.revokeObjectURL(url);
             
-            alert('✅ バックアップが完了しました！');
+            alert('âœ… ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãŒå®Œäº†ã—ã¾ã—ãŸï¼');
         }
 
         function importData(e) {
@@ -3932,7 +4229,7 @@ if (teamData) {
             reader.onload = function(ev) {
                 try {
                     const data = JSON.parse(ev.target.result);
-                    if (confirm('⚠️ データを復元します\n\n現在のデータは上書きされます。よろしいですか？')) {
+                    if (confirm('âš ï¸ ãƒ‡ãƒ¼ã‚¿ã‚’å¾©å…ƒã—ã¾ã™\n\nç¾åœ¨ã®ãƒ‡ãƒ¼ã‚¿ã¯ä¸Šæ›¸ãã•ã‚Œã¾ã™ã€‚ã‚ˆã‚ã—ã„ã§ã™ã‹ï¼Ÿ')) {
                         personalGames = data.personalGames || [];
                         teamGames = data.teamGames || [];
                         players = data.players || [];
@@ -3941,27 +4238,27 @@ if (teamData) {
                         saveData();
                         displayGames();
                         displayPlayers();
-                        alert('✅ データの復元が完了しました！');
+                        alert('âœ… ãƒ‡ãƒ¼ã‚¿ã®å¾©å…ƒãŒå®Œäº†ã—ã¾ã—ãŸï¼');
                         location.reload();
                     }
                 } catch (err) {
-                    alert('❌ ファイルの読み込みに失敗しました');
+                    alert('âŒ ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ');
                 }
             };
             reader.readAsText(file);
             e.target.value = '';
         }
-        // ========== 個人用：このスマホのデータをクリア ==========
+        // ========== å€‹äººç”¨ï¼šã“ã®ã‚¹ãƒžãƒ›ã®ãƒ‡ãƒ¼ã‚¿ã‚’ã‚¯ãƒªã‚¢ ==========
         function confirmClearLocalData() {
-            const message = '⚠️ このスマホの試合データをクリアします\n\n' +
-                '【クリアされるもの】\n' +
-                '• このスマホの試合記録（' + personalGames.length + '件）\n\n' +
-                '【クリアされないもの】\n' +
-                '• 選手情報\n' +
-                '• Google Sheetsのデータ（全員共有）\n' +
-                '• 他の人のスマホのデータ\n\n' +
-                '💡 ヒント：「今すぐ同期」で復元できます\n\n' +
-                '本当にクリアしますか？';
+            const message = 'âš ï¸ ã“ã®ã‚¹ãƒžãƒ›ã®è©¦åˆãƒ‡ãƒ¼ã‚¿ã‚’ã‚¯ãƒªã‚¢ã—ã¾ã™\n\n' +
+                'ã€ã‚¯ãƒªã‚¢ã•ã‚Œã‚‹ã‚‚ã®ã€‘\n' +
+                'â€¢ ã“ã®ã‚¹ãƒžãƒ›ã®è©¦åˆè¨˜éŒ²ï¼ˆ' + personalGames.length + 'ä»¶ï¼‰\n\n' +
+                'ã€ã‚¯ãƒªã‚¢ã•ã‚Œãªã„ã‚‚ã®ã€‘\n' +
+                'â€¢ é¸æ‰‹æƒ…å ±\n' +
+                'â€¢ Google Sheetsã®ãƒ‡ãƒ¼ã‚¿ï¼ˆå…¨å“¡å…±æœ‰ï¼‰\n' +
+                'â€¢ ä»–ã®äººã®ã‚¹ãƒžãƒ›ã®ãƒ‡ãƒ¼ã‚¿\n\n' +
+                'ðŸ’¡ ãƒ’ãƒ³ãƒˆï¼šã€Œä»Šã™ãåŒæœŸã€ã§å¾©å…ƒã§ãã¾ã™\n\n' +
+                'æœ¬å½“ã«ã‚¯ãƒªã‚¢ã—ã¾ã™ã‹ï¼Ÿ';
             
             if (confirm(message)) {
                 clearLocalData();
@@ -3979,25 +4276,25 @@ if (teamData) {
     displayGames();
     displayRankings();
     updateCharts();
-    // ...必要なUI更新
+    // ...å¿…è¦ãªUIæ›´æ–°
 }
-        // ========== 管理者用：チーム全体のデータをリセット ==========
+        // ========== ç®¡ç†è€…ç”¨ï¼šãƒãƒ¼ãƒ å…¨ä½“ã®ãƒ‡ãƒ¼ã‚¿ã‚’ãƒªã‚»ãƒƒãƒˆ ==========
         function confirmResetTeamData() {
     if (!teamData) {
-        alert('チームに参加していません');
+        alert('ãƒãƒ¼ãƒ ã«å‚åŠ ã—ã¦ã„ã¾ã›ã‚“');
         return;
     }
     
-    const message = '🔐 管理者のみ実行可能\n\n' +
-        '⚠️ チーム全体の試合データをリセットします\n\n' +
-        '【影響】\n' +
-        '• Google Sheetsの試合データが削除されます\n' +
-        '• 全メンバーのスマホから試合記録が消えます\n' +
-        '• 復元できません！\n\n' +
-        '【残るもの】\n' +
-        '• 選手情報\n' +
-        '• チーム設定\n\n' +
-        '続けるには、管理者パスワードを入力してください：';
+    const message = 'ðŸ” ç®¡ç†è€…ã®ã¿å®Ÿè¡Œå¯èƒ½\n\n' +
+        'âš ï¸ ãƒãƒ¼ãƒ å…¨ä½“ã®è©¦åˆãƒ‡ãƒ¼ã‚¿ã‚’ãƒªã‚»ãƒƒãƒˆã—ã¾ã™\n\n' +
+        'ã€å½±éŸ¿ã€‘\n' +
+        'â€¢ Google Sheetsã®è©¦åˆãƒ‡ãƒ¼ã‚¿ãŒå‰Šé™¤ã•ã‚Œã¾ã™\n' +
+        'â€¢ å…¨ãƒ¡ãƒ³ãƒãƒ¼ã®ã‚¹ãƒžãƒ›ã‹ã‚‰è©¦åˆè¨˜éŒ²ãŒæ¶ˆãˆã¾ã™\n' +
+        'â€¢ å¾©å…ƒã§ãã¾ã›ã‚“ï¼\n\n' +
+        'ã€æ®‹ã‚‹ã‚‚ã®ã€‘\n' +
+        'â€¢ é¸æ‰‹æƒ…å ±\n' +
+        'â€¢ ãƒãƒ¼ãƒ è¨­å®š\n\n' +
+        'ç¶šã‘ã‚‹ã«ã¯ã€ç®¡ç†è€…ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ï¼š';
     
     const inputPassword = prompt(message);
     
@@ -4006,15 +4303,15 @@ if (teamData) {
     }
     
     if (!inputPassword || inputPassword.trim() === '') {
-        alert('❌ パスワードを入力してください');
+        alert('âŒ ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„');
         return;
     }
     
     const finalConfirm = confirm(
-        '⚠️ 最終確認\n\n' +
-        'チーム全体の試合データを完全に削除します。\n' +
-        'この操作は取り消せません。\n\n' +
-        '本当に実行しますか？'
+        'âš ï¸ æœ€çµ‚ç¢ºèª\n\n' +
+        'ãƒãƒ¼ãƒ å…¨ä½“ã®è©¦åˆãƒ‡ãƒ¼ã‚¿ã‚’å®Œå…¨ã«å‰Šé™¤ã—ã¾ã™ã€‚\n' +
+        'ã“ã®æ“ä½œã¯å–ã‚Šæ¶ˆã›ã¾ã›ã‚“ã€‚\n\n' +
+        'æœ¬å½“ã«å®Ÿè¡Œã—ã¾ã™ã‹ï¼Ÿ'
     );
     
     if (finalConfirm) {
@@ -4022,13 +4319,13 @@ if (teamData) {
     }
 }
 
-        function resetTeamData(adminPassword) {  // ← パラメータ追加
+        function resetTeamData(adminPassword) {  // â† ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¿½åŠ 
     personalGames = [];
     teamGames = [];
     saveData();
     
     if (teamData) {
-        clearServerGameData(adminPassword);  // ← パスワードを渡す
+        clearServerGameData(adminPassword);  // â† ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’æ¸¡ã™
     }
     
     displayGames();
@@ -4038,12 +4335,12 @@ if (teamData) {
         displayTeamGamesHistory();
     }
     
-    alert('✅ チーム全体のデータをリセットしました！\n\n全メンバーに影響があります。\n各メンバーは「今すぐ同期」で空のデータが取得されます。');
+    alert('âœ… ãƒãƒ¼ãƒ å…¨ä½“ã®ãƒ‡ãƒ¼ã‚¿ã‚’ãƒªã‚»ãƒƒãƒˆã—ã¾ã—ãŸï¼\n\nå…¨ãƒ¡ãƒ³ãƒãƒ¼ã«å½±éŸ¿ãŒã‚ã‚Šã¾ã™ã€‚\nå„ãƒ¡ãƒ³ãƒãƒ¼ã¯ã€Œä»Šã™ãåŒæœŸã€ã§ç©ºã®ãƒ‡ãƒ¼ã‚¿ãŒå–å¾—ã•ã‚Œã¾ã™ã€‚');
 }
 
-async function clearServerGameData(adminPassword) {  // ← パラメータ追加
+async function clearServerGameData(adminPassword) {  // â† ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¿½åŠ 
     try {
-        showSyncIndicator('syncing', 'サーバーの試合データを削除中...');
+        showSyncIndicator('syncing', 'ã‚µãƒ¼ãƒãƒ¼ã®è©¦åˆãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ä¸­...');
         
         const response = await fetch(API_URL, {
             method: 'POST',
@@ -4053,22 +4350,22 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             body: JSON.stringify({
                 action: 'clearGames',
                 teamCode: teamData.code,
-                adminPassword: adminPassword  // ← パスワードを送信
+                adminPassword: adminPassword  // â† ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’é€ä¿¡
             })
         });
         
         const result = await response.json();
         
         if (result.success) {
-            showSyncIndicator('success', 'サーバーの試合データも削除完了');
+            showSyncIndicator('success', 'ã‚µãƒ¼ãƒãƒ¼ã®è©¦åˆãƒ‡ãƒ¼ã‚¿ã‚‚å‰Šé™¤å®Œäº†');
         } else {
-            showSyncIndicator('error', result.error || 'サーバー削除失敗');
-            alert('❌ ' + (result.error || 'サーバー削除に失敗しました'));
+            showSyncIndicator('error', result.error || 'ã‚µãƒ¼ãƒãƒ¼å‰Šé™¤å¤±æ•—');
+            alert('âŒ ' + (result.error || 'ã‚µãƒ¼ãƒãƒ¼å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸ'));
         }
     } catch (error) {
-        console.error('サーバー削除エラー:', error);
-        showSyncIndicator('error', 'サーバー削除失敗');
-        alert('❌ エラーが発生しました: ' + error.message);
+        console.error('ã‚µãƒ¼ãƒãƒ¼å‰Šé™¤ã‚¨ãƒ©ãƒ¼:', error);
+        showSyncIndicator('error', 'ã‚µãƒ¼ãƒãƒ¼å‰Šé™¤å¤±æ•—');
+        alert('âŒ ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ: ' + error.message);
     }
 }
         loadData();
@@ -4081,24 +4378,24 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         loadTeamData();
         checkAndShowDraftGame();
         
-        // ========== 選手選択ダイアログのHTML作成 ==========
+        // ========== é¸æ‰‹é¸æŠžãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®HTMLä½œæˆ ==========
         function createPlayerSelectDialog() {
             const dialogHTML = `
                 <div id="playerSelectModal" class="modal-overlay" style="display: none;">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2>🏀 選手を選択</h2>
-                            <button class="modal-close" onclick="closePlayerSelectDialog()">×</button>
+                            <h2>ðŸ€ é¸æ‰‹ã‚’é¸æŠž</h2>
+                            <button class="modal-close" onclick="closePlayerSelectDialog()">Ã—</button>
                         </div>
                         <div class="modal-body">
-                            <p style="margin-bottom: 15px; color: #666;">個人モードで表示する選手を選んでください</p>
+                            <p style="margin-bottom: 15px; color: #666;">å€‹äººãƒ¢ãƒ¼ãƒ‰ã§è¡¨ç¤ºã™ã‚‹é¸æ‰‹ã‚’é¸ã‚“ã§ãã ã•ã„</p>
                             <select id="playerSelectDropdown" class="player-select-dropdown">
-                                <option value="">選手を選択...</option>
+                                <option value="">é¸æ‰‹ã‚’é¸æŠž...</option>
                             </select>
                         </div>
                         <div class="modal-footer">
-                            <button class="modal-btn cancel-btn" onclick="closePlayerSelectDialog()">キャンセル</button>
-                            <button class="modal-btn confirm-btn" onclick="confirmPlayerSelection()">選択</button>
+                            <button class="modal-btn cancel-btn" onclick="closePlayerSelectDialog()">ã‚­ãƒ£ãƒ³ã‚»ãƒ«</button>
+                            <button class="modal-btn confirm-btn" onclick="confirmPlayerSelection()">é¸æŠž</button>
                         </div>
                     </div>
                 </div>
@@ -4106,7 +4403,7 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             document.body.insertAdjacentHTML('beforeend', dialogHTML);
         }
         
-        // ページ読み込み時にダイアログを作成
+        // ãƒšãƒ¼ã‚¸èª­ã¿è¾¼ã¿æ™‚ã«ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’ä½œæˆ
         createPlayerSelectDialog();
     </script>
 </body>
