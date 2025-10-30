@@ -3972,28 +3972,43 @@ if (result.players) {
         
         // シュートチャートを表示する関数
         function showShotChart(gameId) {
-            const game = games.find(g => g.id === gameId);
-            if (!game) return;
+            const game = personalGames.find(g => g.id === gameId);
+            if (!game) {
+                alert('試合データが見つかりません');
+                return;
+            }
             
             // チームモードで記録された試合の場合
             if (game.fromTeam && teamGames) {
                 const teamGame = teamGames.find(tg => tg.id === game.teamGameId);
                 if (teamGame && teamGame.plays) {
                     showShotChartModal(teamGame.plays, game.opponent, game.date);
+                } else {
+                    alert('この試合にはシュート位置の記録がありません');
                 }
+            } else {
+                alert('この試合はチームモードで記録されていないため、シュートチャートを表示できません');
             }
         }
         
         // シュートチャートモーダルを表示
+        // シュートチャートモーダルを表示
         function showShotChartModal(plays, opponent, date) {
+            // プレイデータの確認
+            if (!plays || plays.length === 0) {
+                alert('この試合にはプレイデータがありません');
+                return;
+            }
+            
             // シュート系のプレイのみをフィルター
             const shotPlays = plays.filter(p => 
-                p.type === '2P成功' || p.type === '2P失敗' || 
-                p.type === '3P成功' || p.type === '3P失敗'
+                (p.type === '2P成功' || p.type === '2P失敗' || 
+                 p.type === '3P成功' || p.type === '3P失敗') &&
+                p.position && p.position.x !== undefined && p.position.y !== undefined
             );
             
             if (shotPlays.length === 0) {
-                alert('この試合にはシュート位置の記録がありません');
+                alert('この試合にはシュート位置の記録がありません\n\nチームモードの「記録」タブでシュートを記録する際に、コート上の位置をタップすると記録されます。');
                 return;
             }
             
@@ -4045,7 +4060,12 @@ if (result.players) {
             });
             
             // エリア別統計を表示
-            displayZoneStats(shotPlays);
+            setTimeout(() => {
+                const statsElement = document.getElementById('zoneStatsContent');
+                if (statsElement) {
+                    displayZoneStats(shotPlays);
+                }
+            }, 100);
         }
         
         // エリア別統計を計算して表示
