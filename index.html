@@ -4049,7 +4049,7 @@ if (result.players) {
                     '<div class="stat-box"><div class="label">リバウンド</div><div class="value">' + g.totalRebounds + '</div></div>' +
                     '<div class="stat-box"><div class="label">アシスト</div><div class="value">' + g.assists + '</div></div>' +
                     '</div>' +
-                    '<button class="shot-chart-button" onclick="showShotChart(' + g.id + ')">🎯 シュートチャートを見る</button>'
+                    '<button class="shot-chart-button" onclick="showShotChart(\'' + g.id + '\')">🎯 シュートチャートを見る</button>' +
                     '</div>';
             }).join('');
         }
