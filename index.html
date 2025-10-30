@@ -1210,6 +1210,111 @@
             font-weight: 600;
             margin-left: 20px;
         }
+        /* シュートチャート用のスタイル */
+        .shot-chart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .shot-chart-modal.active {
+            display: flex;
+        }
+        
+        .shot-chart-content {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+        }
+        
+        .court-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            margin: 20px auto;
+            background: #f5f5f5;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            cursor: crosshair;
+        }
+        
+        .court-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .shot-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        
+        .shot-marker.made {
+            background: #2ecc71;
+            border: 2px solid #27ae60;
+        }
+        
+        .shot-marker.missed {
+            background: #e74c3c;
+            border: 2px solid #c0392b;
+        }
+        
+        .zone-stats {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .zone-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .zone-name {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .zone-percentage {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        
+        .shot-chart-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        
+        .shot-chart-button:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -1798,6 +1903,98 @@
         const API_URL = 'https://script.google.com/macros/s/AKfycbwbPUgd-QAVhwBmhyBwiCtS1GDvZks0imrC78ZsJu5dV-d-Zt6reEW0oi1Lkc_MbW_agQ/exec';
         
         let currentMode = 'personal';
+        // シュートチャート関連の変数
+        let currentShotPosition = null;
+        let shotChartCallback = null;
+        
+        // コート図を描画する関数
+        function drawCourt(canvas) {
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // 背景を白に
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+            
+            // コートの線（黒）
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            
+            // 外枠
+            ctx.strokeRect(10, 10, width - 20, height - 20);
+            
+            // フリースローライン（台形）
+            ctx.beginPath();
+            ctx.moveTo(width * 0.2, 10);
+            ctx.lineTo(width * 0.3, height * 0.25);
+            ctx.lineTo(width * 0.7, height * 0.25);
+            ctx.lineTo(width * 0.8, 10);
+            ctx.closePath();
+            ctx.stroke();
+            
+            // 3ポイントライン（半円）
+            ctx.beginPath();
+            ctx.arc(width / 2, 10, width * 0.45, 0, Math.PI);
+            ctx.stroke();
+            
+            // ゴール（半円）
+            ctx.beginPath();
+            ctx.arc(width / 2, 10, 15, 0, Math.PI * 2);
+            ctx.fillStyle = '#e74c3c';
+            ctx.fill();
+            
+            // センターライン（点線）
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(10, height / 2);
+            ctx.lineTo(width - 10, height / 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // エリア名を表示
+            ctx.fillStyle = '#999';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('ゴール下', width / 2, 80);
+            ctx.fillText('左ウィング', width * 0.25, height * 0.35);
+            ctx.fillText('右ウィング', width * 0.75, height * 0.35);
+            ctx.fillText('トップ', width / 2, height * 0.6);
+        }
+        
+        // シュート位置がどのエリアに属するか判定する関数
+        function getZoneFromPosition(x, y, width, height) {
+            const centerX = width / 2;
+            const distanceFromCenter = Math.abs(x - centerX);
+            
+            // Y座標で判定
+            if (y < height * 0.2) {
+                return 'paint'; // ゴール下
+            } else if (y < height * 0.4) {
+                if (distanceFromCenter < width * 0.2) {
+                    return 'mid_range'; // ミドルレンジ
+                } else {
+                    return x < centerX ? 'left_wing' : 'right_wing'; // 左右ウィング
+                }
+            } else if (y < height * 0.65) {
+                return 'top'; // トップ
+            } else {
+                return 'backcourt'; // バックコート
+            }
+        }
+        
+        // エリア名を日本語に変換
+        function getZoneNameJP(zone) {
+            const names = {
+                'paint': 'ゴール下',
+                'left_wing': '左ウィング',
+                'right_wing': '右ウィング',
+                'mid_range': 'ミドルレンジ',
+                'top': 'トップ',
+                'backcourt': 'バックコート'
+            };
+            return names[zone] || zone;
+        }
         let personalGames = [];
         let teamGames = [];
         let players = [];
@@ -2000,10 +2197,46 @@
         }
 
         function recordPlay(type) {
-            if (!selectedPlayer) { 
-                alert('先に選手を選択してください'); 
-                return; 
+            if (!selectedPlayer || !currentQuarter) {
+                alert('選手とクォーターを選択してください');
+                return;
             }
+            
+            // シュート系のプレイの場合は位置を記録
+            const shotTypes = ['2P成功', '2P失敗', '3P成功', '3P失敗'];
+            
+            if (shotTypes.includes(type)) {
+                // シュート位置記録モーダルを開く
+                openShotPositionModal(function(position) {
+                    // 位置情報と共にプレイを記録
+                    recordPlayWithPosition(type, position);
+                });
+            } else {
+                // シュート以外はそのまま記録
+                recordPlayWithPosition(type, null);
+            }
+        }
+        
+        // 位置情報付きでプレイを記録する新しい関数
+        function recordPlayWithPosition(type, position) {
+            const play = {
+                type: type,
+                playerId: selectedPlayer,
+                quarter: currentQuarter,
+                timestamp: Date.now()
+            };
+            
+            // シュート位置情報を追加
+            if (position) {
+                play.position = position;
+            }
+            
+            currentPlays.push(play);
+            updatePlayerStats(selectedPlayer, type);
+            displayPlayHistory();
+            displayCurrentStats();
+            saveData();
+        }
 
             const st = currentTeamGame.playerStats[selectedPlayer];
             
@@ -3775,9 +4008,139 @@ if (result.players) {
                     '<div class="stat-box"><div class="label">リバウンド</div><div class="value">' + g.totalRebounds + '</div></div>' +
                     '<div class="stat-box"><div class="label">アシスト</div><div class="value">' + g.assists + '</div></div>' +
                     '</div>' +
+                    '<button class="shot-chart-button" onclick="showShotChart(\'' + g.id + '\')">🎯 シュートチャートを見る</button>' +
                     '</div>';
             }).join('');
         }
+
+        // ========== ここから追加 ==========
+        
+        // シュートチャートを表示する関数
+        function showShotChart(gameId) {
+            const game = games.find(g => g.id === gameId);
+            if (!game) return;
+            
+            // チームモードで記録された試合の場合
+            if (game.fromTeam && teamGames) {
+                const teamGame = teamGames.find(tg => tg.id === game.teamGameId);
+                if (teamGame && teamGame.plays) {
+                    showShotChartModal(teamGame.plays, game.opponent, game.date);
+                }
+            }
+        }
+        
+        // シュートチャートモーダルを表示
+        function showShotChartModal(plays, opponent, date) {
+            // シュート系のプレイのみをフィルター
+            const shotPlays = plays.filter(p => 
+                p.type === '2P成功' || p.type === '2P失敗' || 
+                p.type === '3P成功' || p.type === '3P失敗'
+            );
+            
+            if (shotPlays.length === 0) {
+                alert('この試合にはシュート位置の記録がありません');
+                return;
+            }
+            
+            // モーダルを作成して表示
+            const modal = document.createElement('div');
+            modal.className = 'shot-chart-modal active';
+            modal.innerHTML = `
+                <div class="shot-chart-content">
+                    <h2 style="text-align: center; color: #667eea;">🎯 シュートチャート</h2>
+                    <p style="text-align: center; color: #666;">
+                        ${opponent} vs ${new Date(date).toLocaleDateString('ja-JP')}
+                    </p>
+                    
+                    <div class="court-container" style="cursor: default;">
+                        <canvas id="displayShotCanvas" class="court-canvas" width="300" height="400"></canvas>
+                    </div>
+                    
+                    <div class="zone-stats" id="zoneStatsContainer">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">📊 エリア別成功率</h3>
+                        <div id="zoneStatsContent"></div>
+                    </div>
+                    
+                    <button class="shot-chart-button" onclick="this.parentElement.parentElement.remove()">
+                        閉じる
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // コート図を描画
+            const canvas = document.getElementById('displayShotCanvas');
+            drawCourt(canvas);
+            
+            // シュートをプロット
+            const ctx = canvas.getContext('2d');
+            shotPlays.forEach(play => {
+                if (play.position) {
+                    const isMade = play.type.includes('成功');
+                    
+                    ctx.fillStyle = isMade ? '#2ecc71' : '#e74c3c';
+                    ctx.beginPath();
+                    ctx.arc(play.position.x, play.position.y, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            });
+            
+            // エリア別統計を表示
+            displayZoneStats(shotPlays);
+        }
+        
+        // エリア別統計を計算して表示
+        function displayZoneStats(shotPlays) {
+            const zoneData = {};
+            
+            shotPlays.forEach(play => {
+                if (play.position) {
+                    const zone = play.position.zone || getZoneFromPosition(
+                        play.position.x, 
+                        play.position.y, 
+                        300, 
+                        400
+                    );
+                    
+                    if (!zoneData[zone]) {
+                        zoneData[zone] = { made: 0, total: 0 };
+                    }
+                    
+                    zoneData[zone].total++;
+                    if (play.type.includes('成功')) {
+                        zoneData[zone].made++;
+                    }
+                }
+            });
+            
+            // エリア別統計をHTML化
+            let html = '';
+            const zones = ['paint', 'left_wing', 'right_wing', 'mid_range', 'top', 'backcourt'];
+            
+            zones.forEach(zone => {
+                if (zoneData[zone]) {
+                    const data = zoneData[zone];
+                    const percentage = ((data.made / data.total) * 100).toFixed(1);
+                    
+                    html += `
+                        <div class="zone-item">
+                            <span class="zone-name">${getZoneNameJP(zone)}</span>
+                            <span class="zone-percentage">
+                                ${percentage}% (${data.made}/${data.total})
+                            </span>
+                        </div>
+                    `;
+                }
+            });
+            
+            document.getElementById('zoneStatsContent').innerHTML = html || '<p style="text-align: center; color: #999;">データがありません</p>';
+        }
+        
+        // ========== ここまで追加 ==========
 
         function displayRankings() {
             const myGames = myPlayerId 
@@ -4366,6 +4729,83 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         alert('❌ エラーが発生しました: ' + error.message);
     }
 }
+
+        // シュート位置記録モーダルを開く
+        function openShotPositionModal(callback) {
+            shotChartCallback = callback;
+            currentShotPosition = null;
+            
+            const modal = document.getElementById('shotPositionModal');
+            const canvas = document.getElementById('shotCourtCanvas');
+            const container = document.getElementById('shotCourtContainer');
+            
+            // コート図を描画
+            drawCourt(canvas);
+            
+            // タップイベントを設定
+            container.onclick = function(e) {
+                const rect = canvas.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
+                const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
+                
+                // 記録された位置を保存
+                currentShotPosition = { x: x, y: y };
+                
+                // 一時的なマーカーを表示
+                drawCourt(canvas);
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#3498db';
+                ctx.beginPath();
+                ctx.arc(x, y, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // 自動的にモーダルを閉じて記録
+                setTimeout(function() {
+                    confirmShotPosition();
+                }, 300);
+            };
+            
+            modal.classList.add('active');
+        }
+        
+        // シュート位置記録モーダルを閉じる
+        function closeShotPositionModal() {
+            const modal = document.getElementById('shotPositionModal');
+            modal.classList.remove('active');
+            currentShotPosition = null;
+            shotChartCallback = null;
+        }
+        
+        // シュート位置を確定
+        function confirmShotPosition() {
+            if (currentShotPosition && shotChartCallback) {
+                const canvas = document.getElementById('shotCourtCanvas');
+                const zone = getZoneFromPosition(
+                    currentShotPosition.x,
+                    currentShotPosition.y,
+                    canvas.width,
+                    canvas.height
+                );
+                
+                shotChartCallback({
+                    x: currentShotPosition.x,
+                    y: currentShotPosition.y,
+                    zone: zone
+                });
+            }
+            closeShotPositionModal();
+        }
+        
+        // 位置記録をスキップ
+        function skipShotPosition() {
+            if (shotChartCallback) {
+                shotChartCallback(null);
+            }
+            closeShotPositionModal();
+        }
         loadData();
         updateDisplay();
         displayGames();
@@ -4404,5 +4844,27 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         // ページ読み込み時にダイアログを作成
         createPlayerSelectDialog();
     </script>
+    <!-- シュート位置記録モーダル -->
+    <div id="shotPositionModal" class="shot-chart-modal">
+        <div class="shot-chart-content">
+            <h2 style="text-align: center; color: #667eea;">🎯 どこから打った？</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 10px;">
+                コートをタップしてシュート位置を記録
+            </p>
+            
+            <div class="court-container" id="shotCourtContainer">
+                <canvas id="shotCourtCanvas" class="court-canvas" width="300" height="400"></canvas>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-btn cancel-btn" style="flex: 1;" onclick="closeShotPositionModal()">
+                    キャンセル
+                </button>
+                <button class="modal-btn confirm-btn" style="flex: 1;" onclick="skipShotPosition()">
+                    位置を記録せずスキップ
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
