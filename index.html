@@ -4041,34 +4041,61 @@ if (result.players) {
         
         // シュートチャートを表示する関数
         function showShotChart(gameId) {
+    // デバッグログ（本番環境では削除可能）
+    console.log('showShotChart called:', {
+        gameId: gameId,
+        type: typeof gameId,
+        fromTeam: personalGames.find(g => g.id === gameId)?.fromTeam
+    });
+    
     // 文字列として渡される場合があるので数値に変換
     const numericId = typeof gameId === 'string' ? parseFloat(gameId) : gameId;
     const game = personalGames.find(g => g.id === numericId);
-            if (!game) {
-                alert('試合データが見つかりません');
+    
+    if (!game) {
+        alert('試合データが見つかりません');
+        console.error('試合が見つかりません:', {
+            searchId: numericId,
+            availableIds: personalGames.map(g => g.id)
+        });
+        return;
+    }
+    
+    // fromTeamチェック
+    if (!game.fromTeam) {
+        console.warn('fromTeamがfalseまたはundefined:', game);
+    }
+    
+    // チームモードで記録された試合の場合
+    if (game.fromTeam && teamGames) {
+        const teamGame = teamGames.find(tg => tg.id === game.teamGameId);
+        
+        if (teamGame && teamGame.plays) {
+            // 自分のプレイだけをフィルター
+            const myPlays = teamGame.plays.filter(p => p.playerId === game.playerId);
+            
+            if (myPlays.length === 0) {
+                alert('この試合にはプレイ記録がありません');
+                console.warn('プレイが見つかりません:', {
+                    teamGameId: game.teamGameId,
+                    playerId: game.playerId,
+                    totalPlays: teamGame.plays.length
+                });
                 return;
             }
             
-            // チームモードで記録された試合の場合
-            if (game.fromTeam && teamGames) {
-                const teamGame = teamGames.find(tg => tg.id === game.teamGameId);
-                if (teamGame && teamGame.plays) {
-                    // 自分のプレイだけをフィルター
-                    const myPlays = teamGame.plays.filter(p => p.playerId === game.playerId);
-                    
-                    if (myPlays.length === 0) {
-                        alert('この試合にはプレイ記録がありません');
-                        return;
-                    }
-                    
-                    showShotChartModal(myPlays, game.opponent, game.date);
-                } else {
-                    alert('この試合にはシュート位置の記録がありません');
-                }
-            } else {
-                alert('この試合はチームモードで記録されていないため、シュートチャートを表示できません');
-            }
+            showShotChartModal(myPlays, game.opponent, game.date);
+        } else {
+            alert('この試合にはシュート位置の記録がありません');
         }
+    } else {
+        alert('この試合はチームモードで記録されていないため、シュートチャートを表示できません');
+        console.warn('チームモードではない:', {
+            fromTeam: game.fromTeam,
+            teamGamesExists: !!teamGames
+        });
+    }
+}
         
        
         // シュートチャートモーダルを表示
@@ -4861,6 +4888,7 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             closeShotPositionModal();
         }
         loadData();
+        migrateData();
         updateDisplay();
         displayGames();
         displayPlayers();
