@@ -2202,8 +2202,13 @@
                 return;
             }
             
+            if (!currentTeamGame) {
+                alert('試合を開始してください');
+                return;
+            }
+            
             // シュート系のプレイの場合は位置を記録
-            const shotTypes = ['2P成功', '2P失敗', '3P成功', '3P失敗'];
+            const shotTypes = ['2p-made', '2p-miss', '3p-made', '3p-miss'];
             
             if (shotTypes.includes(type)) {
                 // シュート位置記録モーダルを開く
@@ -2219,10 +2224,15 @@
         
         // 位置情報付きでプレイを記録する新しい関数
         function recordPlayWithPosition(type, position) {
+            if (!currentTeamGame) {
+                alert('試合を開始してください');
+                return;
+            }
+            
             const play = {
-                type: type,
+                playType: type,  // ← typeではなくplayTypeに変更
                 playerId: selectedPlayer,
-                quarter: currentQuarter,
+                period: currentQuarter,  // ← quarterではなくperiodに変更
                 timestamp: Date.now()
             };
             
@@ -2231,14 +2241,72 @@
                 play.position = position;
             }
             
-            currentPlays.push(play);
+            currentTeamGame.plays.push(play);  // ← currentPlaysではなくcurrentTeamGame.playsに変更
             updatePlayerStats(selectedPlayer, type);
             displayPlayHistory();
-            displayCurrentStats();
+            updateTeamStats();  // ← displayCurrentStatsではなくupdateTeamStatsを呼ぶ
+            
+            // フィードバック表示を追加
+            const player = players.find(p => p.id === selectedPlayer);
+            const playerName = player ? '#' + player.number + ' ' + player.name : '';
+            showPlayFeedback(playerName + ' ' + getPlayLabel(type), type);
+            
             saveData();
         }
 
+        // プレイタイプに応じて選手の統計を更新
+        function updatePlayerStats(playerId, playType) {
+            if (!currentTeamGame || !currentTeamGame.playerStats[playerId]) {
+                return;
+            }
             
+            const stats = currentTeamGame.playerStats[playerId];
+            
+            switch(playType) {
+                case '2p-made':
+                    stats.twoPointsMade++;
+                    stats.twoPointsAttempted++;
+                    break;
+                case '2p-miss':
+                    stats.twoPointsAttempted++;
+                    break;
+                case '3p-made':
+                    stats.threePointsMade++;
+                    stats.threePointsAttempted++;
+                    break;
+                case '3p-miss':
+                    stats.threePointsAttempted++;
+                    break;
+                case 'ft-made':
+                    stats.freeThrowsMade++;
+                    stats.freeThrowsAttempted++;
+                    break;
+                case 'ft-miss':
+                    stats.freeThrowsAttempted++;
+                    break;
+                case 'oreb':
+                    stats.offensiveRebounds++;
+                    break;
+                case 'dreb':
+                    stats.defensiveRebounds++;
+                    break;
+                case 'ast':
+                    stats.assists++;
+                    break;
+                case 'stl':
+                    stats.steals++;
+                    break;
+                case 'blk':
+                    stats.blocks++;
+                    break;
+                case 'to':
+                    stats.turnovers++;
+                    break;
+                case 'foul':
+                    stats.fouls++;
+                    break;
+            }
+        }
 
         function showPlayFeedback(message, type) {
             // 既存のフィードバックがあれば削除
