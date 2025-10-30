@@ -2197,7 +2197,7 @@
         }
 
         function recordPlay(type) {
-            if (!selectedPlayer || !currentQuarter) {
+            if (!selectedPlayer || !currentPeriod) {
                 alert('選手とクォーターを選択してください');
                 return;
             }
@@ -2230,9 +2230,9 @@
             }
             
             const play = {
-                playType: type,  // ← typeではなくplayTypeに変更
+                playType: type,
                 playerId: selectedPlayer,
-                period: currentQuarter,  // ← quarterではなくperiodに変更
+                period: currentPeriod,  // ← currentQuarterではなくcurrentPeriod
                 timestamp: Date.now()
             };
             
