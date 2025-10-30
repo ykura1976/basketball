@@ -3396,6 +3396,7 @@
             freeThrowPercentage: stats.freeThrowsAttempted > 0 ? ((stats.freeThrowsMade / stats.freeThrowsAttempted) * 100).toFixed(1) : '0',
             totalPoints: totalPts,
             source: 'team',
+            fromTeam: true,
             teamGameId: teamGame.id  // ← ★ここが重要!チームゲームIDを保存
         };
         
