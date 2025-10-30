@@ -3810,7 +3810,7 @@ if (result.players) {
             statusEl.innerHTML = 
                 '<div class="team-code-display">' +
                 '<div style="font-size: 0.9em; color: #666;">現在のチーム</div>' +
-                '<div style="font-size: 1.3em; font-weight: bold; color: #667eea; margin: 10px 0;">' + teamName + '</div>' +
+                '<div style="font-size: 1.3em; font-weight: bold; color: #667eea; margin: 10px 0;">' + teamData.name + '</div>' +
                 '<div style="font-size: 0.9em; color: #666;">チームコード</div>' +
                 '<div class="code">' + teamData.code + '</div>' +
                 '<button class="primary-btn" style="background: #2ecc71; margin-top: 15px;" onclick="syncAll()">今すぐ同期(送受信)</button>' +
@@ -3999,7 +3999,6 @@ if (result.players) {
         }
 
         function displayGames() {
-    updatePlayerBanners();
     const gameList = document.getElementById('gameList');
     
     // myPlayerIdが設定されていない場合は全データを表示
@@ -4033,7 +4032,7 @@ if (result.players) {
                     '<div class="stat-box"><div class="label">リバウンド</div><div class="value">' + g.totalRebounds + '</div></div>' +
                     '<div class="stat-box"><div class="label">アシスト</div><div class="value">' + g.assists + '</div></div>' +
                     '</div>' +
-                    '<button class="shot-chart-button" onclick="showShotChart(\'' + g.id + '\')">🎯 シュートチャートを見る</button>' +
+                    '<button class="shot-chart-button" onclick="showShotChart(' + g.id + ')">🎯 シュートチャートを見る</button>'
                     '</div>';
             }).join('');
         }
@@ -4225,7 +4224,6 @@ if (result.players) {
         // ========== ここまで追加 ==========
 
         function displayRankings() {
-            updatePlayerBanners();
             const myGames = myPlayerId 
     ? personalGames.filter(function(g) {
         return !g.playerId || g.playerId === myPlayerId;
@@ -4263,7 +4261,6 @@ if (result.players) {
         }
 
         function updateCharts() {
-            updatePlayerBanners();
             const myGames = myPlayerId 
     ? personalGames.filter(function(g) {
         return !g.playerId || g.playerId === myPlayerId;
