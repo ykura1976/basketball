@@ -4084,7 +4084,7 @@ if (result.players) {
     }
     
     // チームモードで記録された試合の場合
-    if (game.fromTeam && teamGames) {
+    if ((game.fromTeam || game.source === 'team') && teamGames) {
         const teamGame = teamGames.find(tg => tg.id === game.teamGameId);
         
         if (teamGame && teamGame.plays) {
