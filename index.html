@@ -3801,11 +3801,19 @@ if (result.players) {
 }
         function displayTeamStatus() {
             const statusEl = document.getElementById('teamStatus');
+
+            if (!statusEl) {
+                console.error('teamStatus要素が見つかりません');
+                return;
+            }
             
             if (!teamData) {
                 statusEl.innerHTML = '<p style="color: #999; text-align: center;">チームに参加していません</p>';
                 return;
             }
+
+            const teamName = teamData.name || 'チーム名未設定';
+            const teamCode = teamData.code || '不明';
             
             statusEl.innerHTML = 
                 '<div class="team-code-display">' +
@@ -4536,8 +4544,18 @@ if (teamData) {
                 return;
             }
             
-            // ドロップダウンに選手を追加
-            const dropdown = document.getElementById('playerSelectDropdown');
+            const modal = document.getElementById('playerSelectModal');
+    if (!modal) {
+        console.error('モーダルが見つかりません');
+        createPlayerSelectDialog();
+    }
+    
+    const dropdown = document.getElementById('playerSelectDropdown');
+    if (!dropdown) {
+        console.error('ドロップダウンが見つかりません');
+        alert('エラー: ページを再読み込みしてください');
+        return;
+    }
             dropdown.innerHTML = '<option value="">選手を選択...</option>';
             
             players.forEach(function(p) {
