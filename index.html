@@ -4109,6 +4109,7 @@ if (result.players) {
         alert('この試合はチームモードで記録されていないため、シュートチャートを表示できません');
         console.warn('チームモードではない:', {
             fromTeam: game.fromTeam,
+            source: game.source,
             teamGamesExists: !!teamGames
         });
     }
