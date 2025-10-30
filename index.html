@@ -2238,52 +2238,7 @@
             saveData();
         }
 
-            const st = currentTeamGame.playerStats[selectedPlayer];
             
-            // プレイタイプごとのラベル
-            const playLabels = {
-                '2p-made': '✓ 2P成功',
-                '2p-miss': '✗ 2P失敗',
-                '3p-made': '✓ 3P成功',
-                '3p-miss': '✗ 3P失敗',
-                'ft-made': '✓ FT成功',
-                'ft-miss': '✗ FT失敗',
-                'oreb': '📦 オフェンスリバウンド',
-                'dreb': '📦 ディフェンスリバウンド',
-                'ast': '🤝 アシスト',
-                'stl': '🛡️ スティール',
-                'blk': '🚫 ブロック',
-                'to': '⚠️ ターンオーバー',
-                'foul': '⚠️ ファウル'
-            };
-            
-            if (type === '2p-made') { st.twoPointsMade++; st.twoPointsAttempted++; }
-            else if (type === '2p-miss') { st.twoPointsAttempted++; }
-            else if (type === '3p-made') { st.threePointsMade++; st.threePointsAttempted++; }
-            else if (type === '3p-miss') { st.threePointsAttempted++; }
-            else if (type === 'ft-made') { st.freeThrowsMade++; st.freeThrowsAttempted++; }
-            else if (type === 'ft-miss') { st.freeThrowsAttempted++; }
-            else if (type === 'oreb') { st.offensiveRebounds++; }
-            else if (type === 'dreb') { st.defensiveRebounds++; }
-            else if (type === 'ast') { st.assists++; }
-            else if (type === 'stl') { st.steals++; }
-            else if (type === 'blk') { st.blocks++; }
-            else if (type === 'to') { st.turnovers++; }
-            else if (type === 'foul') { st.fouls++; }
-
-            currentTeamGame.plays.push({
-                playerId: selectedPlayer,
-                playType: type,
-                period: currentPeriod,
-                timestamp: Date.now()
-            });
-
-            // フィードバック表示
-            showPlayFeedback(playLabels[type] || 'プレイを記録', type);
-
-            updateTeamStats();
-            displayPlayHistory();
-        }
 
         function showPlayFeedback(message, type) {
             // 既存のフィードバックがあれば削除
