@@ -4050,7 +4050,15 @@ if (result.players) {
             if (game.fromTeam && teamGames) {
                 const teamGame = teamGames.find(tg => tg.id === game.teamGameId);
                 if (teamGame && teamGame.plays) {
-                    showShotChartModal(teamGame.plays, game.opponent, game.date);
+                    // 自分のプレイだけをフィルター
+                    const myPlays = teamGame.plays.filter(p => p.playerId === game.playerId);
+                    
+                    if (myPlays.length === 0) {
+                        alert('この試合にはプレイ記録がありません');
+                        return;
+                    }
+                    
+                    showShotChartModal(myPlays, game.opponent, game.date);
                 } else {
                     alert('この試合にはシュート位置の記録がありません');
                 }
@@ -4059,7 +4067,7 @@ if (result.players) {
             }
         }
         
-        // シュートチャートモーダルを表示
+       
         // シュートチャートモーダルを表示
         function showShotChartModal(plays, opponent, date) {
             // プレイデータの確認
@@ -4068,10 +4076,10 @@ if (result.players) {
                 return;
             }
             
-            // シュート系のプレイのみをフィルター
+            // シュート系のプレイのみをフィルター（playTypeを使用）
             const shotPlays = plays.filter(p => 
-                (p.type === '2P成功' || p.type === '2P失敗' || 
-                 p.type === '3P成功' || p.type === '3P失敗') &&
+                (p.playType === '2p-made' || p.playType === '2p-miss' || 
+                 p.playType === '3p-made' || p.playType === '3p-miss') &&
                 p.position && p.position.x !== undefined && p.position.y !== undefined
             );
             
@@ -4115,7 +4123,7 @@ if (result.players) {
             const ctx = canvas.getContext('2d');
             shotPlays.forEach(play => {
                 if (play.position) {
-                    const isMade = play.type.includes('成功');
+                    const isMade = play.playType.includes('made');
                     
                     ctx.fillStyle = isMade ? '#2ecc71' : '#e74c3c';
                     ctx.beginPath();
@@ -4154,7 +4162,7 @@ if (result.players) {
                     }
                     
                     zoneData[zone].total++;
-                    if (play.type.includes('成功')) {
+                    if (play.playType.includes('made')) {
                         zoneData[zone].made++;
                     }
                 }
