@@ -3801,7 +3801,11 @@ if (result.players) {
 }
         function displayTeamStatus() {
             const statusEl = document.getElementById('teamStatus');
-
+            
+            // ★★★ デバッグ用 ★★★
+            console.log('displayTeamStatus called');
+            console.log('teamData:', teamData);
+            
             if (!statusEl) {
                 console.error('teamStatus要素が見つかりません');
                 return;
@@ -3811,16 +3815,20 @@ if (result.players) {
                 statusEl.innerHTML = '<p style="color: #999; text-align: center;">チームに参加していません</p>';
                 return;
             }
-
+            
+            // ★★★ 追加: teamDataの値を確認 ★★★
             const teamName = teamData.name || 'チーム名未設定';
             const teamCode = teamData.code || '不明';
+            
+            console.log('表示するチーム名:', teamName);
+            console.log('表示するチームコード:', teamCode);
             
             statusEl.innerHTML = 
                 '<div class="team-code-display">' +
                 '<div style="font-size: 0.9em; color: #666;">現在のチーム</div>' +
-                '<div style="font-size: 1.3em; font-weight: bold; color: #667eea; margin: 10px 0;">' + teamData.name + '</div>' +
+                '<div style="font-size: 1.3em; font-weight: bold; color: #667eea; margin: 10px 0;">' + teamName + '</div>' +
                 '<div style="font-size: 0.9em; color: #666;">チームコード</div>' +
-                '<div class="code">' + teamData.code + '</div>' +
+                '<div class="code">' + teamCode + '</div>' +
                 '<button class="primary-btn" style="background: #2ecc71; margin-top: 15px;" onclick="syncAll()">今すぐ同期(送受信)</button>' +
                 '<button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="leaveTeam()">チームから退出</button>' +
                 '</div>';
@@ -4544,18 +4552,29 @@ if (teamData) {
                 return;
             }
             
+            // ★★★ 追加: モーダルが存在するか確認 ★★★
             const modal = document.getElementById('playerSelectModal');
-    if (!modal) {
-        console.error('モーダルが見つかりません');
-        createPlayerSelectDialog();
-    }
-    
-    const dropdown = document.getElementById('playerSelectDropdown');
-    if (!dropdown) {
-        console.error('ドロップダウンが見つかりません');
-        alert('エラー: ページを再読み込みしてください');
-        return;
-    }
+            if (!modal) {
+                console.error('playerSelectModalが見つかりません。ダイアログを再作成します。');
+                createPlayerSelectDialog();
+                // 再度取得
+                const modal2 = document.getElementById('playerSelectModal');
+                if (!modal2) {
+                    alert('選手選択ダイアログの表示に失敗しました。\nページを再読み込みしてください。');
+                    return;
+                }
+            }
+            
+            // ドロップダウンに選手を追加
+            const dropdown = document.getElementById('playerSelectDropdown');
+            
+            // ★★★ 追加: dropdownが存在するか確認 ★★★
+            if (!dropdown) {
+                console.error('playerSelectDropdownが見つかりません');
+                alert('選手選択ダイアログの表示に失敗しました。\nページを再読み込みしてください。');
+                return;
+            }
+            
             dropdown.innerHTML = '<option value="">選手を選択...</option>';
             
             players.forEach(function(p) {
@@ -4573,7 +4592,6 @@ if (teamData) {
             });
             
             // モーダルを表示
-            const modal = document.getElementById('playerSelectModal');
             modal.style.display = 'flex';
         }
         
@@ -4912,8 +4930,8 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         displayGames();
         displayPlayers();
         updateMyPlayerSelect();
-        displayTeamStatus();
         updatePlayerBanners();
+        displayTeamStatus();
         loadTeamData();
         checkAndShowDraftGame();
         
