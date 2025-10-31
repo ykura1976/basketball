@@ -1965,22 +1965,34 @@
         // シュート位置がどのエリアに属するか判定する関数
         function getZoneFromPosition(x, y, width, height) {
             const centerX = width / 2;
-            const distanceFromCenter = Math.abs(x - centerX);
             
-            // Y座標で判定
+            // 1. ゴール下(Y座標が上部20%)
             if (y < height * 0.2) {
-                return 'paint'; // ゴール下
-            } else if (y < height * 0.4) {
-                if (distanceFromCenter < width * 0.2) {
-                    return 'mid_range'; // ミドルレンジ
-                } else {
-                    return x < centerX ? 'left_wing' : 'right_wing'; // 左右ウィング
-                }
-            } else if (y < height * 0.65) {
-                return 'top'; // トップ
-            } else {
-                return 'backcourt'; // バックコート
+                return 'paint';
             }
+            
+            // 2. Y座標20-60%の範囲
+            if (y < height * 0.6) {
+                // X座標で左右を判定
+                const leftBoundary = width * 0.4;   // 左側40%
+                const rightBoundary = width * 0.6;  // 右側40%
+                
+                if (x < leftBoundary) {
+                    return 'left_wing';      // 左ウィング
+                } else if (x > rightBoundary) {
+                    return 'right_wing';     // 右ウィング
+                } else {
+                    return 'top';            // トップ(中央20%)
+                }
+            }
+            
+            // 3. Y座標60-75%: トップ(3Pライン周辺)
+            if (y < height * 0.75) {
+                return 'top';
+            }
+            
+            // 4. それ以降: バックコート
+            return 'backcourt';
         }
         
         // エリア名を日本語に変換
@@ -1989,7 +2001,6 @@
                 'paint': 'ゴール下',
                 'left_wing': '左ウィング',
                 'right_wing': '右ウィング',
-                'mid_range': 'ミドルレンジ',
                 'top': 'トップ',
                 'backcourt': 'バックコート'
             };
@@ -4229,7 +4240,7 @@ if (result.players) {
             
             // エリア別統計をHTML化
             let html = '';
-            const zones = ['paint', 'left_wing', 'right_wing', 'mid_range', 'top', 'backcourt'];
+            const zones = ['paint', 'left_wing', 'right_wing', 'top', 'backcourt'];
             
             zones.forEach(zone => {
                 if (zoneData[zone]) {
