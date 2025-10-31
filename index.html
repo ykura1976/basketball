@@ -4290,14 +4290,19 @@ if (result.players) {
         function displayZoneStats(shotPlays) {
             const zoneData = {};
             
+            // ★★★ 修正: play.position.zoneを無視して、常にgetZoneFromPositionで再計算 ★★★
             shotPlays.forEach(play => {
                 if (play.position) {
-                    const zone = play.position.zone || getZoneFromPosition(
+                    // 常に現在のエリア判定ロジックを使用
+                    const zone = getZoneFromPosition(
                         play.position.x, 
                         play.position.y, 
                         300, 
                         400
                     );
+                    
+                    // デバッグ用ログ(後で削除可能)
+                    console.log('Shot at:', play.position, 'Zone:', zone, 'Type:', play.playType);
                     
                     if (!zoneData[zone]) {
                         zoneData[zone] = { made: 0, total: 0 };
@@ -4310,10 +4315,14 @@ if (result.players) {
                 }
             });
             
-            // エリア別統計をHTML化
-            let html = '';
+            // デバッグ用: 集計結果を表示
+            console.log('Zone statistics:', zoneData);
+            
+            // ★★★ 修正: コーナーを追加、mid_rangeを削除 ★★★
             const zones = ['paint', 'left_corner', 'right_corner', 'left_wing', 'right_wing', 'top', 'backcourt'];
             
+            // エリア別統計をHTML化
+            let html = '';
             zones.forEach(zone => {
                 if (zoneData[zone]) {
                     const data = zoneData[zone];
