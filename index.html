@@ -1954,51 +1954,68 @@
             
             // エリア名を表示
             ctx.fillStyle = '#999';
-            ctx.font = '12px sans-serif';
+            ctx.font = '11px sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('ゴール下', width / 2, 80);
-            ctx.fillText('左ウィング', width * 0.25, height * 0.35);
-            ctx.fillText('右ウィング', width * 0.75, height * 0.35);
-            ctx.fillText('トップ', width / 2, height * 0.6);
+            
+            ctx.fillText('ペイント', width / 2, 70);
+            ctx.fillText('左C', width * 0.15, 50);
+            ctx.fillText('右C', width * 0.85, 50);
+            ctx.fillText('左W', width * 0.25, height * 0.35);
+            ctx.fillText('右W', width * 0.75, height * 0.35);
+            ctx.fillText('トップ', width / 2, height * 0.35);
         }
         
         // シュート位置がどのエリアに属するか判定する関数
         function getZoneFromPosition(x, y, width, height) {
-            const centerX = width / 2;
+            // Canvas寸法: width=300, height=400
+            // 主要な境界値を定義
+            const paintTop = height * 0.25;        // 100px - ペイントエリアの下端
+            const midRangeTop = height * 0.6;      // 240px - ミッドレンジの下端
+            const threePointTop = height * 0.75;   // 300px - 3Pラインの下端
             
-            // 1. ゴール下(Y座標が上部20%)
-            if (y < height * 0.2) {
-                return 'paint';
-            }
+            const paintLeft = width * 0.2;         // 60px - ペイントエリアの左端
+            const paintRight = width * 0.8;        // 240px - ペイントエリアの右端
             
-            // 2. Y座標20-60%の範囲
-            if (y < height * 0.6) {
-                // X座標で左右を判定
-                const leftBoundary = width * 0.4;   // 左側40%
-                const rightBoundary = width * 0.6;  // 右側40%
-                
-                if (x < leftBoundary) {
-                    return 'left_wing';      // 左ウィング
-                } else if (x > rightBoundary) {
-                    return 'right_wing';     // 右ウィング
+            const topLeft = width * 0.4;           // 120px - トップエリアの左端
+            const topRight = width * 0.6;          // 180px - トップエリアの右端
+            
+            // 1. ペイントエリア & コーナー (Y < 100px)
+            if (y < paintTop) {
+                if (x >= paintLeft && x <= paintRight) {
+                    return 'paint';        // ペイントエリア(中央)
+                } else if (x < paintLeft) {
+                    return 'left_corner';  // 左コーナー
                 } else {
-                    return 'top';            // トップ(中央20%)
+                    return 'right_corner'; // 右コーナー
                 }
             }
             
-            // 3. Y座標60-75%: トップ(3Pライン周辺)
-            if (y < height * 0.75) {
-                return 'top';
+            // 2. ミッドレンジエリア (100px < Y < 240px)
+            if (y < midRangeTop) {
+                if (x >= topLeft && x <= topRight) {
+                    return 'top';          // トップ(中央)
+                } else if (x < topLeft) {
+                    return 'left_wing';    // 左ウィング
+                } else {
+                    return 'right_wing';   // 右ウィング
+                }
             }
             
-            // 4. それ以降: バックコート
+            // 3. 3Pラインエリア (240px < Y < 300px)
+            if (y < threePointTop) {
+                return 'top';              // トップ(3Pライン周辺は中央扱い)
+            }
+            
+            // 4. バックコート (Y > 300px)
             return 'backcourt';
         }
         
         // エリア名を日本語に変換
         function getZoneNameJP(zone) {
             const names = {
-                'paint': 'ゴール下',
+                'paint': 'ペイント',
+                'left_corner': '左コーナー',
+                'right_corner': '右コーナー',
                 'left_wing': '左ウィング',
                 'right_wing': '右ウィング',
                 'top': 'トップ',
@@ -4240,7 +4257,7 @@ if (result.players) {
             
             // エリア別統計をHTML化
             let html = '';
-            const zones = ['paint', 'left_wing', 'right_wing', 'top', 'backcourt'];
+            const zones = ['paint', 'left_corner', 'right_corner', 'left_wing', 'right_wing', 'top', 'backcourt'];
             
             zones.forEach(zone => {
                 if (zoneData[zone]) {
