@@ -3946,6 +3946,9 @@ if (result.players) {
             } else if (mode === 'settings') {
                 document.querySelector('.mode-btn:nth-child(3)').classList.add('active');
                 document.getElementById('settingsMode').style.display = 'block';
+                displayPlayers();           // ← 追加
+                updateMyPlayerSelect();     // ← 追加
+                displayTeamStatus();        // ← 追加（これが重要！）
            }
         }
         
@@ -5029,6 +5032,8 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         const lastMode = localStorage.getItem('lastMode');
         if (lastMode) {
             switchMode(lastMode);
+        } else {
+            switchMode('personal');  // デフォルトは個人モード
         }
         
         // ========== 選手選択ダイアログのHTML作成 ==========
