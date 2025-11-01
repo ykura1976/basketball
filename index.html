@@ -3915,6 +3915,7 @@ if (result.players) {
 
         function switchMode(mode) {
            currentMode = mode;
+           localStorage.setItem('lastMode', mode);
             
             // すべてのボタンのアクティブ状態をリセット
             document.querySelectorAll('.mode-btn').forEach(function(btn) {
@@ -5024,6 +5025,11 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         displayTeamStatus();
         loadTeamData();
         checkAndShowDraftGame();
+
+        const lastMode = localStorage.getItem('lastMode');
+        if (lastMode) {
+            switchMode(lastMode);
+        }
         
         // ========== 選手選択ダイアログのHTML作成 ==========
         function createPlayerSelectDialog() {
