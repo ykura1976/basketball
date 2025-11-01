@@ -3877,6 +3877,7 @@ if (result.players) {
             }
             
             if (!teamData) {
+                console.log('teamDataがnullのため、未参加メッセージを表示');
                 statusEl.innerHTML = '<p style="color: #999; text-align: center;">チームに参加していません</p>';
                 return;
             }
@@ -3884,7 +3885,8 @@ if (result.players) {
             // ★★★ 追加: teamDataの値を確認 ★★★
             const teamName = teamData.name || 'チーム名未設定';
             const teamCode = teamData.code || '不明';
-            
+
+            console.log('チーム情報を表示:', teamData.name, teamData.code);
             console.log('表示するチーム名:', teamName);
             console.log('表示するチームコード:', teamCode);
             
