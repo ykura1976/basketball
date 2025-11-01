@@ -5019,6 +5019,8 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         displayPlayers();
         updateMyPlayerSelect();
         updatePlayerBanners();
+        console.log('★★★ これから displayTeamStatus を呼びます ★★★');
+        console.log('★★★ teamData:', teamData);
         displayTeamStatus();
         loadTeamData();
         checkAndShowDraftGame();
