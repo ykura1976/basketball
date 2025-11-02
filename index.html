@@ -3774,7 +3774,7 @@ personalGames = personalGames.filter(function(g) {
                 
                 if (result.success) {
                     const newTeamCode = result.teamCode;
-                    
+                    switchTeam(newTeamCode);  // 先に切り替え
                     teamData = {
                         name: result.teamData ? result.teamData.name : teamName,
                         code: newTeamCode,
@@ -3826,6 +3826,7 @@ personalGames = personalGames.filter(function(g) {
                 const result = await response.json();
                 
                 if (result.success) {
+                    switchTeam(teamCode);
                     teamData = {
                         name: result.teamData ? result.teamData.name : 'チーム',
                         code: teamCode,
@@ -3834,7 +3835,7 @@ personalGames = personalGames.filter(function(g) {
                     };
                     
                     // ★★★ ここが新しい処理 ★★★
-                    switchTeam(teamCode);
+                    
                     allTeamsData[teamCode].teamInfo = teamData;
                     // ★★★ ここまで新しい処理 ★★★
                     
