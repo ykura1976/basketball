@@ -1379,6 +1379,18 @@
         .draft-resume-btn:hover {
             background: rgba(255, 255, 255, 0.5);
         }
+        /* 🆕 クイック登録カードのスタイル */
+        #quickPlayerNumber,
+        #quickPlayerName {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        
+        #quickPlayerNumber:focus,
+        #quickPlayerName:focus {
+            border-color: #00b894;
+            box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -1755,6 +1767,31 @@
                     <h2 style="margin-bottom: 15px;">選手を選択</h2>
                     <div id="playerSelector" class="player-grid"></div>
                 </div>
+
+                <!-- 🆕 試合中の選手クイック登録 -->
+                    <div class="card" style="background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <span style="font-size: 1.5em;">⚡</span>
+                            <h2 style="margin: 0;">選手クイック登録</h2>
+                        </div>
+                        <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">
+                            試合中に参加した選手をすぐに登録できます
+                        </p>
+                        
+                        <div class="input-group">
+                            <label>背番号</label>
+                            <input type="number" id="quickPlayerNumber" placeholder="例: 7" min="0" max="99">
+                        </div>
+
+                        <div class="input-group">
+                            <label>名前</label>
+                            <input type="text" id="quickPlayerName" placeholder="例: 山田太郎">
+                        </div>
+
+                        <button class="primary-btn" style="background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); margin-top: 10px;" onclick="quickAddPlayer()">
+                            ⚡ すぐに登録して選択
+                        </button>
+                    </div>
 
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -3045,9 +3082,32 @@
 
         // ========== 続きから記録(再開)機能 ==========
         function resumeDraftGame() {
+            console.log('resumeDraftGame called');
+            console.log('draftTeamGame:', draftTeamGame);
+            
             if (!draftTeamGame) {
-                alert('❌ 途中保存されたデータがありません');
+                alert('⚠️ 途中保存されたデータがありません');
                 return;
+            }
+            
+            // 🆕 古い形式のデータを新しい形式に変換
+            if (draftTeamGame.game && !draftTeamGame.id) {
+                // 古い形式: { game: {...}, timestamp: ... }
+                const oldGame = draftTeamGame.game;
+                draftTeamGame = {
+                    id: oldGame.id,
+                    date: oldGame.date,
+                    opponent: oldGame.opponent,
+                    plays: oldGame.plays || [],
+                    playerStats: oldGame.playerStats || {},
+                    scores: oldGame.scores || {
+                        our: { q1: 0, q2: 0, q3: 0, q4: 0 },
+                        opp: { q1: 0, q2: 0, q3: 0, q4: 0 }
+                    },
+                    currentPeriod: 1,
+                    savedAt: draftTeamGame.timestamp || new Date().toISOString()
+                };
+                console.log('古い形式から変換しました');
             }
             
             // 確認メッセージ
@@ -3070,28 +3130,47 @@
                 id: draftTeamGame.id,
                 date: draftTeamGame.date,
                 opponent: draftTeamGame.opponent,
-                plays: draftTeamGame.plays.slice(),
-                playerStats: JSON.parse(JSON.stringify(draftTeamGame.playerStats)),
+                plays: draftTeamGame.plays ? draftTeamGame.plays.slice() : [],
+                playerStats: draftTeamGame.playerStats ? JSON.parse(JSON.stringify(draftTeamGame.playerStats)) : {},
                 scores: draftTeamGame.scores ? JSON.parse(JSON.stringify(draftTeamGame.scores)) : {
                     our: { q1: 0, q2: 0, q3: 0, q4: 0 },
                     opp: { q1: 0, q2: 0, q3: 0, q4: 0 }
                 }
             };
             
+            console.log('currentTeamGame restored:', currentTeamGame);
+            
             // ピリオドも復元
             currentPeriod = draftTeamGame.currentPeriod || 1;
+            selectedPlayer = null; // 🆕 選手選択をリセット
+            
             selectPeriod(currentPeriod);
             
             // 日付と対戦相手を画面に表示
             document.getElementById('teamGameDate').value = draftTeamGame.date;
             document.getElementById('teamOpponent').value = draftTeamGame.opponent || '';
             
+            // 🆕 試合開始セクションを非表示、記録画面を表示
+            const startSection = document.querySelector('#teamRecordTab .card:first-child');
+            if (startSection) {
+                startSection.style.display = 'none';
+            }
+            
             // 記録画面を表示
             document.getElementById('teamRecording').style.display = 'block';
             displayPlayerSelector();
             updateTeamStats();
             displayPlayHistory();
+            
+            // 🆕 ステータス表示を更新
             updateDraftStatusDisplay();
+            
+            // 🆕 警告ボックスを削除
+            const alertBox = document.getElementById('draftGameAlert');
+            if (alertBox) {
+                alertBox.remove();
+            }
+            
             alert('✅ 試合記録を再開しました!\n\n前回の続きから記録できます。');
         }
 
@@ -4955,6 +5034,98 @@ if (teamData) {
             document.getElementById('playerName').value = '';
             
             alert('✅ ' + name + ' #' + num + ' を登録しました!');
+        }
+
+        // 🆕 試合中の選手クイック登録機能
+        function quickAddPlayer() {
+            const number = document.getElementById('quickPlayerNumber').value.trim();
+            const name = document.getElementById('quickPlayerName').value.trim();
+            
+            // 入力チェック
+            if (!number || !name) {
+                alert('⚠️ 背番号と名前を入力してください');
+                return;
+            }
+            
+            // 背番号の重複チェック
+            const duplicate = players.find(function(p) {
+                return p.number === number;
+            });
+            
+            if (duplicate) {
+                alert('⚠️ 背番号 #' + number + ' は既に使用されています\n\n' + 
+                      '現在の選手: ' + duplicate.name + '\n\n' +
+                      '別の背番号を入力してください。');
+                return;
+            }
+            
+            // 新しい選手を登録
+            const newPlayer = {
+                id: Date.now().toString(),
+                number: number,
+                name: name,
+                _localNew: true
+            };
+            
+            players.push(newPlayer);
+            
+            // 試合中の場合、この選手の統計も初期化
+            if (currentTeamGame) {
+                currentTeamGame.playerStats[newPlayer.id] = {
+                    twoPointsMade: 0, twoPointsAttempted: 0,
+                    threePointsMade: 0, threePointsAttempted: 0,
+                    freeThrowsMade: 0, freeThrowsAttempted: 0,
+                    offensiveRebounds: 0, defensiveRebounds: 0,
+                    assists: 0, steals: 0, blocks: 0, turnovers: 0, fouls: 0
+                };
+            }
+            
+            // データを保存
+            saveData();
+            
+            // サーバーに同期（チームに参加している場合）
+            if (teamData) {
+                syncWithServer({ pushPlayers: true, pushGames: false });
+            }
+            
+            // 画面を更新
+            displayPlayerSelector();
+            updateMyPlayerSelect();
+            displayPlayers();
+            
+            // 入力欄をクリア
+            document.getElementById('quickPlayerNumber').value = '';
+            document.getElementById('quickPlayerName').value = '';
+            
+            // 🆕 登録した選手を自動的に選択
+            selectedPlayer = newPlayer.id;
+            displayPlayerSelector();
+            
+            // 成功メッセージ
+            showQuickAddFeedback(newPlayer.name + ' #' + newPlayer.number);
+        }
+        
+        // 🆕 クイック登録のフィードバック表示
+        function showQuickAddFeedback(playerInfo) {
+            // 既存のフィードバックがあれば削除
+            const existing = document.querySelector('.quick-add-feedback');
+            if (existing) {
+                existing.remove();
+            }
+        
+            // フィードバック通知を作成
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-notification quick-add-feedback';
+            feedback.style.background = 'linear-gradient(135deg, #00b894 0%, #00cec9 100%)';
+            feedback.innerHTML = '⚡ 登録完了: ' + playerInfo + '<br><span style="font-size: 0.85em; opacity: 0.9;">すぐに記録できます</span>';
+            document.body.appendChild(feedback);
+        
+            // 2秒後に削除
+            setTimeout(function() {
+                if (feedback && feedback.parentNode) {
+                    feedback.remove();
+                }
+            }, 2000);
         }
 
         function editPlayer(playerId) {
