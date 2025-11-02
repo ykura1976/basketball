@@ -3586,21 +3586,35 @@ personalGames = personalGames.filter(function(g) {
                 const result = await response.json();
                 
                 if (result.success) {
-                    teamData = {
-                        name: teamName,
-                        code: teamCode,
-                        spreadsheetId: result.spreadsheetId,
-                        createdAt: new Date().toISOString()
-                    };
-                    saveData();
-                    closeModal('createTeamModal');
-                    displayTeamStatus();
-                    showSyncIndicator('success', 'チーム作成完了!');
-                    
-                    alert('✅ チーム「' + teamName + '」を作成しました!\n\nチームコード: ' + teamCode + '\n\nこのコードを友達に共有してください。\n\nスプレッドシート: ' + result.spreadsheetUrl);
-                } else {
-                    throw new Error(result.error || 'チーム作成に失敗しました');
-                }
+                teamData = {
+                    name: teamName,
+                    code: teamCode,
+                    spreadsheetId: result.spreadsheetId,
+                    createdAt: new Date().toISOString()
+                };
+
+                // ★ 新チーム用にローカルのチーム依存データを初期化
+                players = [];        // 前チームのメンバーを消す
+                teamGames = [];      // 前チームの試合データを消す
+                myPlayerId = null;   // 自分の選手選択も一旦解除
+
+                saveData();
+                closeModal('createTeamModal');
+
+                // ★ サーバーから新チームの最新状態を取得（新規なので players は空で返る）
+                await loadTeamData();
+
+                // 表示更新
+                displayTeamStatus();
+                displayPlayers();
+                updateMyPlayerSelect();
+
+                showSyncIndicator('success', 'チーム作成完了!');
+                alert('✅ チーム「' + teamName + '」を作成しました! ...');
+            } else {
+                throw new Error(result.error || 'チーム作成に失敗しました');
+            }
+
             } catch (error) {
                 console.error('エラー:', error);
                 showSyncIndicator('error', 'エラーが発生しました');
