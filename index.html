@@ -1454,6 +1454,124 @@
             border-color: #00b894;
             box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
         }
+        /* 練習メニューのボタン配置 */
+    .practice-menu-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3列に並べる */
+        gap: 10px; /* ボタン同士の間隔 */
+        margin-top: 10px;
+    }
+    
+    /* 練習メニューボタンのデザイン */
+    .practice-menu-btn {
+        padding: 15px 10px;
+        border: 2px solid #ddd;
+        background: white;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: all 0.3s ease; /* 色が変わるときの滑らかさ */
+        text-align: center;
+    }
+    
+    /* 練習メニューボタンにマウスを乗せたとき */
+    .practice-menu-btn:hover {
+        border-color: #667eea;
+        background: #f0f4ff;
+    }
+    
+    /* 練習メニューボタンが選ばれたとき */
+    .practice-menu-btn.selected {
+        border-color: #667eea;
+        background: #667eea;
+        color: white;
+    }
+    
+    /* 調子選択ボタンの配置 */
+    .mood-selection {
+        display: flex;
+        gap: 10px;
+        justify-content: space-around; /* ボタンを均等に配置 */
+        margin-top: 10px;
+    }
+    
+    /* 調子選択ボタンのデザイン */
+    .mood-btn {
+        flex: 1; /* ボタンを均等な幅にする */
+        padding: 15px 10px;
+        border: 2px solid #ddd;
+        background: white;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    
+    /* 調子選択ボタンにマウスを乗せたとき */
+    .mood-btn:hover {
+        border-color: #667eea;
+        background: #f0f4ff;
+    }
+    
+    /* 調子選択ボタンが選ばれたとき */
+    .mood-btn.selected {
+        border-color: #667eea;
+        background: #667eea;
+        color: white;
+    }
+    
+    /* 練習履歴リストのスタイル */
+    #practiceHistoryList {
+        margin-top: 15px;
+    }
+    
+    /* 練習履歴1つ1つのカード */
+    .practice-history-item {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid #667eea;
+    }
+    
+    /* 練習履歴の日付部分 */
+    .practice-history-date {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    
+    /* 練習履歴のメニュー部分 */
+    .practice-history-menus {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-bottom: 8px;
+    }
+    
+    /* 練習メニューのタグ */
+    .practice-menu-tag {
+        background: #667eea;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 5px;
+        font-size: 0.8em;
+    }
+    
+    /* 練習履歴の調子表示 */
+    .practice-history-mood {
+        font-size: 1.2em;
+        margin-bottom: 5px;
+    }
+    
+    /* 練習履歴のメモ部分 */
+    .practice-history-note {
+        color: #666;
+        font-size: 0.9em;
+        font-style: italic;
+        margin-top: 5px;
+    }
     </style>
 </head>
 <body>
@@ -1480,6 +1598,7 @@
                 <button class="tab" onclick="switchTab('list')">📊 履歴</button>
                 <button class="tab" onclick="switchTab('ranking')">🏆 ランキング</button>
                 <button class="tab" onclick="switchTab('graph')">📈 グラフ</button>
+                <button class="tab" onclick="switchTab('practice')">🎯 練習</button>
             </div>
 
             <div id="inputTab" class="tab-content active">
@@ -1701,6 +1820,83 @@
                 </div>
             </div>
 
+            <!-- 練習タブ -->
+            <div id="practiceTab" class="tab-content">
+                <div class="card">
+                    <h2>📝 今日の練習を記録しよう!</h2>
+                    <p style="color: #666; margin-bottom: 20px;">30秒で完了!練習を記録して習慣化しよう</p>
+                    
+                    <!-- 日付入力 -->
+                    <div class="input-group">
+                        <label>📅 日付</label>
+                        <input type="date" id="practiceDate" value="">
+                    </div>
+                    
+                    <!-- 練習メニュー選択 -->
+                    <div class="input-group">
+                        <label>🏀 今日やった練習(複数選択OK!)</label>
+                        <div class="practice-menu-grid">
+                            <button class="practice-menu-btn" data-menu="shoot" onclick="togglePracticeMenu(this)">
+                                🏀<br>シュート
+                            </button>
+                            <button class="practice-menu-btn" data-menu="dribble" onclick="togglePracticeMenu(this)">
+                                ⚡<br>ドリブル
+                            </button>
+                            <button class="practice-menu-btn" data-menu="pass" onclick="togglePracticeMenu(this)">
+                                🤝<br>パス
+                            </button>
+                            <button class="practice-menu-btn" data-menu="defense" onclick="togglePracticeMenu(this)">
+                                🛡️<br>ディフェンス
+                            </button>
+                            <button class="practice-menu-btn" data-menu="fitness" onclick="togglePracticeMenu(this)">
+                                💪<br>体力
+                            </button>
+                            <button class="practice-menu-btn" data-menu="other" onclick="togglePracticeMenu(this)">
+                                📋<br>その他
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 今日の調子 -->
+                    <div class="input-group">
+                        <label>😊 今日の調子はどうだった?</label>
+                        <div class="mood-selection">
+                            <button class="mood-btn" data-mood="good" onclick="selectMood(this)">
+                                😊<br>良かった
+                            </button>
+                            <button class="mood-btn" data-mood="normal" onclick="selectMood(this)">
+                                😐<br>普通
+                            </button>
+                            <button class="mood-btn" data-mood="bad" onclick="selectMood(this)">
+                                😢<br>イマイチ
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- ひとこと日記(任意) -->
+                    <div class="input-group">
+                        <label>💬 ひとこと日記(書いても書かなくてもOK!)</label>
+                        <textarea id="practiceNote" placeholder="例: 3Pが10本中7本決まった!&#10;例: 左手のドリブルが上手くなってきた" rows="3"></textarea>
+                    </div>
+                    
+                    <!-- 練習時間(任意) -->
+                    <div class="input-group">
+                        <label>⏱️ 練習時間(分) - 任意</label>
+                        <input type="number" id="practiceDuration" min="0" max="300" placeholder="例: 60">
+                    </div>
+                    
+                    <!-- 保存ボタン -->
+                    <button class="primary-btn" onclick="savePracticeRecord()">
+                        ✅ 保存して +10XP 獲得!
+                    </button>
+                </div>
+                
+                <!-- 練習履歴 -->
+                <div class="card">
+                    <h2>📊 最近の練習記録</h2>
+                    <div id="practiceHistoryList"></div>
+                </div>
+            </div>
             
         </div>
         <div id="settingsMode" style="display: none;">
@@ -2082,6 +2278,15 @@
         // シュートチャート関連の変数
         let currentShotPosition = null;
         let shotChartCallback = null;
+
+        let practiceRecords = [];
+        let userProfile = {
+            totalXP: 0,        // 合計経験値(最初は0)
+            level: 1,            // レベル(最初は1)
+            currentStreak: 0,    // 連続記録日数(最初は0)
+            longestStreak: 0,    // 最長連続記録(最初は0)
+            lastPracticeDate: null    // 最後の練習日(最初は無し)
+        };
         
         // コート図を描画する関数
         function drawCourt(canvas) {
@@ -5815,6 +6020,173 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         
         // ページ読み込み時にダイアログを作成
         createPlayerSelectDialog();
+
+        // 📝 練習メニューボタンを押したときの処理
+        function togglePracticeMenu(button) {
+            // ボタンに「selected」というクラスがあれば消す、なければ追加する
+            button.classList.toggle('selected');
+        }
+        
+        // 😊 調子ボタンを押したときの処理
+        function selectMood(button) {
+            // 他の調子ボタンの選択を全部解除する
+            document.querySelectorAll('.mood-btn').forEach(function(btn) {
+                btn.classList.remove('selected');
+            });
+            
+            // 押したボタンだけを選択状態にする
+            button.classList.add('selected');
+        }
+        
+        // 💾 練習記録を保存する関数
+        function savePracticeRecord() {
+            // 1. 入力された情報を取得する
+            const date = document.getElementById('practiceDate').value;
+            const note = document.getElementById('practiceNote').value;
+            const duration = document.getElementById('practiceDuration').value;
+            
+            // 2. 選ばれた練習メニューを取得する
+            const selectedMenus = [];
+            document.querySelectorAll('.practice-menu-btn.selected').forEach(function(btn) {
+                selectedMenus.push(btn.getAttribute('data-menu'));
+            });
+            
+            // 3. 選ばれた調子を取得する
+            let selectedMood = null;
+            const moodBtn = document.querySelector('.mood-btn.selected');
+            if (moodBtn) {
+                selectedMood = moodBtn.getAttribute('data-mood');
+            }
+            
+            // 4. エラーチェック
+            if (!date) {
+                alert('日付を選択してください!');
+                return;
+            }
+            
+            if (selectedMenus.length === 0) {
+                alert('練習メニューを1つ以上選択してください!');
+                return;
+            }
+            
+            if (!selectedMood) {
+                alert('今日の調子を選択してください!');
+                return;
+            }
+            
+            // 5. 練習記録オブジェクトを作成
+            const practice = {
+                id: 'practice_' + Date.now(),  // ユニークなID
+                date: date,
+                menus: selectedMenus,
+                mood: selectedMood,
+                note: note,
+                duration: duration ? parseInt(duration) : 0,
+                xp: 10,  // 基本XP
+                timestamp: new Date().toISOString()
+            };
+            
+            // 6. ひとこと日記を書いたらボーナスXP
+            if (note.trim().length > 0) {
+                practice.xp += 20;  // +20XP
+            }
+            
+            // 7. 練習記録配列に追加
+            practiceRecords.push(practice);
+            
+            // 8. ユーザープロフィールを更新
+            userProfile.totalXP += practice.xp;
+            userProfile.lastPracticeDate = date;
+            
+            // 9. データを保存
+            saveData();
+            
+            // 10. 成功メッセージ
+            alert('✅ 練習記録を保存しました!\n獲得XP: +' + practice.xp + 'XP');
+            
+            // 11. 入力フォームをリセット
+            document.getElementById('practiceNote').value = '';
+            document.getElementById('practiceDuration').value = '';
+            document.querySelectorAll('.practice-menu-btn').forEach(function(btn) {
+                btn.classList.remove('selected');
+            });
+            document.querySelectorAll('.mood-btn').forEach(function(btn) {
+                btn.classList.remove('selected');
+            });
+            
+            // 12. 履歴を再表示
+            displayPracticeHistory();
+        }
+        
+        // 📊 練習履歴を表示する関数
+        function displayPracticeHistory() {
+            const listEl = document.getElementById('practiceHistoryList');
+            
+            if (practiceRecords.length === 0) {
+                listEl.innerHTML = '<p style="color: #999; text-align: center;">まだ練習記録がありません</p>';
+                return;
+            }
+            
+            // 最新の記録が上に来るようにソート
+            const sorted = practiceRecords.slice().sort(function(a, b) {
+                return new Date(b.date) - new Date(a.date);
+            });
+            
+            // 最新5件だけ表示
+            const recent = sorted.slice(0, 5);
+            
+            let html = '';
+            recent.forEach(function(practice) {
+                // 日付を見やすく変換
+                const dateObj = new Date(practice.date);
+                const dateStr = dateObj.toLocaleDateString('ja-JP', {
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                // 練習メニューを日本語に変換
+                const menuNames = {
+                    'shoot': 'シュート',
+                    'dribble': 'ドリブル',
+                    'pass': 'パス',
+                    'defense': 'ディフェンス',
+                    'fitness': '体力',
+                    'other': 'その他'
+                };
+                
+                // 調子を絵文字に変換
+                const moodEmojis = {
+                    'good': '😊 良かった',
+                    'normal': '😐 普通',
+                    'bad': '😢 イマイチ'
+                };
+                
+                html += '<div class="practice-history-item">';
+                html += '<div class="practice-history-date">📅 ' + dateStr + '</div>';
+                
+                // 練習メニュー表示
+                html += '<div class="practice-history-menus">';
+                practice.menus.forEach(function(menu) {
+                    html += '<span class="practice-menu-tag">' + menuNames[menu] + '</span>';
+                });
+                html += '</div>';
+                
+                // 調子表示
+                html += '<div class="practice-history-mood">' + moodEmojis[practice.mood] + '</div>';
+                
+                // メモがあれば表示
+                if (practice.note) {
+                    html += '<div class="practice-history-note">💬 ' + practice.note + '</div>';
+                }
+                
+                // XP表示
+                html += '<div style="color: #667eea; font-weight: bold; margin-top: 5px;">+' + practice.xp + 'XP</div>';
+                
+                html += '</div>';
+            });
+            
+            listEl.innerHTML = html;
+        }
     </script>
     <!-- ========== ここから追加 ========== -->
     
