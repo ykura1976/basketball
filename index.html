@@ -1779,6 +1779,15 @@
                         <button class="action-btn other" onclick="recordPlay('foul')">ファウル</button>
                     </div>
 
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                        <button class="primary-btn" style="background: #3498db;" onclick="saveDraftTeamGame()">
+                            💾 途中保存
+                        </button>
+                        <button class="save-btn" onclick="saveTeamGame()">
+                            ✅ 試合終了・保存
+                        </button>
+                    </div>
+                    
                     <div class="play-history" id="playHistory">
                         <div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>
                     </div>
@@ -1788,14 +1797,7 @@
                     <h2 style="margin-bottom: 15px;">試合統計</h2>
                     <div id="teamStats"></div>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-                        <button class="primary-btn" style="background: #3498db;" onclick="saveDraftTeamGame()">
-                            💾 途中保存
-                        </button>
-                        <button class="save-btn" onclick="saveTeamGame()">
-                            ✅ 試合終了・保存
-                        </button>
-                    </div>
+                    
                 </div>
             </div>
      </div>
