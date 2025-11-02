@@ -1315,6 +1315,70 @@
         .shot-chart-button:hover {
             transform: scale(1.05);
         }
+        /* 🆕 途中保存ステータス表示 */
+        .draft-status-banner {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+
+        .draft-status-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .draft-status-icon {
+            font-size: 1.5em;
+        }
+
+        .draft-status-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .draft-status-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .draft-status-time {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .draft-status-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .draft-resume-btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .draft-resume-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -2464,6 +2528,7 @@
             displayPlayerSelector();
             updateTeamStats();
             displayPlayHistory();
+            updateDraftStatusDisplay();
         }
 
         function displayPlayerSelector() {
@@ -2838,26 +2903,78 @@
         // ========== 途中保存機能 ==========
         function saveDraftTeamGame() {
             if (!currentTeamGame) {
-                alert('❌ 記録中の試合がありません');
+                alert('⚠️ 記録中の試合がありません');
                 return;
             }
             
-            // 現在の試合データを途中保存用に保存
             draftTeamGame = {
-                id: currentTeamGame.id,
-                date: currentTeamGame.date,
-                opponent: currentTeamGame.opponent,
-                plays: currentTeamGame.plays.slice(), // コピーを作成
-                playerStats: JSON.parse(JSON.stringify(currentTeamGame.playerStats)), // 深いコピー
-                scores: JSON.parse(JSON.stringify(currentTeamGame.scores)), // スコアデータも保存
-                currentPeriod: currentPeriod, // 現在のピリオドも保存
-                savedAt: new Date().toISOString() // 保存日時
+                game: JSON.parse(JSON.stringify(currentTeamGame)),
+                timestamp: new Date().toISOString()
             };
             
-            // データを保存
             saveData();
             
-            alert('✅ 途中保存しました!\n\n記録を続けるか、後から「続きから記録」で再開できます。');
+            // 🆕 保存成功の視覚的フィードバック
+            showFeedbackNotification('💾 途中保存しました！', 'success');
+            
+            // 🆕 ステータス表示を更新
+            updateDraftStatusDisplay();
+            
+            // 🆕 ボタンのテキストを変更
+            const draftBtn = document.querySelector('button[onclick="saveDraftTeamGame()"]');
+            if (draftBtn) {
+                const now = new Date();
+                const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                               now.getMinutes().toString().padStart(2, '0');
+                draftBtn.innerHTML = '💾 保存済み (' + timeStr + ')';
+                draftBtn.style.background = '#2ecc71';
+                
+                // 3秒後に元に戻す
+                setTimeout(function() {
+                    draftBtn.innerHTML = '💾 途中保存';
+                    draftBtn.style.background = '#3498db';
+                }, 3000);
+            }
+        }
+
+        // 🆕 途中保存ステータス表示を更新する関数
+        function updateDraftStatusDisplay() {
+            let statusDiv = document.getElementById('draftStatusBanner');
+            
+            // ステータス表示がまだない場合は作成
+            if (!statusDiv) {
+                statusDiv = document.createElement('div');
+                statusDiv.id = 'draftStatusBanner';
+                statusDiv.className = 'draft-status-banner';
+                
+                // プレイ記録エリアの前に挿入
+                const playActions = document.querySelector('.play-actions');
+                if (playActions && playActions.parentNode) {
+                    playActions.parentNode.insertBefore(statusDiv, playActions);
+                }
+            }
+            
+            if (draftTeamGame && draftTeamGame.timestamp) {
+                const saveTime = new Date(draftTeamGame.timestamp);
+                const timeStr = saveTime.getHours().toString().padStart(2, '0') + ':' + 
+                               saveTime.getMinutes().toString().padStart(2, '0');
+                
+                statusDiv.innerHTML = `
+                    <div class="draft-status-info">
+                        <div class="draft-status-icon">💾</div>
+                        <div class="draft-status-text">
+                            <div class="draft-status-label">途中保存済み</div>
+                            <div class="draft-status-time">${timeStr} に保存</div>
+                        </div>
+                    </div>
+                    <div class="draft-status-actions">
+                        <span style="font-size: 0.9em; opacity: 0.9;">そのまま記録を続けられます →</span>
+                    </div>
+                `;
+                statusDiv.style.display = 'flex';
+            } else {
+                statusDiv.style.display = 'none';
+            }
         }
 
         // ========== 続きから記録(再開)機能 ==========
@@ -2908,7 +3025,7 @@
             displayPlayerSelector();
             updateTeamStats();
             displayPlayHistory();
-            
+            updateDraftStatusDisplay();
             alert('✅ 試合記録を再開しました!\n\n前回の続きから記録できます。');
         }
 
@@ -4892,52 +5009,53 @@ if (teamData) {
         }
 
         function updatePlayerBanners() {
-            // 選手が選択されているかチェック
-            if (myPlayerId && players.length > 0) {
-                const player = players.find(function(p) { return p.id === myPlayerId; });
-                const playerText = player ? player.name + ' #' + player.number : '選手が見つかりません';
-
-                const banners = [
-                    { banner: 'inputPlayerBanner', name: 'inputPlayerName' },
-                    { banner: 'listPlayerBanner', name: 'listPlayerName' },
-                    { banner: 'rankingPlayerBanner', name: 'rankingPlayerName' },
-                    { banner: 'graphPlayerBanner', name: 'graphPlayerName' }
-                ];
-
-                banners.forEach(function(b) {
-                    const bannerEl = document.getElementById(b.banner);
-                    const nameEl = document.getElementById(b.name);
-                    
-                    if (bannerEl && nameEl) {
-                        bannerEl.style.display = 'flex';
-                        nameEl.textContent = playerText;
-                        
-                        // クリック機能を追加
-                        bannerEl.style.cursor = 'pointer';
-                        bannerEl.style.transition = 'all 0.3s';
-                        bannerEl.onclick = showPlayerSelectDialog;
-                        
-                        // マウスを乗せたときの効果
-                        bannerEl.onmouseenter = function() {
-                            this.style.transform = 'scale(1.02)';
-                            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-                        };
-                        
-                        bannerEl.onmouseleave = function() {
-                            this.style.transform = 'scale(1)';
-                            this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                        };
-                    }
-                });
-            } else {
-                // 選手が選択されていない場合は非表示
-                ['inputPlayerBanner', 'listPlayerBanner', 'rankingPlayerBanner', 'graphPlayerBanner'].forEach(function(id) {
-                    const el = document.getElementById(id);
-                    if (el) {
-                        el.style.display = 'none';
-                    }
-                });
-            }
+            const banners = [
+                { banner: 'inputPlayerBanner', name: 'inputPlayerName' },
+                { banner: 'listPlayerBanner', name: 'listPlayerName' },
+                { banner: 'rankingPlayerBanner', name: 'rankingPlayerName' },
+                { banner: 'graphPlayerBanner', name: 'graphPlayerName' }
+            ];
+        
+            banners.forEach(function(b) {
+                const bannerEl = document.getElementById(b.banner);
+                const nameEl = document.getElementById(b.name);
+                
+                if (!bannerEl || !nameEl) return;
+        
+                // 🆕 常にバナーを表示
+                bannerEl.style.display = 'flex';
+                
+                // 選手が選択されているかチェック
+                if (myPlayerId && players.length > 0) {
+                    const player = players.find(function(p) { return p.id === myPlayerId; });
+                    const playerText = player ? player.name + ' #' + player.number : '選手が見つかりません';
+                    nameEl.textContent = playerText;
+                } else if (players.length > 0) {
+                    // 🆕 選手が未選択でも登録選手がいる場合
+                    nameEl.textContent = 'タップして選手を選択';
+                    bannerEl.style.background = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+                } else {
+                    // 🆕 選手が1人も登録されていない場合
+                    nameEl.textContent = '選手を登録してください';
+                    bannerEl.style.background = 'linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%)';
+                }
+                
+                // クリック機能を追加
+                bannerEl.style.cursor = 'pointer';
+                bannerEl.style.transition = 'all 0.3s';
+                bannerEl.onclick = showPlayerSelectDialog;
+                
+                // マウスを乗せたときの効果
+                bannerEl.onmouseenter = function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                };
+                
+                bannerEl.onmouseleave = function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                };
+            });
         }
         
         // 選手選択ダイアログを表示する関数
