@@ -5025,14 +5025,18 @@ if (result.players) {
 
         function updateCharts() {
             const myGames = myPlayerId 
-    ? personalGames.filter(function(g) {
-        return !g.playerId || g.playerId === myPlayerId;
-      })
-    : personalGames;
+        ? personalGames.filter(function(g) {
+            return !g.playerId || g.playerId === myPlayerId;
+          })
+        : personalGames;
             
             if (myGames.length === 0) return;
-
-            const sorted = myGames.slice().reverse();
+        
+            // 🆕 日付順にソート（古い順）- reverseを削除
+            const sorted = myGames.slice().sort(function(a, b) {
+                return new Date(a.date) - new Date(b.date);
+            });
+            
             const labels = sorted.map(function(g) {
                 const d = new Date(g.date).toLocaleDateString('ja-JP', {month: 'short', day: 'numeric'});
                 return g.opponent ? d + ' vs ' + g.opponent : d;
