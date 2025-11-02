@@ -1457,7 +1457,10 @@
     </style>
 </head>
 <body>
-    <div class="sync-indicator" id="syncIndicator">同期中...</div>
+    <!-- ← ここから -->
+    <div id="syncOverlay" class="sync-overlay"></div>
+    <div class="sync-indicator" id="syncIndicator"></div>
+    <!-- ← ここまで追加/修正 -->
     
     <div class="container">
         <div class="header">
@@ -2256,12 +2259,35 @@
 
         function showSyncIndicator(status, message) {
             const indicator = document.getElementById('syncIndicator');
-            indicator.className = 'sync-indicator ' + status;
-            indicator.textContent = message;
+            const overlay = document.getElementById('syncOverlay');
             
+            // 🆕 メッセージを分かりやすく整形
+            let displayMessage = message;
+            
+            if (status === 'syncing') {
+                displayMessage = message || '処理中です...\nしばらくお待ちください';
+                
+                // 🆕 オーバーレイを表示（他の操作を防ぐ）
+                if (overlay) {
+                    overlay.classList.add('active');
+                }
+            } else {
+                // 🆕 完了時はオーバーレイを非表示
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+            }
+            
+            indicator.className = 'sync-indicator ' + status;
+            indicator.textContent = displayMessage;
+            
+            // 🆕 成功・エラー時は3秒後に自動で消す
             if (status === 'success' || status === 'error') {
                 setTimeout(function() {
                     indicator.className = 'sync-indicator';
+                    if (overlay) {
+                        overlay.classList.remove('active');
+                    }
                 }, 3000);
             }
         }
@@ -4164,7 +4190,7 @@ personalGames = personalGames.filter(function(g) {
                 return;
             }
         
-            showSyncIndicator('syncing', 'チーム作成中...');
+            showSyncIndicator('syncing', '🏀 チームを作成中...\n\nスプレッドシートを準備しています');
             
             try {
                 const response = await fetch(API_URL, {
@@ -4217,7 +4243,7 @@ personalGames = personalGames.filter(function(g) {
     displayTeamList();
     
     closeModal('createTeamModal');
-    showSyncIndicator('success', 'チーム作成完了!');
+    showSyncIndicator('success', '✅ チーム作成完了！');
     
     alert('✅ チーム「' + teamName + '」を作成しました!\n\nチームコード: ' + newTeamCode);
                 } else {
@@ -4237,7 +4263,7 @@ personalGames = personalGames.filter(function(g) {
                 return;
             }
         
-            showSyncIndicator('syncing', 'チームに参加中...');
+            showSyncIndicator('syncing', '🤝 チームに参加中...\n\nデータを読み込んでいます');
             
             try {
                 const response = await fetch(API_URL, {
@@ -4278,7 +4304,7 @@ personalGames = personalGames.filter(function(g) {
                     updateMyPlayerSelect();
                     displayTeamList();
                     
-                    showSyncIndicator('success', 'チーム参加完了!');
+                    showSyncIndicator('success', '✅ チーム参加完了！');
                     alert('✅ チーム「' + teamData.name + '」に参加しました!');
                 } else {
                     throw new Error(result.error || 'チーム参加に失敗しました');
@@ -4292,7 +4318,7 @@ personalGames = personalGames.filter(function(g) {
         async function syncWithServer(options = { pushPlayers: false, pushGames: true }) {
     if (!teamData) return;
 
-    showSyncIndicator('syncing', '同期中...');
+    showSyncIndicator('syncing', '📤 データを送信中...\n\nしばらくお待ちください');
 
     try {
         const payload = {
@@ -4324,10 +4350,10 @@ personalGames = personalGames.filter(function(g) {
             players.forEach(p => { if (p._localNew) p._localNew = false; });
         }
 
-        showSyncIndicator('success', '送信完了');
+        showSyncIndicator('success', '✅ 送信完了！');
     } catch (e) {
         console.error(e);
-        showSyncIndicator('error', '同期失敗:' + e.message);
+        showSyncIndicator('error', '❌ 送信失敗\n\n' + e.message);
     }
 }
 
@@ -4366,7 +4392,7 @@ async function syncGamesOnly() {
         // ▼▼▼ ここから追加:送受信まとめて行う ▼▼▼
 async function syncAll() {
   if (!teamData) { alert('チームに参加していません'); return; }
-  showSyncIndicator('syncing', '同期中…');
+  showSyncIndicator('syncing', '🔄 データを同期中...\n\n送信と受信を行っています\nしばらくお待ちください');
 
   try {
     // 1) まずサーバーから最新データを取得(受信優先)
@@ -4379,10 +4405,10 @@ async function syncAll() {
     displayRankings();
     updateCharts();
 
-    showSyncIndicator('success', '同期完了!');
+    showSyncIndicator('success', '✅ 同期完了！\n\n最新のデータに更新されました');
   } catch (e) {
     console.error(e);
-    showSyncIndicator('error', '同期失敗:' + e.message);
+    showSyncIndicator('error', '❌ 同期に失敗しました\n\nネットワークを確認してください');
   }
 }
 // ▲▲▲ 追加ここまで ▲▲▲
@@ -4391,7 +4417,7 @@ async function syncAll() {
         async function loadTeamData() {
     if (!teamData) return;
     
-    showSyncIndicator('syncing', 'データ取得中...');
+    showSyncIndicator('syncing', '📥 データを取得中...\n\nサーバーから読み込んでいます');
     
     try {
         const response = await fetch(API_URL, {
@@ -4483,11 +4509,11 @@ if (result.players) {
             
             return addedCount;
         } else {
-            showSyncIndicator('error', 'データ取得失敗');
+            showSyncIndicator('error', '❌ データ取得失敗\n\n' + error.message);
         }
     } catch (error) {
         console.error('データ取得エラー:', error);
-        showSyncIndicator('error', 'データ取得失敗');
+        showSyncIndicator('error', '❌ データ取得失敗\n\n' + error.message);
     }
 }
         function displayTeamStatus() {
