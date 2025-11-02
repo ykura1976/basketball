@@ -1563,6 +1563,13 @@
         </div>
         <div id="settingsMode" style="display: none;">
                 <div class="card">
+                    <h2 style="margin-bottom: 20px;">🔄 チーム切り替え</h2>
+                    <div id="teamListContainer"></div>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
+                        💡 チームをタップすると、そのチームのデータに切り替わります
+                    </p>
+                </div>
+                <div class="card">
                     <h2 style="margin-bottom: 20px;">🔗 チーム連携</h2>
                     <div id="teamStatus"></div>
                     
@@ -2065,6 +2072,8 @@
         let myPlayerId = null;
         let teamData = null;
         let charts = {};
+        let allTeamsData = {};  // 全チームのデータを保存する箱
+        let currentTeamCode = null;  // 今選んでいるチームのコード
         
         let stats = {
             twoPointsMade: 0, twoPointsAttempted: 0,
@@ -2093,48 +2102,231 @@
 
         function loadData() {
             try {
-                const saved = localStorage.getItem('basketballData');
-                if (saved) {
-                    const data = JSON.parse(saved);
+                // ステップ1: 全チームのデータを読み込む
+                const savedAllTeams = localStorage.getItem('allTeamsData');
+                if (savedAllTeams) {
+                    allTeamsData = JSON.parse(savedAllTeams);
+                }
+                
+                // ステップ2: 今選んでいるチームのコードを読み込む
+                const savedCurrentTeam = localStorage.getItem('currentTeamCode');
+                if (savedCurrentTeam) {
+                    currentTeamCode = savedCurrentTeam;
+                }
+                
+                // ステップ3: 今選んでいるチームのデータを読み込む
+                if (currentTeamCode && allTeamsData[currentTeamCode]) {
+                    const data = allTeamsData[currentTeamCode];
                     personalGames = data.personalGames || [];
                     teamGames = data.teamGames || [];
                     players = data.players || [];
                     myPlayerId = data.myPlayerId || null;
-                    teamData = data.teamData || null;
+                    teamData = data.teamInfo || null;
                     draftTeamGame = data.draftTeamGame || null;
-                    // ▼▼▼ ここから追加 ▼▼▼
-                    // myPlayerIdが存在しない選手を指している場合、修正する
+                    
+                    // 選んでいる選手が存在するかチェック
                     if (myPlayerId && players.length > 0) {
                         const playerExists = players.find(function(p) {
                             return p.id === myPlayerId;
                         });
-                
+                        
                         if (!playerExists) {
                             console.warn('選択中の選手が見つかりません。最初の選手を自動選択します。');
                             myPlayerId = players[0].id;
                             saveData();
                         }
                     }
-                    // ▲▲▲ ここまで追加 ▲▲▲
+                } else {
+                    // チームが選ばれていない場合、空っぽにする
+                    personalGames = [];
+                    teamGames = [];
+                    players = [];
+                    myPlayerId = null;
+                    teamData = null;
+                    draftTeamGame = null;
                 }
+                
+                // ステップ4: 古いデータがあったら新しい形式に変換する
+                migrateOldData();
+                
             } catch (e) {
                 console.error('データ読み込みエラー:', e);
             }
         }
-
+        
         function saveData() {
-            const data = {
-                personalGames: personalGames,
-                teamGames: teamGames,
-                players: players,
-                myPlayerId: myPlayerId,
-                teamData: teamData,
-                draftTeamGame: draftTeamGame
-            };
-            localStorage.setItem('basketballData', JSON.stringify(data));
-            showSavedIndicator();
+            try {
+                // チームが選ばれていないと保存できない
+                if (!currentTeamCode) {
+                    console.warn('チームが選択されていないため、保存できません');
+                    return;
+                }
+                
+                // 今選んでいるチームのデータを更新する
+                allTeamsData[currentTeamCode] = {
+                    personalGames: personalGames,
+                    teamGames: teamGames,
+                    players: players,
+                    myPlayerId: myPlayerId,
+                    teamInfo: teamData,
+                    draftTeamGame: draftTeamGame,
+                    lastModified: new Date().toISOString()
+                };
+                
+                // 全チームのデータを保存
+                localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
+                localStorage.setItem('currentTeamCode', currentTeamCode);
+                
+                showSavedIndicator();
+            } catch (e) {
+                console.error('データ保存エラー:', e);
+            }
         }
 
+        // ========== チーム切り替え関数 ==========
+        function switchTeam(teamCode) {
+            if (!teamCode) {
+                console.error('チームコードが指定されていません');
+                return;
+            }
+            
+            // ステップ1: 今のデータを保存
+            if (currentTeamCode) {
+                saveData();
+            }
+            
+            // ステップ2: 新しいチームに切り替え
+            currentTeamCode = teamCode;
+            localStorage.setItem('currentTeamCode', teamCode);
+            
+            // ステップ3: 新しいチームのデータを読み込む
+            if (allTeamsData[teamCode]) {
+                const data = allTeamsData[teamCode];
+                personalGames = data.personalGames || [];
+                teamGames = data.teamGames || [];
+                players = data.players || [];
+                myPlayerId = data.myPlayerId || null;
+                teamData = data.teamInfo || null;
+                draftTeamGame = data.draftTeamGame || null;
+            } else {
+                // 新しいチームの場合、空っぽにする
+                personalGames = [];
+                teamGames = [];
+                players = [];
+                myPlayerId = null;
+                draftTeamGame = null;
+            }
+            
+            // ステップ4: 画面を更新
+            displayPlayers();
+            updateMyPlayerSelect();
+            displayGames();
+            displayRankings();
+            updateCharts();
+            displayTeamStatus();
+            displayTeamList();
+            
+            alert('✅ チーム切り替え完了!');
+        }
+
+        // ========== 古いデータを新しい形式に変換する関数 ==========
+        function migrateOldData() {
+            try {
+                const oldData = localStorage.getItem('basketballData');
+                if (oldData) {
+                    const data = JSON.parse(oldData);
+                    
+                    // 古いデータがあり、チーム情報がある場合
+                    if (data.teamData && data.teamData.code) {
+                        const oldTeamCode = data.teamData.code;
+                        
+                        // まだ変換していないかチェック
+                        if (!allTeamsData[oldTeamCode]) {
+                            console.log('古いデータを新しい形式に変換します:', oldTeamCode);
+                            
+                            // 古いデータを新しい形式に変換
+                            allTeamsData[oldTeamCode] = {
+                                personalGames: data.personalGames || [],
+                                teamGames: data.teamGames || [],
+                                players: data.players || [],
+                                myPlayerId: data.myPlayerId || null,
+                                teamInfo: data.teamData,
+                                draftTeamGame: data.draftTeamGame || null,
+                                lastModified: new Date().toISOString()
+                            };
+                            
+                            // 今選んでいるチームに設定
+                            currentTeamCode = oldTeamCode;
+                            
+                            // 新しい形式で保存
+                            localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
+                            localStorage.setItem('currentTeamCode', currentTeamCode);
+                            
+                            // 古いデータを削除
+                            localStorage.removeItem('basketballData');
+                            
+                            console.log('✅ データ変換完了');
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('データ変換エラー:', e);
+            }
+        }
+
+        // ========== チーム一覧を表示する関数 ==========
+        function displayTeamList() {
+            const container = document.getElementById('teamListContainer');
+            if (!container) return;
+            
+            const teamCodes = Object.keys(allTeamsData);
+            
+            if (teamCodes.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">チームがありません</p>';
+                return;
+            }
+            
+            let html = '<div style="margin-top: 15px;">';
+            html += '<h4 style="color: #667eea; margin-bottom: 10px;">🏀 参加チーム一覧</h4>';
+            
+            teamCodes.forEach(function(code) {
+                const team = allTeamsData[code];
+                const isActive = code === currentTeamCode;
+                const teamInfo = team.teamInfo || {};
+                const teamName = teamInfo.name || 'チーム';
+                
+                html += `
+                    <div style="
+                        padding: 12px;
+                        margin-bottom: 8px;
+                        background: ${isActive ? '#e8f0fe' : '#f5f5f5'};
+                        border: 2px solid ${isActive ? '#667eea' : '#ddd'};
+                        border-radius: 8px;
+                        cursor: pointer;
+                    " onclick="switchTeam('${code}')">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: bold; color: #333;">
+                                    ${isActive ? '✅ ' : ''}${teamName}
+                                </div>
+                                <div style="font-size: 0.85em; color: #666; margin-top: 4px;">
+                                    コード: ${code}
+                                </div>
+                                <div style="font-size: 0.75em; color: #999; margin-top: 2px;">
+                                    選手: ${team.players ? team.players.length : 0}名 | 
+                                    試合: ${team.teamGames ? team.teamGames.length : 0}件
+                                </div>
+                            </div>
+                            ${isActive ? '<div style="color: #667eea; font-size: 1.5em;">●</div>' : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
         function showSavedIndicator() {
             const indicator = document.getElementById('savedIndicator');
             indicator.classList.add('show');
@@ -3565,39 +3757,43 @@ personalGames = personalGames.filter(function(g) {
                 alert('チーム名を入力してください');
                 return;
             }
-
-            showSyncIndicator('syncing', 'チームを作成中...');
-            
-            const teamCode = generateTeamCode();
+        
+            showSyncIndicator('syncing', 'チーム作成中...');
             
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain',
-                    },
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({
                         action: 'createTeam',
-                        teamName: teamName,
-                        teamCode: teamCode
+                        teamName: teamName
                     })
                 });
                 
                 const result = await response.json();
                 
                 if (result.success) {
+                    const newTeamCode = result.teamCode;
+                    
                     teamData = {
-                        name: teamName,
-                        code: teamCode,
+                        name: result.teamData ? result.teamData.name : teamName,
+                        code: newTeamCode,
                         spreadsheetId: result.spreadsheetId,
-                        createdAt: new Date().toISOString()
+                        createdAt: new Date().toISOString(),
+                        adminPassword: result.teamData ? result.teamData.adminPassword : null
                     };
+                    
+                    // ★★★ ここが新しい処理 ★★★
+                    switchTeam(newTeamCode);
+                    allTeamsData[newTeamCode].teamInfo = teamData;
                     saveData();
+                    // ★★★ ここまで新しい処理 ★★★
+                    
                     closeModal('createTeamModal');
                     displayTeamStatus();
                     showSyncIndicator('success', 'チーム作成完了!');
                     
-                    alert('✅ チーム「' + teamName + '」を作成しました!\n\nチームコード: ' + teamCode + '\n\nこのコードを友達に共有してください。\n\nスプレッドシート: ' + result.spreadsheetUrl);
+                    alert('✅ チーム「' + teamName + '」を作成しました!\n\nチームコード: ' + newTeamCode + '\n\nこのコードを仲間に共有してください。');
                 } else {
                     throw new Error(result.error || 'チーム作成に失敗しました');
                 }
@@ -3607,22 +3803,20 @@ personalGames = personalGames.filter(function(g) {
                 alert('❌ エラー: ' + error.message + '\n\nもう一度お試しください。');
             }
         }
-
+        
         async function joinTeam() {
             const teamCode = document.getElementById('joinTeamCode').value.trim().toUpperCase();
             if (!teamCode || teamCode.length !== 6) {
                 alert('正しい6桁のチームコードを入力してください');
                 return;
             }
-
+        
             showSyncIndicator('syncing', 'チームに参加中...');
             
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain',
-                    },
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({
                         action: 'joinTeam',
                         teamCode: teamCode
@@ -3639,19 +3833,21 @@ personalGames = personalGames.filter(function(g) {
                         joinedAt: new Date().toISOString()
                     };
                     
-                    saveData();
+                    // ★★★ ここが新しい処理 ★★★
+                    switchTeam(teamCode);
+                    allTeamsData[teamCode].teamInfo = teamData;
+                    // ★★★ ここまで新しい処理 ★★★
+                    
                     closeModal('joinTeamModal');
                     
-                    // データを取得
                     await loadTeamData();
                     
-                    // 表示を更新
                     displayTeamStatus();
                     displayPlayers();
                     updateMyPlayerSelect();
                     
                     showSyncIndicator('success', 'チーム参加完了!');
-                    alert('✅ チームに参加しました!\n\nチーム名: ' + teamData.name + '\nチームコード: ' + teamCode + '\n\n選手データを取得しました。\n設定タブの「個人モード表示設定」で選手を選択してください。');
+                    alert('✅ チーム「' + teamData.name + '」に参加しました!');
                 } else {
                     throw new Error(result.error || 'チーム参加に失敗しました');
                 }
@@ -3661,7 +3857,6 @@ personalGames = personalGames.filter(function(g) {
                 alert('❌ エラー: ' + error.message);
             }
         }
-
         async function syncWithServer(options = { pushPlayers: false, pushGames: true }) {
     if (!teamData) return;
 
@@ -3899,6 +4094,7 @@ if (result.players) {
                 '<button class="primary-btn" style="background: #2ecc71; margin-top: 15px;" onclick="syncAll()">今すぐ同期(送受信)</button>' +
                 '<button class="primary-btn" style="background: #e74c3c; margin-top: 10px;" onclick="leaveTeam()">チームから退出</button>' +
                 '</div>';
+            displayTeamList();
         }
 
         function leaveTeam() {
@@ -5028,6 +5224,7 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         displayTeamStatus();
         loadTeamData();
         checkAndShowDraftGame();
+        displayTeamList();
 
         const lastMode = localStorage.getItem('lastMode');
         if (lastMode) {
