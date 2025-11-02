@@ -3825,7 +3825,10 @@ personalGames = personalGames.filter(function(g) {
                 const result = await response.json();
                 
                 if (result.success) {
+                    // ★★★ 修正: 先にswitchTeam ★★★
                     switchTeam(teamCode);
+                    
+                    // ★★★ 修正: 後でteamDataを設定 ★★★
                     teamData = {
                         name: result.teamData ? result.teamData.name : 'チーム',
                         code: teamCode,
@@ -3833,18 +3836,20 @@ personalGames = personalGames.filter(function(g) {
                         joinedAt: new Date().toISOString()
                     };
                     
-                    // ★★★ ここが新しい処理 ★★★
-                    
+                    // ★★★ 修正: allTeamsDataに保存 ★★★
                     allTeamsData[teamCode].teamInfo = teamData;
-                    // ★★★ ここまで新しい処理 ★★★
                     
                     closeModal('joinTeamModal');
                     
+                    // データを取得
                     await loadTeamData();
                     
+                    // 画面を更新
+                    saveData();
                     displayTeamStatus();
                     displayPlayers();
                     updateMyPlayerSelect();
+                    displayTeamList();
                     
                     showSyncIndicator('success', 'チーム参加完了!');
                     alert('✅ チーム「' + teamData.name + '」に参加しました!');
