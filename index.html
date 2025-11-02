@@ -5972,6 +5972,148 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             }
             closeShotPositionModal();
         }
+
+        // 【関数1】練習メニューボタンを押したときの処理
+        function togglePracticeMenu(button) {
+            button.classList.toggle('selected');
+        }
+        
+        // 【関数2】調子ボタンを押したときの処理
+        function selectMood(button) {
+            document.querySelectorAll('.mood-btn').forEach(function(btn) {
+                btn.classList.remove('selected');
+            });
+            button.classList.add('selected');
+        }
+        
+        // 【関数3】練習記録を保存する関数
+        function savePracticeRecord() {
+            const date = document.getElementById('practiceDate').value;
+            const note = document.getElementById('practiceNote').value;
+            const duration = document.getElementById('practiceDuration').value;
+            
+            const selectedMenus = [];
+            document.querySelectorAll('.practice-menu-btn.selected').forEach(function(btn) {
+                selectedMenus.push(btn.getAttribute('data-menu'));
+            });
+            
+            let selectedMood = null;
+            const moodBtn = document.querySelector('.mood-btn.selected');
+            if (moodBtn) {
+                selectedMood = moodBtn.getAttribute('data-mood');
+            }
+            
+            if (!date) {
+                alert('📅 日付を選択してください!');
+                return;
+            }
+            
+            if (selectedMenus.length === 0) {
+                alert('🏀 練習メニューを1つ以上選択してください!');
+                return;
+            }
+            
+            if (!selectedMood) {
+                alert('😊 今日の調子を選択してください!');
+                return;
+            }
+            
+            const practice = {
+                id: 'practice_' + Date.now(),
+                date: date,
+                menus: selectedMenus,
+                mood: selectedMood,
+                note: note,
+                duration: duration ? parseInt(duration) : 0,
+                xp: 10,
+                timestamp: new Date().toISOString()
+            };
+            
+            if (note.trim().length > 0) {
+                practice.xp += 20;
+            }
+            
+            practiceRecords.push(practice);
+            userProfile.totalXP += practice.xp;
+            userProfile.lastPracticeDate = date;
+            
+            saveData();
+            
+            alert('✅ 練習記録を保存しました!\n獲得XP: +' + practice.xp + 'XP');
+            
+            document.getElementById('practiceNote').value = '';
+            document.getElementById('practiceDuration').value = '';
+            document.querySelectorAll('.practice-menu-btn').forEach(function(btn) {
+                btn.classList.remove('selected');
+            });
+            document.querySelectorAll('.mood-btn').forEach(function(btn) {
+                btn.classList.remove('selected');
+            });
+            
+            displayPracticeHistory();
+        }
+        
+        // 【関数4】練習履歴を表示する関数
+        function displayPracticeHistory() {
+            const listEl = document.getElementById('practiceHistoryList');
+            
+            if (practiceRecords.length === 0) {
+                listEl.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">まだ練習記録がありません</p>';
+                return;
+            }
+            
+            const sorted = practiceRecords.slice().sort(function(a, b) {
+                return new Date(b.date) - new Date(a.date);
+            });
+            
+            const recent = sorted.slice(0, 5);
+            
+            const menuNames = {
+                'shoot': 'シュート',
+                'dribble': 'ドリブル',
+                'pass': 'パス',
+                'defense': 'ディフェンス',
+                'fitness': '体力',
+                'other': 'その他'
+            };
+            
+            const moodEmojis = {
+                'good': '😊 良かった',
+                'normal': '😐 普通',
+                'bad': '😢 イマイチ'
+            };
+            
+            let html = '';
+            recent.forEach(function(practice) {
+                const dateObj = new Date(practice.date);
+                const dateStr = dateObj.toLocaleDateString('ja-JP', {
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                html += '<div class="practice-history-item">';
+                html += '<div class="practice-history-date">📅 ' + dateStr + '</div>';
+                
+                html += '<div class="practice-history-menus">';
+                practice.menus.forEach(function(menu) {
+                    html += '<span class="practice-menu-tag">' + menuNames[menu] + '</span>';
+                });
+                html += '</div>';
+                
+                html += '<div class="practice-history-mood">' + moodEmojis[practice.mood] + '</div>';
+                
+                if (practice.note) {
+                    html += '<div class="practice-history-note">💬 ' + practice.note + '</div>';
+                }
+                
+                html += '<div style="color: #667eea; font-weight: bold; margin-top: 5px;">+' + practice.xp + 'XP</div>';
+                
+                html += '</div>';
+            });
+            
+            listEl.innerHTML = html;
+        }
+        
         loadData();
         migrateData();
         updateDisplay();
