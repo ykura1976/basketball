@@ -36,32 +36,95 @@
             margin-bottom: 10px;
         }
 
+        /* 🆕 同期インジケーター - 画面中央に大きく表示 */
         .sync-indicator {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.9);
-            padding: 8px 15px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 30px 50px;
             border-radius: 20px;
-            font-size: 0.85em;
+            font-size: 1.3em;
             font-weight: bold;
-            z-index: 1000;
+            z-index: 10000;
             display: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            min-width: 300px;
+            text-align: center;
+            animation: fadeInScale 0.3s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
 
         .sync-indicator.syncing {
             display: block;
-            color: #667eea;
+            color: #fff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .sync-indicator.syncing::before {
+            content: '⏳ ';
+            font-size: 1.5em;
+            display: block;
+            margin-bottom: 10px;
+            animation: rotate 1s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .sync-indicator.success {
             display: block;
-            color: #2ecc71;
+            color: #fff;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .sync-indicator.success::before {
+            content: '✅ ';
+            font-size: 1.5em;
+            display: block;
+            margin-bottom: 10px;
         }
 
         .sync-indicator.error {
             display: block;
-            color: #ff4757;
+            color: #fff;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .sync-indicator.error::before {
+            content: '⚠️ ';
+            font-size: 1.5em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* 🆕 背景オーバーレイ（同期中は他の操作を防ぐ） */
+        .sync-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            display: none;
+        }
+
+        .sync-overlay.active {
+            display: block;
         }
 
         .mode-switch {
