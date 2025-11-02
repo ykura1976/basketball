@@ -2521,6 +2521,17 @@
                     teamData = data.teamInfo || null;
                     draftTeamGame = data.draftTeamGame || null;
                     
+                    // ⭐⭐⭐ ここに2行追加 ⭐⭐⭐
+                    practiceRecords = data.practiceRecords || [];
+                    userProfile = data.userProfile || {
+                        totalXP: 0,
+                        level: 1,
+                        currentStreak: 0,
+                        longestStreak: 0,
+                        lastPracticeDate: null
+                    };
+                    // ⭐⭐⭐ ここまで追加 ⭐⭐⭐
+                    
                     // 選んでいる選手が存在するかチェック
                     if (myPlayerId && players.length > 0) {
                         const playerExists = players.find(function(p) {
@@ -2541,6 +2552,17 @@
                     myPlayerId = null;
                     teamData = null;
                     draftTeamGame = null;
+                    
+                    // ⭐⭐⭐ ここにも2行追加 ⭐⭐⭐
+                    practiceRecords = [];
+                    userProfile = {
+                        totalXP: 0,
+                        level: 1,
+                        currentStreak: 0,
+                        longestStreak: 0,
+                        lastPracticeDate: null
+                    };
+                    // ⭐⭐⭐ ここまで追加 ⭐⭐⭐
                 }
                 
                 // ステップ4: 古いデータがあったら新しい形式に変換する
@@ -2577,6 +2599,8 @@
                     myPlayerId: myPlayerId,
                     teamInfo: teamData,
                     draftTeamGame: draftTeamGame,
+                    practiceRecords: practiceRecords,
+                    userProfile: userProfile,
                     lastModified: new Date().toISOString()
                 };
                 
@@ -4819,7 +4843,8 @@ if (result.players) {
                 c.classList.remove('active');
             });
             
-            const tabs = ['input', 'list', 'ranking', 'graph', 'settings'];
+            // ⭐ ここを修正: 'practice'を追加 ⭐
+            const tabs = ['input', 'list', 'ranking', 'graph', 'practice', 'settings'];
             const index = tabs.indexOf(tab);
             document.querySelector('#personalMode .tab:nth-child(' + (index + 1) + ')').classList.add('active');
             document.getElementById(tab + 'Tab').classList.add('active');
@@ -4831,7 +4856,14 @@ if (result.players) {
                 displayTeamStatus();
             }
             if (tab === 'ranking') displayRankings();
-            if (tab === 'list') displayGames();
+            
+            // ⭐ ここを追加: 練習タブの処理 ⭐
+            if (tab === 'practice') {
+                // 今日の日付を自動入力
+                document.getElementById('practiceDate').valueAsDate = new Date();
+                // 練習履歴を表示
+                displayPracticeHistory();
+            }
         }
 
         function changeValue(key, delta) {
