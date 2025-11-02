@@ -3461,7 +3461,8 @@
             totalPoints: totalPts,
             source: 'team',
             fromTeam: true,
-            teamGameId: teamGame.id  // ← ★ここが重要!チームゲームIDを保存
+            teamGameId: teamGame.id,  // ← ★ここが重要!チームゲームIDを保存
+            teamCode: teamData ? teamData.code : null
         };
         
         personalGames.unshift(personalGame);
@@ -3855,7 +3856,8 @@ if (result.players) {
                             freeThrowPercentage: stats.freeThrowsAttempted > 0 ? ((stats.freeThrowsMade / stats.freeThrowsAttempted) * 100).toFixed(1) : '0',
                             totalPoints: totalPts,
                             source: 'team',
-                            teamGameId: game.id  // ← この行を追加
+                            teamGameId: game.id,// ← この行を追加
+                            teamCode: teamData ? teamData.code : null
                         };
                         
                         personalGames.unshift(personalGame);
@@ -4070,7 +4072,8 @@ if (result.players) {
                 threePointPercentage: stats.threePointsAttempted > 0 ? ((stats.threePointsMade / stats.threePointsAttempted) * 100).toFixed(1) : '0',
                 freeThrowPercentage: stats.freeThrowsAttempted > 0 ? ((stats.freeThrowsMade / stats.freeThrowsAttempted) * 100).toFixed(1) : '0',
                 totalPoints: (stats.twoPointsMade * 2) + (stats.threePointsMade * 3) + stats.freeThrowsMade,
-                source: 'personal'
+                source: 'personal',
+                teamCode: teamData ? teamData.code : null
             };
 
             personalGames.unshift(game);
@@ -4100,15 +4103,20 @@ if (result.players) {
         }
 
         function displayGames() {
-    updatePlayerBanners();
-    const gameList = document.getElementById('gameList');
-    
-    // myPlayerIdが設定されていない場合は全データを表示
-    const myGames = myPlayerId 
-        ? personalGames.filter(function(g) {
-            return !g.playerId || g.playerId === myPlayerId;
-          })
-        : personalGames;
+          updatePlayerBanners();
+          const gameList = document.getElementById('gameList');
+
+          const currentCode = (teamData && teamData.code) ? teamData.code : null;
+          const teamFiltered = currentCode
+            ? personalGames.filter(function(g){ return g.teamCode === currentCode; })
+            : personalGames;
+
+          const myGames = myPlayerId 
+            ? teamFiltered.filter(function(g) {
+                return !g.playerId || g.playerId === myPlayerId;
+              })
+            : teamFiltered;
+
     
     if (myGames.length === 0) {
         gameList.innerHTML = '<div class="empty-state"><div class="icon">🏀</div><h3>まだ記録がありません</h3><p>最初の試合を記録しましょう!</p></div>';
@@ -4347,11 +4355,17 @@ if (result.players) {
         // ========== ここまで追加 ==========
 
         function displayRankings() {
-            const myGames = myPlayerId 
-    ? personalGames.filter(function(g) {
-        return !g.playerId || g.playerId === myPlayerId;
-      })
-    : personalGames;
+          const currentCode = (teamData && teamData.code) ? teamData.code : null;
+          const teamFiltered = currentCode
+            ? personalGames.filter(function(g){ return g.teamCode === currentCode; })
+            : personalGames;
+
+          const myGames = myPlayerId 
+            ? teamFiltered.filter(function(g) {
+                return !g.playerId || g.playerId === myPlayerId;
+              })
+            : teamFiltered;
+
             
             if (myGames.length === 0) {
                 document.getElementById('topPoints').innerHTML = '<p style="text-align: center; color: #999;">記録がありません</p>';
@@ -4384,11 +4398,17 @@ if (result.players) {
         }
 
         function updateCharts() {
-            const myGames = myPlayerId 
-    ? personalGames.filter(function(g) {
-        return !g.playerId || g.playerId === myPlayerId;
-      })
-    : personalGames;
+          const currentCode = (teamData && teamData.code) ? teamData.code : null;
+          const teamFiltered = currentCode
+            ? personalGames.filter(function(g){ return g.teamCode === currentCode; })
+            : personalGames;
+        
+          const myGames = myPlayerId 
+            ? teamFiltered.filter(function(g) {
+                return !g.playerId || g.playerId === myPlayerId;
+              })
+            : teamFiltered;
+
             
             if (myGames.length === 0) return;
 
