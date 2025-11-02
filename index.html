@@ -1779,11 +1779,11 @@
                         <button class="action-btn other" onclick="recordPlay('foul')">ファウル</button>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-                        <button class="primary-btn" style="background: #3498db;" onclick="saveDraftTeamGame()">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; margin-bottom: 15px;">
+                        <button class="primary-btn" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); padding: 15px; box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);" onclick="saveDraftTeamGame()">
                             💾 途中保存
                         </button>
-                        <button class="save-btn" onclick="saveTeamGame()">
+                        <button class="save-btn" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); padding: 15px; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);" onclick="saveTeamGame()">
                             ✅ 試合終了・保存
                         </button>
                     </div>
@@ -2761,6 +2761,12 @@
             if (playIndex === -1) return;
             
             const play = currentTeamGame.plays[playIndex];
+            
+            // 🆕 削除する選手とプレイの情報を取得
+            const player = players.find(function(p) { return p.id === play.playerId; });
+            const playerName = player ? '#' + player.number + ' ' + player.name : '';
+            const playLabel = getPlayLabel(play.playType);
+            
             const st = currentTeamGame.playerStats[play.playerId];
             
             if (play.playType === '2p-made') { st.twoPointsMade--; st.twoPointsAttempted--; }
@@ -2781,38 +2787,67 @@
             
             updateTeamStats();
             displayPlayHistory();
+            
+            // 🆕 削除成功のポップアップ表示
+            showDeleteFeedback(playerName + ' ' + playLabel);
+            
+            // 🆕 データを保存
+            saveData();
+        }
+        
+        // 🆕 削除フィードバック表示関数を追加
+        function showDeleteFeedback(message) {
+            // 既存のフィードバックがあれば削除
+            const existing = document.querySelector('.delete-feedback');
+            if (existing) {
+                existing.remove();
+            }
+        
+            // フィードバック通知を作成
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-notification delete-feedback';
+            feedback.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+            feedback.textContent = '🗑️ 削除しました: ' + message;
+            document.body.appendChild(feedback);
+        
+            // 1.5秒後に削除
+            setTimeout(function() {
+                if (feedback && feedback.parentNode) {
+                    feedback.remove();
+                }
+            }, 1500);
         }
 
         function displayPlayHistory() {
-    const histEl = document.getElementById('playHistory');
-    
-    // ========== 追加:存在チェック ==========
-    if (!currentTeamGame || !currentTeamGame.plays) {
-        histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
-        return;
-    }
-    // ========================================
-    
-    if (currentTeamGame.plays.length === 0) {
-        histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
-        return;
-    }
-    
-    const recentPlays = currentTeamGame.plays.slice().reverse().slice(0, 10);
-    histEl.innerHTML = '<div style="margin-bottom: 10px; font-size: 0.9em; color: #666; font-weight: bold;">最新のプレイ(最大10件) - タップで削除</div>' +
-        recentPlays.map(function(play) {
-            const p = players.find(function(pl) {
-                return pl.id === play.playerId;
-            });
-            return '<div class="play-item">' +
-                '<div>' +
-                '<strong>' + play.period + 'Q | #' + p.number + ' ' + p.name + '</strong>' +
-                '<div style="font-size: 0.85em; color: #666; margin-top: 2px;">' + getPlayLabel(play.playType) + '</div>' +
-                '</div>' +
-                '<button class="undo-btn" onclick="deletePlay(' + play.timestamp + ')">削除</button>' +
-                '</div>';
-        }).join('');
-}
+            const histEl = document.getElementById('playHistory');
+            
+            // ========== 追加:存在チェック ==========
+            if (!currentTeamGame || !currentTeamGame.plays) {
+                histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
+                return;
+            }
+            // ========================================
+            
+            if (currentTeamGame.plays.length === 0) {
+                histEl.innerHTML = '<div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>';
+                return;
+            }
+            
+            const recentPlays = currentTeamGame.plays.slice().reverse().slice(0, 10);
+            histEl.innerHTML = '<div style="margin-bottom: 10px; font-size: 0.9em; color: #666; font-weight: bold;">最新のプレイ(最大10件) - タップで削除</div>' +
+                recentPlays.map(function(play) {
+                    const p = players.find(function(pl) {
+                        return pl.id === play.playerId;
+                    });
+                    return '<div class="play-item">' +
+                        '<div>' +
+                        '<strong>' + play.period + 'Q | #' + p.number + ' ' + p.name + '</strong>' +
+                        '<div style="font-size: 0.85em; color: #666; margin-top: 2px;">' + getPlayLabel(play.playType) + '</div>' +
+                        '</div>' +
+                        '<button class="undo-btn" onclick="deletePlay(' + play.timestamp + ')">削除</button>' +
+                        '</div>';
+                }).join('');
+        }
 
         function updateTeamStats() {
             const el = document.getElementById('teamStats');
@@ -2909,15 +2944,22 @@
                 return;
             }
             
+            // 🆕 現在のピリオドも保存
             draftTeamGame = {
-                game: JSON.parse(JSON.stringify(currentTeamGame)),
-                timestamp: new Date().toISOString()
+                id: currentTeamGame.id,
+                date: currentTeamGame.date,
+                opponent: currentTeamGame.opponent,
+                plays: JSON.parse(JSON.stringify(currentTeamGame.plays)),
+                playerStats: JSON.parse(JSON.stringify(currentTeamGame.playerStats)),
+                scores: JSON.parse(JSON.stringify(currentTeamGame.scores)),
+                currentPeriod: currentPeriod,
+                savedAt: new Date().toISOString()
             };
             
             saveData();
             
-            // 🆕 保存成功の視覚的フィードバック
-            showFeedbackNotification('💾 途中保存しました！', 'success');
+            // 🆕 保存成功の視覚的フィードバック（改善版）
+            showSaveFeedback();
             
             // 🆕 ステータス表示を更新
             updateDraftStatusDisplay();
@@ -2928,15 +2970,38 @@
                 const now = new Date();
                 const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
                                now.getMinutes().toString().padStart(2, '0');
-                draftBtn.innerHTML = '💾 保存済み (' + timeStr + ')';
-                draftBtn.style.background = '#2ecc71';
+                draftBtn.innerHTML = '✅ 保存済み (' + timeStr + ')';
+                draftBtn.style.background = 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)';
                 
                 // 3秒後に元に戻す
                 setTimeout(function() {
                     draftBtn.innerHTML = '💾 途中保存';
-                    draftBtn.style.background = '#3498db';
+                    draftBtn.style.background = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
                 }, 3000);
             }
+        }
+        
+        // 🆕 途中保存フィードバック表示関数
+        function showSaveFeedback() {
+            // 既存のフィードバックがあれば削除
+            const existing = document.querySelector('.save-feedback');
+            if (existing) {
+                existing.remove();
+            }
+        
+            // フィードバック通知を作成
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-notification save-feedback';
+            feedback.style.background = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+            feedback.innerHTML = '💾 途中保存しました！<br><span style="font-size: 0.85em; opacity: 0.9;">そのまま記録を続けられます</span>';
+            document.body.appendChild(feedback);
+        
+            // 2秒後に削除
+            setTimeout(function() {
+                if (feedback && feedback.parentNode) {
+                    feedback.remove();
+                }
+            }, 2000);
         }
 
         // 🆕 途中保存ステータス表示を更新する関数
@@ -2965,12 +3030,11 @@
                     <div class="draft-status-info">
                         <div class="draft-status-icon">💾</div>
                         <div class="draft-status-text">
-                            <div class="draft-status-label">途中保存済み</div>
-                            <div class="draft-status-time">${timeStr} に保存</div>
+                            <div class="draft-status-label">途中保存済み（${timeStr}）</div>
+                            <div class="draft-status-time" style="font-size: 0.9em; margin-top: 3px;">
+                                ✨ プレイボタンを押せば記録を続けられます
+                            </div>
                         </div>
-                    </div>
-                    <div class="draft-status-actions">
-                        <span style="font-size: 0.9em; opacity: 0.9;">そのまま記録を続けられます →</span>
                     </div>
                 `;
                 statusDiv.style.display = 'flex';
