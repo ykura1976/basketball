@@ -2156,11 +2156,21 @@
         
         function saveData() {
             try {
-                // チームが選ばれていないと保存できない
+                // ★★★ 修正: currentTeamCodeがない場合の処理を追加 ★★★
                 if (!currentTeamCode) {
-                    console.warn('チームが選択されていないため、保存できません');
-                    return;
+                    console.warn('⚠️ currentTeamCodeが未設定です');
+                    
+                    // teamDataがある場合は、そのコードを使う
+                    if (teamData && teamData.code) {
+                        console.log('📝 teamDataからcurrentTeamCodeを設定:', teamData.code);
+                        currentTeamCode = teamData.code;
+                    } else {
+                        console.warn('❌ 保存できません: チームコードが不明');
+                        return;
+                    }
                 }
+                
+                console.log('💾 データ保存中:', currentTeamCode);
                 
                 // 今選んでいるチームのデータを更新する
                 allTeamsData[currentTeamCode] = {
@@ -2177,14 +2187,16 @@
                 localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
                 localStorage.setItem('currentTeamCode', currentTeamCode);
                 
+                console.log('✅ 保存完了');
                 showSavedIndicator();
             } catch (e) {
-                console.error('データ保存エラー:', e);
+                console.error('❌ データ保存エラー:', e);
             }
         }
 
         // ========== チーム切り替え関数 ==========
         function switchTeam(teamCode) {
+            console.log('🔄 チーム切り替え開始:', teamCode);
             if (!teamCode) {
                 console.error('チームコードが指定されていません');
                 return;
@@ -3842,26 +3854,47 @@ personalGames = personalGames.filter(function(g) {
                 const result = await response.json();
                 
                 if (result.success) {
-                    const newTeamCode = result.teamCode;
-                    switchTeam(newTeamCode);  // 先に切り替え
-                    teamData = {
-                        name: result.teamData ? result.teamData.name : teamName,
-                        code: newTeamCode,
-                        spreadsheetId: result.spreadsheetId,
-                        createdAt: new Date().toISOString(),
-                        adminPassword: result.teamData ? result.teamData.adminPassword : null
-                    };
-                    
-                    // ★★★ ここが新しい処理 ★★★
-                    allTeamsData[newTeamCode].teamInfo = teamData;
-                    saveData();
-                    // ★★★ ここまで新しい処理 ★★★
-                    
-                    closeModal('createTeamModal');
-                    displayTeamStatus();
-                    showSyncIndicator('success', 'チーム作成完了!');
-                    
-                    alert('✅ チーム「' + teamName + '」を作成しました!\n\nチームコード: ' + newTeamCode + '\n\nこのコードを仲間に共有してください。');
+    const newTeamCode = result.teamCode;
+    
+    // ステップ1: currentTeamCodeを先に設定
+    currentTeamCode = newTeamCode;
+    
+    // ステップ2: teamDataを設定
+    teamData = {
+        name: result.teamData ? result.teamData.name : teamName,
+        code: newTeamCode,
+        spreadsheetId: result.spreadsheetId,
+        createdAt: new Date().toISOString(),
+        adminPassword: result.teamData ? result.teamData.adminPassword : null
+    };
+    
+    // ステップ3: allTeamsDataを初期化
+    if (!allTeamsData[newTeamCode]) {
+        allTeamsData[newTeamCode] = {
+            personalGames: [],
+            teamGames: [],
+            players: [],
+            myPlayerId: null,
+            teamInfo: teamData,
+            draftTeamGame: null
+        };
+    } else {
+        allTeamsData[newTeamCode].teamInfo = teamData;
+    }
+    
+    // ステップ4: 保存
+    localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
+    localStorage.setItem('currentTeamCode', currentTeamCode);
+    
+    // ステップ5: 画面更新
+    saveData();
+    displayTeamStatus();
+    displayTeamList();
+    
+    closeModal('createTeamModal');
+    showSyncIndicator('success', 'チーム作成完了!');
+    
+    alert('✅ チーム「' + teamName + '」を作成しました!\n\nチームコード: ' + newTeamCode);
                 } else {
                     throw new Error(result.error || 'チーム作成に失敗しました');
                 }
