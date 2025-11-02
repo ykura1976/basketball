@@ -2190,6 +2190,8 @@
                 return;
             }
             
+            console.log('🔄 チーム切り替え開始:', teamCode);
+            
             // ステップ1: 今のデータを保存
             if (currentTeamCode) {
                 saveData();
@@ -2208,24 +2210,91 @@
                 myPlayerId = data.myPlayerId || null;
                 teamData = data.teamInfo || null;
                 draftTeamGame = data.draftTeamGame || null;
+                
+                console.log('✅ チームデータ読み込み完了');
+                console.log('  選手数:', players.length);
+                console.log('  個人試合数:', personalGames.length);
+                console.log('  チーム試合数:', teamGames.length);
             } else {
                 // 新しいチームの場合、空っぽにする
+                console.log('⚠️ 新しいチーム（データなし）');
+                allTeamsData[teamCode] = {
+                    personalGames: [],
+                    teamGames: [],
+                    players: [],
+                    myPlayerId: null,
+                    teamInfo: null,
+                    draftTeamGame: null
+                };
                 personalGames = [];
                 teamGames = [];
                 players = [];
                 myPlayerId = null;
+                teamData = null;
                 draftTeamGame = null;
             }
             
-            // ステップ4: 画面を更新
-            displayPlayers();
-            updateMyPlayerSelect();
-            displayGames();
-            displayRankings();
-            updateCharts();
-            displayTeamStatus();
-            displayTeamList();
+            // ステップ4: データを保存
+            saveData();
             
+            // ステップ5: 画面を更新（順番が重要）
+            console.log('🔄 画面更新開始...');
+            
+            // 5-1: 選手リストを更新
+            if (typeof displayPlayers === 'function') {
+                displayPlayers();
+                console.log('  ✅ displayPlayers完了');
+            }
+            
+            // 5-2: 個人モード表示設定を更新
+            if (typeof updateMyPlayerSelect === 'function') {
+                updateMyPlayerSelect();
+                console.log('  ✅ updateMyPlayerSelect完了');
+            }
+            
+            // 5-3: 個人タブの試合履歴を更新
+            if (typeof displayGames === 'function') {
+                displayGames();
+                console.log('  ✅ displayGames完了');
+            }
+            
+            // 5-4: ランキングを更新
+            if (typeof displayRankings === 'function') {
+                displayRankings();
+                console.log('  ✅ displayRankings完了');
+            }
+            
+            // 5-5: グラフを更新
+            if (typeof updateCharts === 'function') {
+                updateCharts();
+                console.log('  ✅ updateCharts完了');
+            }
+            
+            // 5-6: チーム情報を更新
+            if (typeof displayTeamStatus === 'function') {
+                displayTeamStatus();
+                console.log('  ✅ displayTeamStatus完了');
+            }
+            
+            // 5-7: チーム一覧を更新
+            if (typeof displayTeamList === 'function') {
+                displayTeamList();
+                console.log('  ✅ displayTeamList完了');
+            }
+            
+            // 5-8: チームタブの履歴を更新
+            if (typeof displayTeamGamesHistory === 'function') {
+                displayTeamGamesHistory();
+                console.log('  ✅ displayTeamGamesHistory完了');
+            }
+            
+            // 5-9: 選手バナーを更新
+            if (typeof updatePlayerBanners === 'function') {
+                updatePlayerBanners();
+                console.log('  ✅ updatePlayerBanners完了');
+            }
+            
+            console.log('✅ 画面更新完了');
             alert('✅ チーム切り替え完了!');
         }
 
