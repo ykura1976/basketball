@@ -4633,7 +4633,7 @@ personalGames = personalGames.filter(function(g) {
             showSyncIndicator('syncing', '🏀 チームを作成中...\n\nスプレッドシートを準備しています');
             
             try {
-                // ステップ2: サーバーにチーム作成リクエストを送信(チームコードも一緒に送る)
+                // ステップ2: サーバーにチーム作成リクエストを送信
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain' },
@@ -4648,10 +4648,17 @@ personalGames = personalGames.filter(function(g) {
                 
                 if (result.success) {
                     // ステップ3: サーバーから返ってきたチームコードを確認
-                    const returnedTeamCode = result.teamCode;
+                    const returnedTeamCode = result.teamCode || newTeamCode;
                     
-                    // ステップ4: グローバル変数に保存
-                    currentTeamCode = returnedTeamCode;
+                    // ステップ4: グローバル変数を先にクリア(重要!)
+                    personalGames = [];
+                    teamGames = [];
+                    players = [];
+                    myPlayerId = null;
+                    draftTeamGame = null;
+                    if (typeof practiceRecords !== 'undefined') {
+                        practiceRecords = [];
+                    }
                     
                     // ステップ5: チームデータを設定
                     teamData = {
@@ -4662,25 +4669,51 @@ personalGames = personalGames.filter(function(g) {
                         adminPassword: result.teamData ? result.teamData.adminPassword : null
                     };
                     
-                    // ステップ6: ローカルストレージに保存
-                    saveTeamData();
+                    // ステップ6: currentTeamCodeを設定
+                    currentTeamCode = returnedTeamCode;
                     
-                    // ステップ7: 成功メッセージを表示
-                    showSyncIndicator('success', '✅ チームを作成しました！\n\nチームコード: ' + returnedTeamCode);
+                    // ステップ7: allTeamsDataに新しいチームのデータを作成
+                    allTeamsData[returnedTeamCode] = {
+                        personalGames: [],
+                        teamGames: [],
+                        players: [],
+                        myPlayerId: null,
+                        teamInfo: teamData,
+                        draftTeamGame: null,
+                        practiceRecords: typeof practiceRecords !== 'undefined' ? [] : undefined,
+                        userProfile: typeof userProfile !== 'undefined' ? userProfile : undefined
+                    };
                     
-                    // ステップ8: モーダルを閉じて、チーム設定表示を更新
+                    // ステップ8: ローカルストレージに保存
+                    localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
+                    localStorage.setItem('currentTeamCode', currentTeamCode);
+                    
+                    // ステップ9: 画面を更新
+                    displayPlayers();
+                    updateMyPlayerSelect();
+                    displayGames();
+                    displayRankings();
+                    updateCharts();
+                    displayTeamStatus();
+                    displayTeamList();
+                    if (typeof displayTeamGamesHistory === 'function') {
+                        displayTeamGamesHistory();
+                    }
+                    
+                    // ステップ10: 成功メッセージを表示
+                    showSyncIndicator('success', '✅ チーム作成完了!');
                     closeModal('createTeamModal');
                     document.getElementById('newTeamName').value = '';
-                    displayTeamSettings();
+                    
+                    alert('✅ チーム「' + teamName + '」を作成しました!\n\nチームコード: ' + returnedTeamCode);
                     
                 } else {
-                    showSyncIndicator('error', result.error || 'チーム作成に失敗しました');
-                    alert('⚠️ チーム作成に失敗しました: ' + (result.error || '不明なエラー'));
+                    throw new Error(result.error || 'チーム作成に失敗しました');
                 }
             } catch (error) {
-                console.error('チーム作成エラー:', error);
-                showSyncIndicator('error', 'ネットワークエラー');
-                alert('⚠️ エラーが発生しました: ' + error.message);
+                console.error('エラー:', error);
+                showSyncIndicator('error', 'エラーが発生しました');
+                alert('❌ エラー: ' + error.message + '\n\nもう一度お試しください。');
             }
         }
         
