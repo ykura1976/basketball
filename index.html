@@ -2790,11 +2790,29 @@
                                 myPlayerId: data.myPlayerId || null,
                                 teamInfo: data.teamData,
                                 draftTeamGame: data.draftTeamGame || null,
+                                practiceRecords: data.practiceRecords || [],
+                                userProfile: data.userProfile || {
+                                    totalXP: 0,
+                                    level: 1,
+                                    currentStreak: 0,
+                                    longestStreak: 0,
+                                    lastPracticeDate: null
+                                },
                                 lastModified: new Date().toISOString()
                             };
                             
                             // 今選んでいるチームに設定
                             currentTeamCode = oldTeamCode;
+                            
+                            // 変数も更新
+                            personalGames = allTeamsData[oldTeamCode].personalGames;
+                            teamGames = allTeamsData[oldTeamCode].teamGames;
+                            players = allTeamsData[oldTeamCode].players;
+                            myPlayerId = allTeamsData[oldTeamCode].myPlayerId;
+                            teamData = allTeamsData[oldTeamCode].teamInfo;
+                            draftTeamGame = allTeamsData[oldTeamCode].draftTeamGame;
+                            practiceRecords = allTeamsData[oldTeamCode].practiceRecords;
+                            userProfile = allTeamsData[oldTeamCode].userProfile;
                             
                             // 新しい形式で保存
                             localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
@@ -2805,6 +2823,48 @@
                             
                             console.log('✅ データ変換完了');
                         }
+                    } else if (data.players && data.players.length > 0) {
+                        // チーム情報が無いが選手データがある場合
+                        // → ダミーのチームコードを生成
+                        console.warn('⚠️ チーム情報が無いデータを発見。ダミーチームを作成します。');
+                        const dummyCode = 'LOCAL' + Date.now().toString().substr(-6);
+                        
+                        allTeamsData[dummyCode] = {
+                            personalGames: data.personalGames || [],
+                            teamGames: data.teamGames || [],
+                            players: data.players || [],
+                            myPlayerId: data.myPlayerId || null,
+                            teamInfo: {
+                                name: 'ローカルチーム',
+                                code: dummyCode
+                            },
+                            draftTeamGame: data.draftTeamGame || null,
+                            practiceRecords: data.practiceRecords || [],
+                            userProfile: data.userProfile || {
+                                totalXP: 0,
+                                level: 1,
+                                currentStreak: 0,
+                                longestStreak: 0,
+                                lastPracticeDate: null
+                            },
+                            lastModified: new Date().toISOString()
+                        };
+                        
+                        currentTeamCode = dummyCode;
+                        teamData = allTeamsData[dummyCode].teamInfo;
+                        personalGames = allTeamsData[dummyCode].personalGames;
+                        teamGames = allTeamsData[dummyCode].teamGames;
+                        players = allTeamsData[dummyCode].players;
+                        myPlayerId = allTeamsData[dummyCode].myPlayerId;
+                        draftTeamGame = allTeamsData[dummyCode].draftTeamGame;
+                        practiceRecords = allTeamsData[dummyCode].practiceRecords;
+                        userProfile = allTeamsData[dummyCode].userProfile;
+                        
+                        localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
+                        localStorage.setItem('currentTeamCode', currentTeamCode);
+                        localStorage.removeItem('basketballData');
+                        
+                        console.log('✅ ローカルチーム作成完了:', dummyCode);
                     }
                 }
             } catch (e) {
@@ -5864,18 +5924,43 @@ if (teamData) {
         }
 
         function clearLocalData() {
-    personalGames = [];
-    teamGames = [];
-    players = [];
-    myPlayerId = null;
-
-    saveData();
-
-    displayGames();
-    displayRankings();
-    updateCharts();
-    // ...必要なUI更新
-}
+        // すべてのローカルデータをクリア
+        localStorage.removeItem('basketballData');
+        localStorage.removeItem('allTeamsData');
+        localStorage.removeItem('currentTeamCode');
+        
+        // 変数もクリア
+        allTeamsData = {};
+        currentTeamCode = null;
+        personalGames = [];
+        teamGames = [];
+        players = [];
+        myPlayerId = null;
+        teamData = null;
+        draftTeamGame = null;
+        practiceRecords = [];
+        userProfile = {
+            totalXP: 0,
+            level: 1,
+            currentStreak: 0,
+            longestStreak: 0,
+            lastPracticeDate: null
+        };
+        
+        // UIを更新
+        displayGames();
+        displayRankings();
+        updateCharts();
+        displayPlayers();
+        updateMyPlayerSelect();
+        displayTeamStatus();
+        displayTeamList();
+        
+        alert('✅ このスマホのデータをクリアしました!\n\nチームに再度参加してください。');
+        
+        // 設定タブを表示
+        switchMode('settings');
+    }
         // ========== 管理者用:チーム全体のデータをリセット ==========
         function confirmResetTeamData() {
     if (!teamData) {
