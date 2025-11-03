@@ -7048,7 +7048,9 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
                 
                 // その日に練習記録があるかチェック
                 const hasPractice = practiceRecords.some(function(p) {
-                    return p.date === dateStr;
+                        // 選択中の選手の練習記録のみをチェック
+                    const isMyRecord = !p.playerId || p.playerId === myPlayerId;
+                    return p.date === dateStr && isMyRecord;
                 });
                 
                 // 曜日
