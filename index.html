@@ -1822,6 +1822,33 @@
 
             <!-- 練習タブ -->
             <div id="practiceTab" class="tab-content">
+                <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3em;">🔥</div>
+                            <div style="font-size: 2em; font-weight: bold;" id="currentStreakDisplay">0</div>
+                            <div style="font-size: 0.9em;">日連続</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em;">🏆</div>
+                            <div style="font-size: 1.5em; font-weight: bold;" id="longestStreakDisplay">0</div>
+                            <div style="font-size: 0.9em;">最長記録</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em;">⭐</div>
+                            <div style="font-size: 1.5em; font-weight: bold;" id="totalXPDisplay">0</div>
+                            <div style="font-size: 0.9em;">XP</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--  ここからカレンダー表示カードを追加  -->
+                <div class="card">
+                    <h3>📅 最近の練習記録</h3>
+                    <div id="practiceCalendar" style="display: flex; gap: 5px; justify-content: center; margin-top: 15px;"></div>
+                </div>
+                <!--  ここまで追加  -->
+                
                 <div class="card">
                     <h2>📝 今日の練習を記録しよう!</h2>
                     <p style="color: #666; margin-bottom: 20px;">30秒で完了!練習を記録して習慣化しよう</p>
@@ -4854,6 +4881,7 @@ if (result.players) {
                 displayPlayers(); 
                 updateMyPlayerSelect();
                 displayTeamStatus();
+                displayPracticeCalendar();
             }
             if (tab === 'ranking') displayRankings();
             
@@ -4863,6 +4891,7 @@ if (result.players) {
                 document.getElementById('practiceDate').valueAsDate = new Date();
                 // 練習履歴を表示
                 displayPracticeHistory();
+                updateStreakDisplay();
             }
         }
 
@@ -6145,6 +6174,101 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             
             listEl.innerHTML = html;
         }
+
+        // 【関数5】ストリークを計算する関数
+        function calculateStreak(practiceDate) {
+            const today = new Date(practiceDate);
+            today.setHours(0, 0, 0, 0);
+            
+            if (!userProfile.lastPracticeDate) {
+                // 初めての練習記録
+                userProfile.currentStreak = 1;
+                userProfile.longestStreak = 1;
+                return 1;
+            }
+            
+            const lastDate = new Date(userProfile.lastPracticeDate);
+            lastDate.setHours(0, 0, 0, 0);
+            
+            // 日数の差を計算(ミリ秒→日数)
+            const daysDiff = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
+            
+            if (daysDiff === 0) {
+                // 今日既に記録済み(ストリークは変わらない)
+                return userProfile.currentStreak;
+            } else if (daysDiff === 1) {
+                // 連続記録継続!
+                userProfile.currentStreak++;
+                // 最長記録を更新
+                if (userProfile.currentStreak > userProfile.longestStreak) {
+                    userProfile.longestStreak = userProfile.currentStreak;
+                }
+                return userProfile.currentStreak;
+            } else {
+                // 途切れた...
+                userProfile.currentStreak = 1;
+                return 1;
+            }
+        }
+        
+        // 【関数6】ストリークボーナスXPを計算
+        function getStreakBonus(streak) {
+            if (streak >= 30) return 200;
+            if (streak >= 14) return 100;
+            if (streak >= 7) return 50;
+            return 0;
+        }
+
+        // 【関数7】ストリーク表示を更新する関数
+        function updateStreakDisplay() {
+            document.getElementById('currentStreakDisplay').textContent = userProfile.currentStreak;
+            document.getElementById('longestStreakDisplay').textContent = userProfile.longestStreak;
+            document.getElementById('totalXPDisplay').textContent = userProfile.totalXP;
+        }
+
+        // 【関数8】過去7日間のカレンダーを表示
+        function displayPracticeCalendar() {
+            const calendarEl = document.getElementById('practiceCalendar');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            let html = '';
+            
+            // 過去7日間をループ
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // その日に練習記録があるかチェック
+                const hasPractice = practiceRecords.some(function(p) {
+                    return p.date === dateStr;
+                });
+                
+                // 曜日
+                const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+                const dayName = dayNames[date.getDay()];
+                
+                // 今日かどうか
+                const isToday = i === 0;
+                
+                html += '<div style="text-align: center; flex: 1;">';
+                html += '<div style="font-size: 0.8em; color: #999;">' + dayName + '</div>';
+                
+                if (hasPractice) {
+                    html += '<div style="font-size: 2em;">🔥</div>';
+                } else if (isToday) {
+                    html += '<div style="font-size: 2em;">📍</div>';
+                } else {
+                    html += '<div style="font-size: 2em; opacity: 0.2;">⬜</div>';
+                }
+                
+                html += '<div style="font-size: 0.7em; color: #666;">' + (date.getMonth() + 1) + '/' + date.getDate() + '</div>';
+                html += '</div>';
+            }
+            
+            calendarEl.innerHTML = html;
+        }
         
         loadData();
         migrateData();
@@ -6262,23 +6386,36 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             
             // 6. ひとこと日記を書いたらボーナスXP
             if (note.trim().length > 0) {
-                practice.xp += 20;  // +20XP
+                practice.xp += 20;
             }
             
             // 7. 練習記録配列に追加
             practiceRecords.push(practice);
             
-            // 8. ユーザープロフィールを更新
+            // ⭐⭐⭐ ここから修正 ⭐⭐⭐
+            // 8. ストリークを計算
+            const currentStreak = calculateStreak(date);
+            const streakBonus = getStreakBonus(currentStreak);
+            practice.xp += streakBonus;
+            
+            // 9. ユーザープロフィールを更新
             userProfile.totalXP += practice.xp;
             userProfile.lastPracticeDate = date;
             
-            // 9. データを保存
+            // 10. データを保存
             saveData();
             
-            // 10. 成功メッセージ
-            alert('✅ 練習記録を保存しました!\n獲得XP: +' + practice.xp + 'XP');
+            // 11. 成功メッセージ(ストリーク情報も表示)
+            let message = '✅ 練習記録を保存しました!\n';
+            message += '獲得XP: +' + practice.xp + 'XP\n';
+            message += '🔥 連続記録: ' + currentStreak + '日';
+            if (streakBonus > 0) {
+                message += '\n🎉 ストリークボーナス: +' + streakBonus + 'XP!';
+            }
+            alert(message);
+            // ⭐⭐⭐ ここまで修正 ⭐⭐⭐
             
-            // 11. 入力フォームをリセット
+            // 12. 入力フォームをリセット
             document.getElementById('practiceNote').value = '';
             document.getElementById('practiceDuration').value = '';
             document.querySelectorAll('.practice-menu-btn').forEach(function(btn) {
@@ -6288,9 +6425,8 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
                 btn.classList.remove('selected');
             });
             
-            // 12. 履歴を再表示
+            // 13. 履歴を再表示
             displayPracticeHistory();
-        }
         
         // 📊 練習履歴を表示する関数
         function displayPracticeHistory() {
