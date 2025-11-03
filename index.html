@@ -5072,21 +5072,25 @@ if (result.players) {
             try {
                 console.log('🚪 チームから退出開始:', teamCodeToLeave);
                 
-                // ステップ1: 現在のチームのデータを保存してから削除準備
+                // ★★★ 重要: 先にcurrentTeamCodeをクリアして、saveData()で再保存されないようにする ★★★
+                const tempCurrentCode = currentTeamCode;
+                currentTeamCode = null;  // ← これが重要!
+                
                 console.log('📌 allTeamsData削除前:', Object.keys(allTeamsData));
                 
-                // ステップ2: allTeamsDataから該当チームを削除
+                // allTeamsDataから削除
                 if (allTeamsData[teamCodeToLeave]) {
                     delete allTeamsData[teamCodeToLeave];
                     console.log('✅ allTeamsDataから削除しました:', teamCodeToLeave);
                     console.log('📌 allTeamsData削除後:', Object.keys(allTeamsData));
                 }
                 
-                // ステップ3: localStorageを更新(重要!)
+                // localStorageを更新
                 localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
+                localStorage.removeItem('currentTeamCode');
                 console.log('💾 localStorageに保存しました');
                 
-                // ステップ4: 他にチームがあるか確認
+                // 残りのチームを確認
                 const remainingTeams = Object.keys(allTeamsData);
                 console.log('📊 残りのチーム数:', remainingTeams.length);
                 
@@ -5095,19 +5099,13 @@ if (result.players) {
                     const nextTeamCode = remainingTeams[0];
                     console.log('🔄 別のチームに切り替えます:', nextTeamCode);
                     
-                    // switchTeam()を呼ぶ
+                    // switchTeam()を呼ぶ（これがcurrentTeamCodeを設定する）
                     switchTeam(nextTeamCode);
                     
-                    alert('✅ チーム「' + teamNameToLeave + '」から退出しました\n\n別のチーム「' + 
-                          (allTeamsData[nextTeamCode].teamInfo ? allTeamsData[nextTeamCode].teamInfo.name : nextTeamCode) + 
-                          '」に切り替えました');
-                    
                 } else {
-                    // チームが1つもない場合は初期化
+                    // 全部初期化
                     console.log('🔄 全チームから退出しました');
                     
-                    // グローバル変数を初期化
-                    currentTeamCode = null;
                     teamData = null;
                     personalGames = [];
                     teamGames = [];
@@ -5128,9 +5126,6 @@ if (result.players) {
                         };
                     }
                     
-                    // localStorageから削除
-                    localStorage.removeItem('currentTeamCode');
-                    
                     // 画面を更新
                     console.log('🔄 画面を更新します');
                     displayPlayers();
@@ -5141,14 +5136,16 @@ if (result.players) {
                     displayRankings();
                     updateCharts();
                     displayTeamStatus();
-                    displayTeamList();  // ← 重要!
+                    displayTeamList();
                     if (typeof displayTeamGamesHistory === 'function') {
                         displayTeamGamesHistory();
                     }
                     
                     alert('✅ チーム「' + teamNameToLeave + '」から退出しました\n\nチームに参加していない状態になりました');
+                    return;
                 }
                 
+                alert('✅ チーム「' + teamNameToLeave + '」から退出しました');
                 console.log('🎉 退出処理が完了しました');
                 
             } catch (error) {
