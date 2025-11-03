@@ -6058,60 +6058,86 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         }
         
         // 【関数3】練習記録を保存する関数
+        // 💾 練習記録を保存する関数
         function savePracticeRecord() {
+            // 1. 入力された情報を取得する
             const date = document.getElementById('practiceDate').value;
             const note = document.getElementById('practiceNote').value;
             const duration = document.getElementById('practiceDuration').value;
             
+            // 2. 選ばれた練習メニューを取得する
             const selectedMenus = [];
             document.querySelectorAll('.practice-menu-btn.selected').forEach(function(btn) {
                 selectedMenus.push(btn.getAttribute('data-menu'));
             });
             
+            // 3. 選ばれた調子を取得する
             let selectedMood = null;
             const moodBtn = document.querySelector('.mood-btn.selected');
             if (moodBtn) {
                 selectedMood = moodBtn.getAttribute('data-mood');
             }
             
+            // 4. エラーチェック
             if (!date) {
-                alert('📅 日付を選択してください!');
+                alert('日付を選択してください!');
                 return;
             }
             
             if (selectedMenus.length === 0) {
-                alert('🏀 練習メニューを1つ以上選択してください!');
+                alert('練習メニューを1つ以上選択してください!');
                 return;
             }
             
             if (!selectedMood) {
-                alert('😊 今日の調子を選択してください!');
+                alert('今日の調子を選択してください!');
                 return;
             }
             
+            // 5. 練習記録オブジェクトを作成
             const practice = {
-                id: 'practice_' + Date.now(),
+                id: 'practice_' + Date.now(),  // ユニークなID
                 date: date,
                 menus: selectedMenus,
                 mood: selectedMood,
                 note: note,
                 duration: duration ? parseInt(duration) : 0,
-                xp: 10,
+                xp: 10,  // 基本XP
                 timestamp: new Date().toISOString()
             };
             
+            // 6. ひとこと日記を書いたらボーナスXP
             if (note.trim().length > 0) {
                 practice.xp += 20;
             }
             
+            // 7. 練習記録配列に追加
             practiceRecords.push(practice);
+            
+            // ⭐⭐⭐ ここから修正 ⭐⭐⭐
+            // 8. ストリークを計算
+            const currentStreak = calculateStreak(date);
+            const streakBonus = getStreakBonus(currentStreak);
+            practice.xp += streakBonus;
+            
+            // 9. ユーザープロフィールを更新
             userProfile.totalXP += practice.xp;
             userProfile.lastPracticeDate = date;
             
+            // 10. データを保存
             saveData();
             
-            alert('✅ 練習記録を保存しました!\n獲得XP: +' + practice.xp + 'XP');
+            // 11. 成功メッセージ(ストリーク情報も表示)
+            let message = '✅ 練習記録を保存しました!\n';
+            message += '獲得XP: +' + practice.xp + 'XP\n';
+            message += '🔥 連続記録: ' + currentStreak + '日';
+            if (streakBonus > 0) {
+                message += '\n🎉 ストリークボーナス: +' + streakBonus + 'XP!';
+            }
+            alert(message);
+            // ⭐⭐⭐ ここまで修正 ⭐⭐⭐
             
+            // 12. 入力フォームをリセット
             document.getElementById('practiceNote').value = '';
             document.getElementById('practiceDuration').value = '';
             document.querySelectorAll('.practice-menu-btn').forEach(function(btn) {
@@ -6121,12 +6147,15 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
                 btn.classList.remove('selected');
             });
             
+            // 13. 履歴を再表示
             displayPracticeHistory();
         }
         
         // 【関数4】練習履歴を表示する関数
         function displayPracticeHistory() {
             const listEl = document.getElementById('practiceHistoryList');
+            
+            // 選択されている選手の練習記録だけをフィルタリング
             const myPractices = myPlayerId 
                 ? practiceRecords.filter(function(p) {
                     return !p.playerId || p.playerId === myPlayerId;
@@ -6134,63 +6163,63 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
                 : practiceRecords;
             
             if (myPractices.length === 0) {
-                listEl.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">まだ練習記録がありません</p>';
+                listEl.innerHTML = '<p style="color: #999; text-align: center;">まだ練習記録がありません</p>';
                 return;
             }
             
-            const sorted = myPractices.slice().sort(function(a, b) {  // ← practiceRecords を myPractices に変更
+            // 最新の記録が上に来るようにソート
+            const sorted = myPractices.slice().sort(function(a, b) {
                 return new Date(b.date) - new Date(a.date);
             });
             
-            if (practiceRecords.length === 0) {
-                listEl.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">まだ練習記録がありません</p>';
-                return;
-            }
-            
-            const sorted = practiceRecords.slice().sort(function(a, b) {
-                return new Date(b.date) - new Date(a.date);
-            });
-            
+            // 最新5件だけ表示
             const recent = sorted.slice(0, 5);
-            
-            const menuNames = {
-                'shoot': 'シュート',
-                'dribble': 'ドリブル',
-                'pass': 'パス',
-                'defense': 'ディフェンス',
-                'fitness': '体力',
-                'other': 'その他'
-            };
-            
-            const moodEmojis = {
-                'good': '😊 良かった',
-                'normal': '😐 普通',
-                'bad': '😢 イマイチ'
-            };
             
             let html = '';
             recent.forEach(function(practice) {
+                // 日付を見やすく変換
                 const dateObj = new Date(practice.date);
                 const dateStr = dateObj.toLocaleDateString('ja-JP', {
                     month: 'long',
                     day: 'numeric'
                 });
                 
+                // 練習メニューを日本語に変換
+                const menuNames = {
+                    'shoot': 'シュート',
+                    'dribble': 'ドリブル',
+                    'pass': 'パス',
+                    'defense': 'ディフェンス',
+                    'fitness': '体力',
+                    'other': 'その他'
+                };
+                
+                // 調子を絵文字に変換
+                const moodEmojis = {
+                    'good': '😊 良かった',
+                    'normal': '😐 普通',
+                    'bad': '😢 イマイチ'
+                };
+                
                 html += '<div class="practice-history-item">';
                 html += '<div class="practice-history-date">📅 ' + dateStr + '</div>';
                 
+                // 練習メニュー表示
                 html += '<div class="practice-history-menus">';
                 practice.menus.forEach(function(menu) {
                     html += '<span class="practice-menu-tag">' + menuNames[menu] + '</span>';
                 });
                 html += '</div>';
                 
+                // 調子表示
                 html += '<div class="practice-history-mood">' + moodEmojis[practice.mood] + '</div>';
                 
+                // メモがあれば表示
                 if (practice.note) {
                     html += '<div class="practice-history-note">💬 ' + practice.note + '</div>';
                 }
                 
+                // XP表示
                 html += '<div style="color: #667eea; font-weight: bold; margin-top: 5px;">+' + practice.xp + 'XP</div>';
                 
                 html += '</div>';
@@ -6198,6 +6227,7 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             
             listEl.innerHTML = html;
         }
+            
 
         // 【関数5】ストリークを計算する関数
         function calculateStreak(practiceDate) {
@@ -6360,168 +6390,8 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             button.classList.add('selected');
         }
         
-        // 💾 練習記録を保存する関数
-        function savePracticeRecord() {
-            // 1. 入力された情報を取得する
-            const date = document.getElementById('practiceDate').value;
-            const note = document.getElementById('practiceNote').value;
-            const duration = document.getElementById('practiceDuration').value;
-            
-            // 2. 選ばれた練習メニューを取得する
-            const selectedMenus = [];
-            document.querySelectorAll('.practice-menu-btn.selected').forEach(function(btn) {
-                selectedMenus.push(btn.getAttribute('data-menu'));
-            });
-            
-            // 3. 選ばれた調子を取得する
-            let selectedMood = null;
-            const moodBtn = document.querySelector('.mood-btn.selected');
-            if (moodBtn) {
-                selectedMood = moodBtn.getAttribute('data-mood');
-            }
-            
-            // 4. エラーチェック
-            if (!date) {
-                alert('日付を選択してください!');
-                return;
-            }
-            
-            if (selectedMenus.length === 0) {
-                alert('練習メニューを1つ以上選択してください!');
-                return;
-            }
-            
-            if (!selectedMood) {
-                alert('今日の調子を選択してください!');
-                return;
-            }
-            
-            // 5. 練習記録オブジェクトを作成
-            const practice = {
-                id: 'practice_' + Date.now(),  // ユニークなID
-                date: date,
-                menus: selectedMenus,
-                mood: selectedMood,
-                note: note,
-                duration: duration ? parseInt(duration) : 0,
-                xp: 10,  // 基本XP
-                timestamp: new Date().toISOString()
-            };
-            
-            // 6. ひとこと日記を書いたらボーナスXP
-            if (note.trim().length > 0) {
-                practice.xp += 20;
-            }
-            
-            // 7. 練習記録配列に追加
-            practiceRecords.push(practice);
-            
-            // ⭐⭐⭐ ここから修正 ⭐⭐⭐
-            // 8. ストリークを計算
-            const currentStreak = calculateStreak(date);
-            const streakBonus = getStreakBonus(currentStreak);
-            practice.xp += streakBonus;
-            
-            // 9. ユーザープロフィールを更新
-            userProfile.totalXP += practice.xp;
-            userProfile.lastPracticeDate = date;
-            
-            // 10. データを保存
-            saveData();
-            
-            // 11. 成功メッセージ(ストリーク情報も表示)
-            let message = '✅ 練習記録を保存しました!\n';
-            message += '獲得XP: +' + practice.xp + 'XP\n';
-            message += '🔥 連続記録: ' + currentStreak + '日';
-            if (streakBonus > 0) {
-                message += '\n🎉 ストリークボーナス: +' + streakBonus + 'XP!';
-            }
-            alert(message);
-            // ⭐⭐⭐ ここまで修正 ⭐⭐⭐
-            
-            // 12. 入力フォームをリセット
-            document.getElementById('practiceNote').value = '';
-            document.getElementById('practiceDuration').value = '';
-            document.querySelectorAll('.practice-menu-btn').forEach(function(btn) {
-                btn.classList.remove('selected');
-            });
-            document.querySelectorAll('.mood-btn').forEach(function(btn) {
-                btn.classList.remove('selected');
-            });
-            
-            // 13. 履歴を再表示
-            displayPracticeHistory();
-        }
+                
         
-        // 📊 練習履歴を表示する関数
-        function displayPracticeHistory() {
-            const listEl = document.getElementById('practiceHistoryList');
-            
-            if (practiceRecords.length === 0) {
-                listEl.innerHTML = '<p style="color: #999; text-align: center;">まだ練習記録がありません</p>';
-                return;
-            }
-            
-            // 最新の記録が上に来るようにソート
-            const sorted = practiceRecords.slice().sort(function(a, b) {
-                return new Date(b.date) - new Date(a.date);
-            });
-            
-            // 最新5件だけ表示
-            const recent = sorted.slice(0, 5);
-            
-            let html = '';
-            recent.forEach(function(practice) {
-                // 日付を見やすく変換
-                const dateObj = new Date(practice.date);
-                const dateStr = dateObj.toLocaleDateString('ja-JP', {
-                    month: 'long',
-                    day: 'numeric'
-                });
-                
-                // 練習メニューを日本語に変換
-                const menuNames = {
-                    'shoot': 'シュート',
-                    'dribble': 'ドリブル',
-                    'pass': 'パス',
-                    'defense': 'ディフェンス',
-                    'fitness': '体力',
-                    'other': 'その他'
-                };
-                
-                // 調子を絵文字に変換
-                const moodEmojis = {
-                    'good': '😊 良かった',
-                    'normal': '😐 普通',
-                    'bad': '😢 イマイチ'
-                };
-                
-                html += '<div class="practice-history-item">';
-                html += '<div class="practice-history-date">📅 ' + dateStr + '</div>';
-                
-                // 練習メニュー表示
-                html += '<div class="practice-history-menus">';
-                practice.menus.forEach(function(menu) {
-                    html += '<span class="practice-menu-tag">' + menuNames[menu] + '</span>';
-                });
-                html += '</div>';
-                
-                // 調子表示
-                html += '<div class="practice-history-mood">' + moodEmojis[practice.mood] + '</div>';
-                
-                // メモがあれば表示
-                if (practice.note) {
-                    html += '<div class="practice-history-note">💬 ' + practice.note + '</div>';
-                }
-                
-                // XP表示
-                html += '<div style="color: #667eea; font-weight: bold; margin-top: 5px;">+' + practice.xp + 'XP</div>';
-                
-                html += '</div>';
-            });
-            
-            listEl.innerHTML = html;
-        }
     </script>
     <!-- ========== ここから追加 ========== -->
     
