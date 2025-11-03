@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏀 バスケ記録</title>
+    <!-- PWAキャッシュ対策 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- アプリバージョン -->
+    <meta name="app-version" content="37.1">
+    
+    <!-- PWA設定 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="バスケ記録">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
@@ -2308,6 +2320,45 @@
     <div class="saved-indicator" id="savedIndicator">✓ 保存しました</div>
 
     <script>
+        // ========== バージョン管理とキャッシュクリア ==========
+        const APP_VERSION = '37.2';
+        
+        (function checkAppVersion() {
+            const STORED_VERSION = localStorage.getItem('appVersion');
+            
+            if (STORED_VERSION !== APP_VERSION) {
+                console.log('🔄 新しいバージョンを検出:', STORED_VERSION, '→', APP_VERSION);
+                
+                if ('caches' in window) {
+                    caches.keys().then(function(cacheNames) {
+                        return Promise.all(
+                            cacheNames.map(function(cacheName) {
+                                console.log('🗑️ キャッシュを削除:', cacheName);
+                                return caches.delete(cacheName);
+                            })
+                        );
+                    }).then(function() {
+                        console.log('✅ キャッシュクリア完了');
+                    }).catch(function(error) {
+                        console.warn('⚠️ キャッシュクリアエラー:', error);
+                    });
+                }
+                
+                localStorage.setItem('appVersion', APP_VERSION);
+                
+                if (STORED_VERSION) {
+                    console.log('🔄 アプリを更新中...');
+                    setTimeout(function() {
+                        window.location.reload(true);
+                    }, 1000);
+                    return;
+                } else {
+                    console.log('✅ 初回起動');
+                }
+            } else {
+                console.log('✅ 最新バージョン:', APP_VERSION);
+            }
+        })();
         const API_URL = 'https://script.google.com/macros/s/AKfycbwbPUgd-QAVhwBmhyBwiCtS1GDvZks0imrC78ZsJu5dV-d-Zt6reEW0oi1Lkc_MbW_agQ/exec';
         
         let currentMode = 'personal';
