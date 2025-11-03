@@ -5550,7 +5550,50 @@ if (result.players) {
                     }
                 }
             });
+            
+            // ==================== Week 7-8: レベル・XP表示を更新 追加開始 ====================
+            updateLevelDisplay();
+            // ==================== Week 7-8: レベル・XP表示を更新 追加終了 ====================
         }
+        
+        // ==================== Week 7-8: レベル・XP表示更新関数 追加開始 ====================
+        
+        /**
+         * グラフタブのレベル・XP表示を更新する関数
+         */
+        function updateLevelDisplay() {
+            // レベル表示
+            const levelEl = document.getElementById('userLevelDisplay');
+            if (levelEl) {
+                levelEl.textContent = userProfile.level;
+            }
+            
+            // XP表示
+            const xpEl = document.getElementById('userXPDisplay');
+            if (xpEl) {
+                xpEl.textContent = userProfile.totalXP;
+            }
+            
+            // 進捗パーセント
+            const progress = getProgressToNextLevel();
+            const progressBar = document.getElementById('xpProgressBar');
+            const progressText = document.getElementById('xpProgressText');
+            if (progressBar) {
+                progressBar.style.width = progress + '%';
+            }
+            if (progressText) {
+                progressText.textContent = progress + '%';
+            }
+            
+            // 次のレベルまでのXP
+            const xpToNext = getXPToNextLevel();
+            const xpToNextEl = document.getElementById('xpToNextLevel');
+            if (xpToNextEl) {
+                xpToNextEl.textContent = 'あと ' + xpToNext + ' XP';
+            }
+        }
+        
+        // ==================== Week 7-8: レベル・XP表示更新関数 追加終了 ====================
 
         function addPlayer() {
             const num = document.getElementById('playerNumber').value;
