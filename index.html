@@ -5056,7 +5056,8 @@ if (result.players) {
                 '• チーム情報\n' +
                 '• 選手データ\n' +
                 '• 試合記録\n' +
-                '• 練習記録\n\n' +
+                (typeof practiceRecords !== 'undefined' ? '• 練習記録\n' : '') +
+                '\n' +
                 '【影響範囲】\n' +
                 '• このスマホからのみ削除されます\n' +
                 '• Google Sheetsのデータは残ります\n' +
@@ -5069,32 +5070,43 @@ if (result.players) {
             }
             
             try {
-                console.log('🚪 チームから退出:', teamCodeToLeave);
+                console.log('🚪 チームから退出開始:', teamCodeToLeave);
                 
-                // ステップ1: allTeamsDataから該当チームを削除
+                // ステップ1: 現在のチームのデータを保存してから削除準備
+                console.log('📌 allTeamsData削除前:', Object.keys(allTeamsData));
+                
+                // ステップ2: allTeamsDataから該当チームを削除
                 if (allTeamsData[teamCodeToLeave]) {
                     delete allTeamsData[teamCodeToLeave];
                     console.log('✅ allTeamsDataから削除しました:', teamCodeToLeave);
+                    console.log('📌 allTeamsData削除後:', Object.keys(allTeamsData));
                 }
                 
-                // ステップ2: localStorageを更新
+                // ステップ3: localStorageを更新(重要!)
                 localStorage.setItem('allTeamsData', JSON.stringify(allTeamsData));
+                console.log('💾 localStorageに保存しました');
                 
-                // ステップ3: 他にチームがあるか確認
+                // ステップ4: 他にチームがあるか確認
                 const remainingTeams = Object.keys(allTeamsData);
-                console.log('📌 残りのチーム数:', remainingTeams.length);
+                console.log('📊 残りのチーム数:', remainingTeams.length);
                 
                 if (remainingTeams.length > 0) {
-                    // 他のチームに切り替え
+                    // 別のチームに切り替え
                     const nextTeamCode = remainingTeams[0];
-                    console.log('📌 別のチームに切り替えます:', nextTeamCode);
+                    console.log('🔄 別のチームに切り替えます:', nextTeamCode);
+                    
+                    // switchTeam()を呼ぶ
                     switchTeam(nextTeamCode);
                     
-                    alert('✅ チーム「' + teamNameToLeave + '」から退出しました\n\n別のチームに切り替えました');
+                    alert('✅ チーム「' + teamNameToLeave + '」から退出しました\n\n別のチーム「' + 
+                          (allTeamsData[nextTeamCode].teamInfo ? allTeamsData[nextTeamCode].teamInfo.name : nextTeamCode) + 
+                          '」に切り替えました');
+                    
                 } else {
                     // チームが1つもない場合は初期化
-                    console.log('📌 すべてのチームから退出しました');
+                    console.log('🔄 全チームから退出しました');
                     
+                    // グローバル変数を初期化
                     currentTeamCode = null;
                     teamData = null;
                     personalGames = [];
@@ -5102,21 +5114,34 @@ if (result.players) {
                     players = [];
                     myPlayerId = null;
                     draftTeamGame = null;
+                    
                     if (typeof practiceRecords !== 'undefined') {
                         practiceRecords = [];
+                    }
+                    if (typeof userProfile !== 'undefined') {
+                        userProfile = {
+                            totalXP: 0,
+                            level: 1,
+                            currentStreak: 0,
+                            longestStreak: 0,
+                            lastPracticeDate: null
+                        };
                     }
                     
                     // localStorageから削除
                     localStorage.removeItem('currentTeamCode');
                     
-                    // ステップ4: 画面を更新
+                    // 画面を更新
+                    console.log('🔄 画面を更新します');
                     displayPlayers();
-                    updateMyPlayerSelect();
+                    if (typeof updateMyPlayerSelect === 'function') {
+                        updateMyPlayerSelect();
+                    }
                     displayGames();
                     displayRankings();
                     updateCharts();
                     displayTeamStatus();
-                    displayTeamList();
+                    displayTeamList();  // ← 重要!
                     if (typeof displayTeamGamesHistory === 'function') {
                         displayTeamGamesHistory();
                     }
@@ -5124,12 +5149,13 @@ if (result.players) {
                     alert('✅ チーム「' + teamNameToLeave + '」から退出しました\n\nチームに参加していない状態になりました');
                 }
                 
+                console.log('🎉 退出処理が完了しました');
+                
             } catch (error) {
                 console.error('❌ チーム退出エラー:', error);
                 alert('⚠️ エラーが発生しました: ' + error.message);
             }
         }
-
         document.getElementById('gameDate').valueAsDate = new Date();
         document.getElementById('teamGameDate').valueAsDate = new Date();
 
