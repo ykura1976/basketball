@@ -1822,6 +1822,15 @@
 
             <!-- 練習タブ -->
             <div id="practiceTab" class="tab-content">
+                <!--選手バナー -->
+                <div id="practicePlayerBanner" class="current-player-banner" style="display: none;">
+                    <span class="player-icon">👤</span>
+                    <div class="player-info">
+                        <span class="player-label">現在表示中</span>
+                        <span class="player-name" id="practicePlayerName"></span>
+                    </div>
+                </div>
+                <!--ここまで追加 -->
                 <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         <div style="text-align: center;">
@@ -5609,7 +5618,8 @@ if (teamData) {
                 { banner: 'inputPlayerBanner', name: 'inputPlayerName' },
                 { banner: 'listPlayerBanner', name: 'listPlayerName' },
                 { banner: 'rankingPlayerBanner', name: 'rankingPlayerName' },
-                { banner: 'graphPlayerBanner', name: 'graphPlayerName' }
+                { banner: 'graphPlayerBanner', name: 'graphPlayerName' },
+                { banner: 'practicePlayerBanner', name: 'practicePlayerName' }
             ];
         
             banners.forEach(function(b) {
