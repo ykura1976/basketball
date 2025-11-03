@@ -1825,6 +1825,27 @@
                     </div>
                 </div>
                 
+                
+                
+                <div class="card">
+                    <h2 style="margin-bottom: 20px;">シュート成功率の推移</h2>
+                    <div class="chart-container">
+                        <canvas id="shootingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 練習タブ -->
+            <div id="practiceTab" class="tab-content">
+                <!--選手バナー -->
+                <div id="practicePlayerBanner" class="current-player-banner" style="display: none;">
+                    <span class="player-icon">👤</span>
+                    <div class="player-info">
+                        <span class="player-label">現在表示中</span>
+                        <span class="player-name" id="practicePlayerName"></span>
+                    </div>
+                </div>
+                <!--ここまで追加 -->
                 <!-- ==================== Week 7-8: レベル・XP表示エリア 追加開始 ==================== -->
                 
                 <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
@@ -1885,25 +1906,6 @@
                 
                 <!-- ==================== Week 7-8: レベル・XP表示エリア 追加終了 ==================== -->
                 
-                <div class="card">
-                    <h2 style="margin-bottom: 20px;">シュート成功率の推移</h2>
-                    <div class="chart-container">
-                        <canvas id="shootingChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 練習タブ -->
-            <div id="practiceTab" class="tab-content">
-                <!--選手バナー -->
-                <div id="practicePlayerBanner" class="current-player-banner" style="display: none;">
-                    <span class="player-icon">👤</span>
-                    <div class="player-info">
-                        <span class="player-label">現在表示中</span>
-                        <span class="player-name" id="practicePlayerName"></span>
-                    </div>
-                </div>
-                <!--ここまで追加 -->
                 <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         <div style="text-align: center;">
