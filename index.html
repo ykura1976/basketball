@@ -1824,6 +1824,67 @@
                         <span class="player-name" id="graphPlayerName"></span>
                     </div>
                 </div>
+                
+                <!-- ==================== Week 7-8: レベル・XP表示エリア 追加開始 ==================== -->
+                
+                <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                        color: white; 
+                                        text-align: center;">
+                    <!-- レベル表示 -->
+                    <div style="font-size: 48px; 
+                                font-weight: bold; 
+                                margin-bottom: 10px;
+                                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                        ⭐ Lv.<span id="userLevelDisplay">1</span>
+                    </div>
+                    
+                    <!-- XP表示 -->
+                    <div style="font-size: 20px; 
+                                margin-bottom: 20px;
+                                opacity: 0.95;">
+                        <span id="userXPDisplay">0</span> XP
+                    </div>
+                    
+                    <!-- プログレスバー -->
+                    <div style="background: rgba(255,255,255,0.25);
+                                height: 25px;
+                                border-radius: 12px;
+                                overflow: hidden;
+                                margin-bottom: 12px;
+                                box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                        <div id="xpProgressBar" 
+                             style="background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+                                    height: 100%;
+                                    width: 0%;
+                                    transition: width 0.5s ease;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-weight: bold;
+                                    font-size: 14px;">
+                            <span id="xpProgressText">0%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 次のレベルまでの情報 -->
+                    <div style="font-size: 15px; 
+                                opacity: 0.9;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                gap: 10px;">
+                        <span>次のレベルまで</span>
+                        <span id="xpToNextLevel" 
+                              style="font-size: 18px; 
+                                     font-weight: bold;
+                                     color: #FFD700;">
+                            あと 100 XP
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- ==================== Week 7-8: レベル・XP表示エリア 追加終了 ==================== -->
+                
                 <div class="card">
                     <h2 style="margin-bottom: 20px;">シュート成功率の推移</h2>
                     <div class="chart-container">
@@ -5099,12 +5160,36 @@ if (result.players) {
                 source: 'personal'
             };
 
+            // ==================== Week 7-8: XP処理を追加 開始 ====================
+            
+            // XPを計算
+            const xpData = calculateGameXP(game);
+            
+            // XPをゲームデータに記録
+            game.xpEarned = xpData.total;
+            game.xpBreakdown = xpData.breakdown;
+            
+            // ユーザープロファイルのXPを増やす
+            userProfile.totalXP += xpData.total;
+            
+            // ==================== Week 7-8: XP処理を追加 終了 ====================
+
             personalGames.unshift(game);
             saveData();
             
             if (teamData) {
                 syncGamesOnly();
             }
+            
+            // ==================== Week 7-8: XP・レベルアップ表示を追加 開始 ====================
+            
+            // XP獲得アニメーション表示
+            showXPAnimation(xpData);
+            
+            // レベルアップチェック
+            checkLevelUp();
+            
+            // ==================== Week 7-8: XP・レベルアップ表示を追加 終了 ====================
             
             displayGames();
             resetForm();
@@ -5114,7 +5199,6 @@ if (result.players) {
             
             alert('✅ 試合記録を保存しました!');
         }
-
         function resetForm() {
             Object.keys(stats).forEach(function(key) {
                 stats[key] = 0;
@@ -6414,6 +6498,334 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             return 0;
         }
 
+        // ==================== Week 7-8: XP・レベルシステム 追加開始 ====================
+        
+        /**
+         * 試合記録からXPを計算する関数
+         * @param {Object} gameData - 試合データ
+         * @returns {Object} - XP情報 {total: 合計XP, breakdown: 内訳}
+         */
+        function calculateGameXP(gameData) {
+            // 基本XP(試合に出場したら必ずもらえる)
+            let xp = 50;
+            
+            // 内訳を記録(後で分析に使える)
+            const breakdown = {
+                base: 50,
+                bonuses: []
+            };
+            
+            // ボーナスXP: 得点
+            if (gameData.totalPoints >= 15) {
+                xp += 30;
+                breakdown.bonuses.push({name: '高得点(15点以上)', xp: 30});
+            } else if (gameData.totalPoints >= 10) {
+                xp += 20;
+                breakdown.bonuses.push({name: '二桁得点(10点以上)', xp: 20});
+            }
+            
+            // ボーナスXP: 2Pシュート成功率
+            if (gameData.twoPointsAttempted >= 5) {
+                if (gameData.twoPointPercentage >= 60) {
+                    xp += 15;
+                    breakdown.bonuses.push({name: '2P高成功率(60%以上)', xp: 15});
+                } else if (gameData.twoPointPercentage >= 50) {
+                    xp += 10;
+                    breakdown.bonuses.push({name: '2P良成功率(50%以上)', xp: 10});
+                }
+            }
+            
+            // ボーナスXP: 3Pシュート成功率
+            if (gameData.threePointsAttempted >= 3) {
+                if (gameData.threePointPercentage >= 40) {
+                    xp += 15;
+                    breakdown.bonuses.push({name: '3P高成功率(40%以上)', xp: 15});
+                } else if (gameData.threePointPercentage >= 33) {
+                    xp += 10;
+                    breakdown.bonuses.push({name: '3P良成功率(33%以上)', xp: 10});
+                }
+            }
+            
+            // ボーナスXP: リバウンド
+            const totalRebounds = gameData.offensiveRebounds + gameData.defensiveRebounds;
+            if (totalRebounds >= 8) {
+                xp += 15;
+                breakdown.bonuses.push({name: 'リバウンド王(8本以上)', xp: 15});
+            } else if (totalRebounds >= 5) {
+                xp += 10;
+                breakdown.bonuses.push({name: 'リバウンド貢献(5本以上)', xp: 10});
+            }
+            
+            // ボーナスXP: アシスト
+            if (gameData.assists >= 5) {
+                xp += 15;
+                breakdown.bonuses.push({name: 'アシスト王(5本以上)', xp: 15});
+            } else if (gameData.assists >= 3) {
+                xp += 10;
+                breakdown.bonuses.push({name: 'アシスト貢献(3本以上)', xp: 10});
+            }
+            
+            // ボーナスXP: スティール
+            if (gameData.steals >= 4) {
+                xp += 15;
+                breakdown.bonuses.push({name: 'スティール王(4本以上)', xp: 15});
+            } else if (gameData.steals >= 2) {
+                xp += 10;
+                breakdown.bonuses.push({name: 'スティール貢献(2本以上)', xp: 10});
+            }
+            
+            // ボーナスXP: ブロック
+            if (gameData.blocks >= 3) {
+                xp += 15;
+                breakdown.bonuses.push({name: 'ブロック王(3本以上)', xp: 15});
+            } else if (gameData.blocks >= 1) {
+                xp += 10;
+                breakdown.bonuses.push({name: 'ブロック貢献(1本以上)', xp: 10});
+            }
+            
+            return {
+                total: xp,
+                breakdown: breakdown
+            };
+        }
+        
+        /**
+         * レベルに必要な累計XPを計算
+         * @param {number} level - 目標レベル
+         * @returns {number} - 必要な累計XP
+         */
+        function getXPForLevel(level) {
+            if (level === 1) return 0;
+            
+            let totalXP = 0;
+            for (let i = 1; i < level; i++) {
+                totalXP += 50 + (i * 50);
+            }
+            return totalXP;
+        }
+        
+        /**
+         * レベルアップをチェックして実行
+         */
+        function checkLevelUp() {
+            const currentLevel = userProfile.level;
+            const nextLevelXP = getXPForLevel(currentLevel + 1);
+            
+            if (userProfile.totalXP >= nextLevelXP) {
+                userProfile.level++;
+                saveData();
+                showLevelUpAnimation(userProfile.level);
+                
+                setTimeout(function() {
+                    checkLevelUp();
+                }, 1000);
+            }
+        }
+        
+        /**
+         * レベルアップアニメーション表示
+         * @param {number} newLevel - 新しいレベル
+         */
+        function showLevelUpAnimation(newLevel) {
+            const nextLevelXP = getXPForLevel(newLevel + 1);
+            const xpToNext = nextLevelXP - userProfile.totalXP;
+            
+            alert('🎉✨ レベルアップ! ✨🎉\n\n' +
+                  '⭐ レベル ' + newLevel + ' になりました!\n\n' +
+                  '次のレベルまで あと ' + xpToNext + 'XP\n' +
+                  '頑張って練習・試合を続けよう!');
+        }
+        
+        /**
+         * XP獲得アニメーション表示
+         * @param {Object} xpData - XP情報
+         */
+        function showXPAnimation(xpData) {
+            let message = '⭐ XP GET! ⭐\n\n';
+            message += '+' + xpData.total + 'XP 獲得!\n\n';
+            
+            if (xpData.breakdown.bonuses.length > 0) {
+                message += '【ボーナス】\n';
+                xpData.breakdown.bonuses.forEach(function(bonus) {
+                    message += '✓ ' + bonus.name + ': +' + bonus.xp + 'XP\n';
+                });
+                message += '\n';
+            }
+            
+            message += '合計XP: ' + userProfile.totalXP + '\n';
+            message += '現在: レベル ' + userProfile.level;
+            
+            const nextLevelXP = getXPForLevel(userProfile.level + 1);
+            const xpToNext = nextLevelXP - userProfile.totalXP;
+            message += '\n次のレベルまで: あと ' + xpToNext + 'XP';
+            
+            alert(message);
+        }
+        
+        /**
+         * 次のレベルまでの進捗パーセントを計算
+         * @returns {number} - 進捗パーセント(0-100)
+         */
+        function getProgressToNextLevel() {
+            const currentLevel = userProfile.level;
+            const currentXP = userProfile.totalXP;
+            const nextLevelXP = getXPForLevel(currentLevel + 1);
+            const prevLevelXP = getXPForLevel(currentLevel);
+            
+            const xpInThisLevel = nextLevelXP - prevLevelXP;
+            const xpEarned = currentXP - prevLevelXP;
+            
+            const progress = Math.min(100, Math.max(0, Math.floor((xpEarned / xpInThisLevel) * 100)));
+            
+            return progress;
+        }
+        
+        /**
+         * 次のレベルまでに必要なXPを計算
+         * @returns {number} - 必要XP
+         */
+        function getXPToNextLevel() {
+            const currentLevel = userProfile.level;
+            const currentXP = userProfile.totalXP;
+            const nextLevelXP = getXPForLevel(currentLevel + 1);
+            
+            return Math.max(0, nextLevelXP - currentXP);
+        }
+        
+        // ==================== Week 7-8: XP・レベルシステム 追加終了 ====================
+
+        // ==================== Week 7-8: 試合記録保存時のXP付与 追加開始 ====================
+        
+        /**
+         * 個人モードで試合記録を保存する関数(新規作成)
+         */
+        function savePersonalGameRecord() {
+            // 入力値の取得
+            const date = document.getElementById('gameDate').value;
+            const opponent = document.getElementById('opponent').value;
+            const playTime = parseInt(document.getElementById('playTime').value) || 0;
+            
+            // バリデーション
+            if (!date) {
+                alert('試合日を入力してください');
+                return;
+            }
+            
+            if (!opponent) {
+                alert('対戦相手を入力してください');
+                return;
+            }
+            
+            if (!myPlayerId) {
+                alert('先に選手を登録してください(設定タブ)');
+                return;
+            }
+            
+            // 統計データの取得
+            const twoPointsMade = parseInt(document.getElementById('twoPointsMade').textContent);
+            const twoPointsAttempted = parseInt(document.getElementById('twoPointsAttempted').textContent);
+            const threePointsMade = parseInt(document.getElementById('threePointsMade').textContent);
+            const threePointsAttempted = parseInt(document.getElementById('threePointsAttempted').textContent);
+            const freeThrowsMade = parseInt(document.getElementById('freeThrowsMade').textContent);
+            const freeThrowsAttempted = parseInt(document.getElementById('freeThrowsAttempted').textContent);
+            const offensiveRebounds = parseInt(document.getElementById('offensiveRebounds').textContent);
+            const defensiveRebounds = parseInt(document.getElementById('defensiveRebounds').textContent);
+            const assists = parseInt(document.getElementById('assists').textContent);
+            const steals = parseInt(document.getElementById('steals').textContent);
+            const blocks = parseInt(document.getElementById('blocks').textContent);
+            const turnovers = parseInt(document.getElementById('turnovers').textContent);
+            const fouls = parseInt(document.getElementById('fouls').textContent);
+            
+            // 計算
+            const totalPoints = (twoPointsMade * 2) + (threePointsMade * 3) + freeThrowsMade;
+            const twoPointPercentage = twoPointsAttempted > 0 ? ((twoPointsMade / twoPointsAttempted) * 100).toFixed(1) : 0;
+            const threePointPercentage = threePointsAttempted > 0 ? ((threePointsMade / threePointsAttempted) * 100).toFixed(1) : 0;
+            const freeThrowPercentage = freeThrowsAttempted > 0 ? ((freeThrowsMade / freeThrowsAttempted) * 100).toFixed(1) : 0;
+            
+            // 試合データを作成
+            const gameData = {
+                id: 'game_' + Date.now(),
+                date: date,
+                opponent: opponent,
+                playerId: myPlayerId,
+                playTime: playTime,
+                twoPointsMade: twoPointsMade,
+                twoPointsAttempted: twoPointsAttempted,
+                threePointsMade: threePointsMade,
+                threePointsAttempted: threePointsAttempted,
+                freeThrowsMade: freeThrowsMade,
+                freeThrowsAttempted: freeThrowsAttempted,
+                offensiveRebounds: offensiveRebounds,
+                defensiveRebounds: defensiveRebounds,
+                assists: assists,
+                steals: steals,
+                blocks: blocks,
+                turnovers: turnovers,
+                fouls: fouls,
+                totalPoints: totalPoints,
+                totalRebounds: offensiveRebounds + defensiveRebounds,
+                twoPointPercentage: parseFloat(twoPointPercentage),
+                threePointPercentage: parseFloat(threePointPercentage),
+                freeThrowPercentage: parseFloat(freeThrowPercentage),
+                recordedBy: myPlayerId,
+                recordMethod: 'personal',
+                timestamp: new Date().toISOString()
+            };
+            
+            // XPを計算
+            const xpData = calculateGameXP(gameData);
+            
+            // XPをゲームデータに記録
+            gameData.xpEarned = xpData.total;
+            gameData.xpBreakdown = xpData.breakdown;
+            
+            // ユーザープロファイルのXPを増やす
+            userProfile.totalXP += xpData.total;
+            
+            // データを保存
+            personalGames.unshift(gameData);
+            saveData();
+            
+            // XP獲得アニメーション表示
+            showXPAnimation(xpData);
+            
+            // レベルアップチェック
+            checkLevelUp();
+            
+            // 成功メッセージ
+            alert('✅ 試合記録を保存しました!');
+            
+            // フォームをリセット
+            resetInputForm();
+            
+            // 履歴タブに切り替え
+            switchTab('list');
+        }
+        
+        /**
+         * 入力フォームをリセットする関数
+         */
+        function resetInputForm() {
+            document.getElementById('gameDate').valueAsDate = new Date();
+            document.getElementById('opponent').value = '';
+            document.getElementById('playTime').value = '0';
+            
+            // 全ての統計をリセット
+            const statIds = [
+                'twoPointsMade', 'twoPointsAttempted',
+                'threePointsMade', 'threePointsAttempted',
+                'freeThrowsMade', 'freeThrowsAttempted',
+                'offensiveRebounds', 'defensiveRebounds',
+                'assists', 'steals', 'blocks', 'turnovers', 'fouls'
+            ];
+            
+            statIds.forEach(function(id) {
+                document.getElementById(id).textContent = '0';
+            });
+        }
+        
+        // ==================== Week 7-8: 試合記録保存時のXP付与 追加終了 ====================
+        
         // 【関数7】ストリーク表示を更新する関数
         function updateStreakDisplay() {
             document.getElementById('currentStreakDisplay').textContent = userProfile.currentStreak;
