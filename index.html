@@ -2793,6 +2793,16 @@
                 myPlayerId = data.myPlayerId || null;
                 teamData = data.teamInfo || null;
                 draftTeamGame = data.draftTeamGame || null;
+
+                // 練習記録とユーザープロファイルも読み込む
+                practiceRecords = data.practiceRecords || [];
+                userProfile = data.userProfile || {
+                    totalXP: 0,
+                    level: 1,
+                    currentStreak: 0,
+                    longestStreak: 0,
+                    lastPracticeDate: null
+                };
                 
                 console.log('✅ チームデータ読み込み完了');
                 console.log('  選手数:', players.length);
@@ -2815,6 +2825,15 @@
                 myPlayerId = null;
                 teamData = null;
                 draftTeamGame = null;
+
+                practiceRecords = [];
+                userProfile = {
+                    totalXP: 0,
+                    level: 1,
+                    currentStreak: 0,
+                    longestStreak: 0,
+                    lastPracticeDate: null
+                };
             }
             
             // ステップ4: データを保存
@@ -7049,6 +7068,12 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
                 // その日に練習記録があるかチェック
                 const hasPractice = practiceRecords.some(function(p) {
                         // 選択中の選手の練習記録のみをチェック
+                    const isMyRecord = !p.playerId || p.playerId === myPlayerId;
+                    return p.date === dateStr && isMyRecord;
+                });
+
+                // その日に練習記録があるかチェック(選択中の選手のみ)
+                const hasPractice = practiceRecords.some(function(p) {
                     const isMyRecord = !p.playerId || p.playerId === myPlayerId;
                     return p.date === dateStr && isMyRecord;
                 });
