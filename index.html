@@ -4870,25 +4870,25 @@ if (result.players) {
                 c.classList.remove('active');
             });
             
-            // ⭐ ここを修正: 'practice'を追加 ⭐
-            const tabs = ['input', 'list', 'ranking', 'graph', 'practice'];
-            const index = tabs.indexOf(tab);
-            document.querySelector('#personalMode .tab:nth-child(' + (index + 1) + ')').classList.add('active');
-            document.getElementById(tab + 'Tab').classList.add('active');
-            
-            if (tab === 'graph') updateCharts();
-            if (tab === 'settings') { 
-                displayPlayers(); 
-                updateMyPlayerSelect();
-                displayTeamStatus();
-            }
-            if (tab === 'ranking') displayRankings();
-            
-            // ⭐ ここを追加: 練習タブの処理 ⭐
-            if (tab === 'practice') {
-                // 今日の日付を自動入力
+            // ⭐ まずはシンプルに動くバージョンに戻す ⭐
+            if (tab === 'input') {
+                document.querySelector('#personalMode .tab:nth-child(1)').classList.add('active');
+                document.getElementById('inputTab').classList.add('active');
+            } else if (tab === 'list') {
+                document.querySelector('#personalMode .tab:nth-child(2)').classList.add('active');
+                document.getElementById('listTab').classList.add('active');
+            } else if (tab === 'ranking') {
+                document.querySelector('#personalMode .tab:nth-child(3)').classList.add('active');
+                document.getElementById('rankingTab').classList.add('active');
+                displayRankings();
+            } else if (tab === 'graph') {
+                document.querySelector('#personalMode .tab:nth-child(4)').classList.add('active');
+                document.getElementById('graphTab').classList.add('active');
+                updateCharts();
+            } else if (tab === 'practice') {
+                document.querySelector('#personalMode .tab:nth-child(5)').classList.add('active');
+                document.getElementById('practiceTab').classList.add('active');
                 document.getElementById('practiceDate').valueAsDate = new Date();
-                // 練習履歴を表示
                 displayPracticeHistory();
                 updateStreakDisplay();
                 displayPracticeCalendar();
