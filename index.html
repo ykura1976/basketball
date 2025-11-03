@@ -6127,6 +6127,20 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         // 【関数4】練習履歴を表示する関数
         function displayPracticeHistory() {
             const listEl = document.getElementById('practiceHistoryList');
+            const myPractices = myPlayerId 
+                ? practiceRecords.filter(function(p) {
+                    return !p.playerId || p.playerId === myPlayerId;
+                  })
+                : practiceRecords;
+            
+            if (myPractices.length === 0) {
+                listEl.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">まだ練習記録がありません</p>';
+                return;
+            }
+            
+            const sorted = myPractices.slice().sort(function(a, b) {  // ← practiceRecords を myPractices に変更
+                return new Date(b.date) - new Date(a.date);
+            });
             
             if (practiceRecords.length === 0) {
                 listEl.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">まだ練習記録がありません</p>';
