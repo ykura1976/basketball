@@ -4640,17 +4640,32 @@ personalGames = personalGames.filter(function(g) {
                     body: JSON.stringify({
                         action: 'createTeam',
                         teamName: teamName,
-                        teamCode: newTeamCode  // ← 重要: チームコードを送る
+                        teamCode: newTeamCode
                     })
                 });
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    // ステップ3: サーバーから返ってきたチームコードを確認
                     const returnedTeamCode = result.teamCode || newTeamCode;
                     
-                    // ステップ4: グローバル変数を先にクリア(重要!)
+                    // ★★★ 重要: 古いデータが残っている可能性があるので完全クリア ★★★
+                    // ステップ3: 現在のチームのデータを先に保存(もしあれば)
+                    if (currentTeamCode && allTeamsData[currentTeamCode]) {
+                        allTeamsData[currentTeamCode] = {
+                            personalGames: personalGames,
+                            teamGames: teamGames,
+                            players: players,
+                            myPlayerId: myPlayerId,
+                            teamInfo: teamData,
+                            draftTeamGame: draftTeamGame,
+                            practiceRecords: typeof practiceRecords !== 'undefined' ? practiceRecords : [],
+                            userProfile: typeof userProfile !== 'undefined' ? userProfile : undefined,
+                            lastModified: new Date().toISOString()
+                        };
+                    }
+                    
+                    // ステップ4: グローバル変数を完全にクリア
                     personalGames = [];
                     teamGames = [];
                     players = [];
@@ -4672,7 +4687,7 @@ personalGames = personalGames.filter(function(g) {
                     // ステップ6: currentTeamCodeを設定
                     currentTeamCode = returnedTeamCode;
                     
-                    // ステップ7: allTeamsDataに新しいチームのデータを作成
+                    // ステップ7: 新しいチームの空データを作成
                     allTeamsData[returnedTeamCode] = {
                         personalGames: [],
                         teamGames: [],
@@ -4680,8 +4695,15 @@ personalGames = personalGames.filter(function(g) {
                         myPlayerId: null,
                         teamInfo: teamData,
                         draftTeamGame: null,
-                        practiceRecords: typeof practiceRecords !== 'undefined' ? [] : undefined,
-                        userProfile: typeof userProfile !== 'undefined' ? userProfile : undefined
+                        practiceRecords: [],
+                        userProfile: typeof userProfile !== 'undefined' ? {
+                            totalXP: 0,
+                            level: 1,
+                            currentStreak: 0,
+                            longestStreak: 0,
+                            lastPracticeDate: null
+                        } : undefined,
+                        lastModified: new Date().toISOString()
                     };
                     
                     // ステップ8: ローカルストレージに保存
@@ -4700,7 +4722,7 @@ personalGames = personalGames.filter(function(g) {
                         displayTeamGamesHistory();
                     }
                     
-                    // ステップ10: 成功メッセージを表示
+                    // ステップ10: 成功メッセージ
                     showSyncIndicator('success', '✅ チーム作成完了!');
                     closeModal('createTeamModal');
                     document.getElementById('newTeamName').value = '';
