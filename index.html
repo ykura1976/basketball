@@ -6569,6 +6569,10 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             
             // 13. 履歴を再表示
             displayPracticeHistory();
+
+            // 14. 個人データタブの表示も更新
+            updateStreakDisplay();      // ストリーク表示を更新
+            displayPracticeCalendar();  // カレンダーを更新
         }
         
         // 【関数4】練習履歴を表示する関数
