@@ -6079,6 +6079,10 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             }
             
             // 4. エラーチェック
+            if (!myPlayerId) {
+                alert('先に設定タブで選手を登録・選択してください!');
+                return;
+            }
             if (!date) {
                 alert('日付を選択してください!');
                 return;
@@ -6098,6 +6102,7 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             const practice = {
                 id: 'practice_' + Date.now(),  // ユニークなID
                 date: date,
+                playerId: myPlayerId,
                 menus: selectedMenus,
                 mood: selectedMood,
                 note: note,
