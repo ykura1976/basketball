@@ -2429,13 +2429,24 @@
         let currentShotPosition = null;
         let shotChartCallback = null;
 
+        // 選手ごとの練習データを管理するオブジェクト
+        let playerPracticeData = {};
+        // 例: { 
+        //   'player1': { 
+        //     records: [...], 
+        //     profile: { totalXP: 50, level: 2, ... } 
+        //   },
+        //   'player2': { ... }
+        // }
+        
+        // 現在表示中の選手の練習記録とプロフィール(表示用)
         let practiceRecords = [];
         let userProfile = {
-            totalXP: 0,        // 合計経験値(最初は0)
-            level: 1,            // レベル(最初は1)
-            currentStreak: 0,    // 連続記録日数(最初は0)
-            longestStreak: 0,    // 最長連続記録(最初は0)
-            lastPracticeDate: null    // 最後の練習日(最初は無し)
+            totalXP: 0,
+            level: 1,
+            currentStreak: 0,
+            longestStreak: 0,
+            lastPracticeDate: null
         };
         
         // コート図を描画する関数
@@ -2672,14 +2683,43 @@
                     draftTeamGame = data.draftTeamGame || null;
                     
                     // ⭐⭐⭐ ここに2行追加 ⭐⭐⭐
-                    practiceRecords = data.practiceRecords || [];
-                    userProfile = data.userProfile || {
-                        totalXP: 0,
-                        level: 1,
-                        currentStreak: 0,
-                        longestStreak: 0,
-                        lastPracticeDate: null
-                    };
+                    // 選手ごとの練習データを読み込む
+                    playerPracticeData = data.playerPracticeData || {};
+                    
+                    // 現在選択している選手の練習データを取得
+                    if (myPlayerId) {
+                        if (playerPracticeData[myPlayerId]) {
+                            // その選手のデータがあれば取得
+                            practiceRecords = playerPracticeData[myPlayerId].records || [];
+                            userProfile = playerPracticeData[myPlayerId].profile || {
+                                totalXP: 0,
+                                level: 1,
+                                currentStreak: 0,
+                                longestStreak: 0,
+                                lastPracticeDate: null
+                            };
+                        } else {
+                            // その選手のデータがなければ初期化
+                            practiceRecords = [];
+                            userProfile = {
+                                totalXP: 0,
+                                level: 1,
+                                currentStreak: 0,
+                                longestStreak: 0,
+                                lastPracticeDate: null
+                            };
+                        }
+                    } else {
+                        // 選手が選択されていない場合
+                        practiceRecords = [];
+                        userProfile = {
+                            totalXP: 0,
+                            level: 1,
+                            currentStreak: 0,
+                            longestStreak: 0,
+                            lastPracticeDate: null
+                        };
+                    }
                     // ⭐⭐⭐ ここまで追加 ⭐⭐⭐
                     
                     // 選んでいる選手が存在するかチェック
@@ -2742,6 +2782,14 @@
                 console.log('💾 データ保存中:', currentTeamCode);
                 
                 // 今選んでいるチームのデータを更新する
+                // 現在の選手の練習データを playerPracticeData に保存
+                if (myPlayerId) {
+                    playerPracticeData[myPlayerId] = {
+                        records: practiceRecords,
+                        profile: userProfile
+                    };
+                }
+                
                 allTeamsData[currentTeamCode] = {
                     personalGames: personalGames,
                     teamGames: teamGames,
@@ -2749,8 +2797,7 @@
                     myPlayerId: myPlayerId,
                     teamInfo: teamData,
                     draftTeamGame: draftTeamGame,
-                    practiceRecords: practiceRecords,
-                    userProfile: userProfile,
+                    playerPracticeData: playerPracticeData,  // ← 変更
                     lastModified: new Date().toISOString()
                 };
                 
@@ -6007,22 +6054,82 @@ if (teamData) {
         }
         
         function changeMyPlayer() {
+            // 現在の選手の練習データを保存
+            if (myPlayerId) {
+                playerPracticeData[myPlayerId] = {
+                    records: practiceRecords,
+                    profile: userProfile
+                };
+            }
+            
+            // 新しい選手を選択
             myPlayerId = document.getElementById('myPlayerSelect').value || null;
+            
+            // 新しい選手の練習データを読み込む
+            loadPlayerPracticeData(myPlayerId);
+            
             saveData();
             displayGames();
             displayRankings();
             updateCharts();
             
-            updatePlayerBanners();  // ← 追加
+            updatePlayerBanners();
             
             if (myPlayerId) {
                 const p = players.find(function(pl) {
                     return pl.id === myPlayerId;
                 });
-                alert('✅ 個人モード表示を「' + p.name + ' #' + p.number + '」に設定しました\n\n履歴・ランキング・グラフが更新されました!');
+                alert('✅ 個人モード表示を「' + p.name + ' #' + p.number + '」に設定しました\n\n履歴・ランキング・グラフ・練習記録が更新されました!');
             }
         }
 
+        // ★★★ ここから新しい関数を追加 ★★★
+        function loadPlayerPracticeData(playerId) {
+            // 選手が選択されていない場合
+            if (!playerId) {
+                practiceRecords = [];
+                userProfile = {
+                    totalXP: 0,
+                    level: 1,
+                    currentStreak: 0,
+                    longestStreak: 0,
+                    lastPracticeDate: null
+                };
+                return;
+            }
+            
+            // その選手のデータがあれば取得
+            if (playerPracticeData[playerId]) {
+                practiceRecords = playerPracticeData[playerId].records || [];
+                userProfile = playerPracticeData[playerId].profile || {
+                    totalXP: 0,
+                    level: 1,
+                    currentStreak: 0,
+                    longestStreak: 0,
+                    lastPracticeDate: null
+                };
+            } else {
+                // その選手のデータがなければ初期化
+                practiceRecords = [];
+                userProfile = {
+                    totalXP: 0,
+                    level: 1,
+                    currentStreak: 0,
+                    longestStreak: 0,
+                    lastPracticeDate: null
+                };
+            }
+            
+            // 練習タブが表示されている場合は表示を更新
+            if (document.getElementById('practiceTab').classList.contains('active')) {
+                displayPracticeHistory();
+                updateStreakDisplay();
+                displayPracticeCalendar();
+                updateLevelDisplay();
+            }
+        }
+        // ★★★ ここまで新しい関数 ★★★
+       
         function updatePlayerBanners() {
             const banners = [
                 { banner: 'inputPlayerBanner', name: 'inputPlayerName' },
