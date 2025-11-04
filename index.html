@@ -5244,6 +5244,7 @@ if (result.players) {
                 displayPracticeHistory();
                 updateStreakDisplay();
                 displayPracticeCalendar();
+                updateLevelDisplay();
             }
         }
 
@@ -7069,7 +7070,7 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
                 // その日に練習記録があるかチェック
                 const hasPractice = practiceRecords.some(function(p) {
                         // 選択中の選手の練習記録のみをチェック
-                    const isMyRecord = !p.playerId || p.playerId === myPlayerId;
+                    const isMyRecord = p.playerId === myPlayerId;
                     return p.date === dateStr && isMyRecord;
                 });
 
