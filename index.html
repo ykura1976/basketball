@@ -2840,16 +2840,23 @@
                 myPlayerId = data.myPlayerId || null;
                 teamData = data.teamInfo || null;
                 draftTeamGame = data.draftTeamGame || null;
-
-                // 練習記録とユーザープロファイルも読み込む
-                practiceRecords = data.practiceRecords || [];
-                userProfile = data.userProfile || {
-                    totalXP: 0,
-                    level: 1,
-                    currentStreak: 0,
-                    longestStreak: 0,
-                    lastPracticeDate: null
-                };
+            
+                // ★★★ 選手ごとの練習データを読み込む ★★★
+                playerPracticeData = data.playerPracticeData || {};
+                
+                // 現在の選手の練習データを読み込む
+                if (myPlayerId) {
+                    loadPlayerPracticeData(myPlayerId);
+                } else {
+                    practiceRecords = [];
+                    userProfile = {
+                        totalXP: 0,
+                        level: 1,
+                        currentStreak: 0,
+                        longestStreak: 0,
+                        lastPracticeDate: null
+                    };
+                }
                 
                 console.log('✅ チームデータ読み込み完了');
                 console.log('  選手数:', players.length);
