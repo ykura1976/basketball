@@ -7072,12 +7072,6 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
                     return p.date === dateStr && isMyRecord;
                 });
 
-                // その日に練習記録があるかチェック(選択中の選手のみ)
-                const hasPractice = practiceRecords.some(function(p) {
-                    const isMyRecord = !p.playerId || p.playerId === myPlayerId;
-                    return p.date === dateStr && isMyRecord;
-                });
-                
                 // 曜日
                 const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
                 const dayName = dayNames[date.getDay()];
