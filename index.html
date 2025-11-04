@@ -1905,6 +1905,23 @@
                 </div>
                 
                 <!-- ==================== Week 7-8: レベル・XP表示エリア 追加終了 ==================== -->
+                <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 15px;">🔄 練習データ同期</h3>
+                    <p style="margin-bottom: 15px; font-size: 0.9em; opacity: 0.9;">
+                        練習記録を全デバイスで共有できます
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button class="primary-btn" style="background: white; color: #667eea;" onclick="loadPracticeDataFromServer()">
+                            📥 サーバーから読み込み
+                        </button>
+                        <button class="primary-btn" style="background: white; color: #667eea;" onclick="syncAllPracticeData()">
+                            📤 サーバーに送信
+                        </button>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 0.8em; opacity: 0.8;">
+                        ※ チームに参加している場合のみ有効
+                    </p>
+                </div>
                 
                 <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
@@ -2760,6 +2777,13 @@
                 
             } catch (e) {
                 console.error('データ読み込みエラー:', e);
+            }
+            
+            // 🆕 チームに参加している場合、自動的にサーバーから読み込む
+            if (teamData && teamData.code) {
+                setTimeout(function() {
+                    loadPracticeDataFromServer();
+                }, 1000);
             }
         }
         
@@ -6720,6 +6744,11 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             
             // 10. データを保存
             saveData();
+
+            // 🆕 10.5. サーバーにも保存（バックグラウンドで実行）
+            if (teamData && teamData.code) {
+                syncPracticeRecordToServer(practice);
+            }
             
             // 11. 成功メッセージ(ストリーク情報も表示)
             let message = '✅ 練習記録を保存しました!\n';
@@ -6826,7 +6855,181 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             
             listEl.innerHTML = html;
         }
+
+        // ========== 🆕 練習記録同期機能 ==========
+        
+        /**
+         * 練習記録を1件サーバーに保存
+         */
+        async function syncPracticeRecordToServer(practice) {
+            if (!teamData || !teamData.code) {
+                console.log('⚠️ チームに参加していないため、練習記録はローカルのみに保存されます');
+                return;
+            }
             
+            try {
+                showSyncIndicator('syncing', '練習記録を同期中...');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'text/plain'},
+                    body: JSON.stringify({
+                        action: 'savePracticeRecord',
+                        teamCode: teamData.code,
+                        practice: practice
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('✅ 練習記録をサーバーに保存しました:', practice.id);
+                    showSyncIndicator('success', '練習記録を同期しました');
+                } else {
+                    console.error('❌ サーバー保存失敗:', result.error);
+                    showSyncIndicator('error', '同期に失敗しました');
+                }
+                
+            } catch (error) {
+                console.error('❌ 練習記録同期エラー:', error);
+                showSyncIndicator('error', '同期に失敗しました');
+            }
+        }
+        
+        /**
+         * すべての練習データをサーバーに同期
+         */
+        async function syncAllPracticeData() {
+            if (!teamData || !teamData.code) {
+                alert('⚠️ チームに参加していません');
+                return;
+            }
+            
+            try {
+                showSyncIndicator('syncing', '全練習データを同期中...\nしばらくお待ちください');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'text/plain'},
+                    body: JSON.stringify({
+                        action: 'syncPracticeData',
+                        teamCode: teamData.code,
+                        playerPracticeData: playerPracticeData
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('✅ 練習データ同期完了:', result.addedCount + '件追加');
+                    showSyncIndicator('success', result.message);
+                    
+                    // 同期後、サーバーから最新データを読み込む
+                    await loadPracticeDataFromServer();
+                } else {
+                    console.error('❌ 同期失敗:', result.error);
+                    showSyncIndicator('error', '同期に失敗しました');
+                    alert('❌ 同期に失敗しました\n\n' + result.error);
+                }
+                
+            } catch (error) {
+                console.error('❌ 練習データ同期エラー:', error);
+                showSyncIndicator('error', '同期に失敗しました');
+                alert('❌ エラーが発生しました\n\n' + error.message);
+            }
+        }
+        
+        /**
+         * サーバーから練習データを読み込む
+         */
+        async function loadPracticeDataFromServer() {
+            if (!teamData || !teamData.code) {
+                console.log('⚠️ チームに参加していないため、ローカルデータのみ表示します');
+                return;
+            }
+            
+            try {
+                showSyncIndicator('syncing', '練習データを読み込み中...');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'text/plain'},
+                    body: JSON.stringify({
+                        action: 'getPracticeData',
+                        teamCode: teamData.code
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.playerPracticeData) {
+                    // サーバーのデータをマージ
+                    playerPracticeData = mergePracticeData(playerPracticeData, result.playerPracticeData);
+                    
+                    // 現在の選手のデータを反映
+                    if (myPlayerId && playerPracticeData[myPlayerId]) {
+                        practiceRecords = playerPracticeData[myPlayerId].records || [];
+                        userProfile = playerPracticeData[myPlayerId].profile || {
+                            totalXP: 0,
+                            level: 1,
+                            currentStreak: 0,
+                            longestStreak: 0,
+                            lastPracticeDate: null
+                        };
+                    }
+                    
+                    // ローカルに保存
+                    saveData();
+                    
+                    // 画面を更新
+                    displayPracticeHistory();
+                    updateStreakDisplay();
+                    displayPracticeCalendar();
+                    
+                    console.log('✅ 練習データ読み込み完了');
+                    showSyncIndicator('success', '練習データを読み込みました');
+                } else {
+                    console.log('ℹ️ サーバーに練習データがありません');
+                    showSyncIndicator('success', '同期完了（新しいデータなし）');
+                }
+                
+            } catch (error) {
+                console.error('❌ 練習データ読み込みエラー:', error);
+                showSyncIndicator('error', '読み込みに失敗しました');
+            }
+        }
+        
+        /**
+         * 練習データをマージ（重複を避ける）
+         */
+        function mergePracticeData(local, server) {
+            const merged = JSON.parse(JSON.stringify(local)); // ディープコピー
+            
+            for (const playerId in server) {
+                if (!merged[playerId]) {
+                    // ローカルにないデータはそのまま追加
+                    merged[playerId] = server[playerId];
+                } else {
+                    // 既存の記録IDを取得
+                    const existingIds = new Set();
+                    merged[playerId].records.forEach(function(r) {
+                        existingIds.add(r.id);
+                    });
+                    
+                    // サーバーの記録で、ローカルにないものだけ追加
+                    server[playerId].records.forEach(function(r) {
+                        if (!existingIds.has(r.id)) {
+                            merged[playerId].records.push(r);
+                        }
+                    });
+                    
+                    // プロフィールはサーバーのものを優先（最新のXP、ストリークなど）
+                    merged[playerId].profile = server[playerId].profile;
+                }
+            }
+            
+            return merged;
+        }
 
         // 【関数5】ストリークを計算する関数
         function calculateStreak(practiceDate) {
