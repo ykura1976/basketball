@@ -6598,7 +6598,13 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         function displayPracticeHistory() {
             const listEl = document.getElementById('practiceHistoryList');
             
-            const myPractices = practiceRecords;
+            // 選択されている選手の練習記録だけをフィルタリング
+            // 注意: 選手IDが一致する記録のみを表示(古い記録は表示されない)
+            const myPractices = myPlayerId 
+                ? practiceRecords.filter(function(p) {
+                    return p.playerId === myPlayerId;
+                  })
+                : [];
             
             if (myPractices.length === 0) {
                 listEl.innerHTML = '<p style="color: #999; text-align: center;">まだ練習記録がありません</p>';
