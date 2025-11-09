@@ -3845,40 +3845,14 @@
                 '<div><strong>💾 保存日時:</strong> ' + new Date(draftTeamGame.savedAt).toLocaleString('ja-JP') + '</div>' +
                 '</div>' +
                 '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">' +
-                '<button id="resumeDraftBtn" class="primary-btn" style="background: #2ecc71;">▶️ 続きから記録</button>' +
-                '<button id="deleteDraftBtn" class="primary-btn" style="background: #e74c3c;">🗑️ 削除して新規作成</button>' +
+                '<button class="primary-btn" style="background: #2ecc71;" onclick="resumeDraftGame()">▶️ 続きから記録</button>' +
+                '<button class="primary-btn" style="background: #e74c3c;" onclick="deleteDraftGame()">🗑️ 削除して新規作成</button>' +
                 '</div>';
             
             // タブの最初に挿入
             teamRecordTab.insertBefore(alertBox, teamRecordTab.firstChild);
-            
-            // 🆕 イベントリスナーを追加（setTimeoutで確実に登録）
-            setTimeout(function() {
-                const resumeBtn = document.getElementById('resumeDraftBtn');
-                const deleteBtn = document.getElementById('deleteDraftBtn');
-                
-                if (resumeBtn) {
-                    resumeBtn.addEventListener('click', function() {
-                        console.log('続きから記録ボタンが押されました');
-                        resumeDraftGame();
-                    });
-                    console.log('resumeDraftBtn イベントリスナー登録完了');
-                } else {
-                    console.error('resumeDraftBtn が見つかりません');
-                }
-                
-                if (deleteBtn) {
-                    deleteBtn.addEventListener('click', function() {
-                        console.log('削除して新規作成ボタンが押されました');
-                        deleteDraftGame();
-                    });
-                    console.log('deleteDraftBtn イベントリスナー登録完了');
-                } else {
-                    console.error('deleteDraftBtn が見つかりません');
-                }
-            }, 100);
         }
-        
+
         // ========== 途中保存データを削除して新規作成 ==========
         function deleteDraftGame() {
             if (!confirm('⚠️ 途中保存されたデータを削除します\n\n削除すると復元できません。\n本当によろしいですか?')) {
