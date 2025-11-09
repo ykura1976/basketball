@@ -4534,9 +4534,24 @@
         }
 
         function saveGameEdit() {
-            if (currentEditingGameIndex === null) return;
+            console.log('🔵 saveGameEdit開始');
+            console.log('currentEditingGameIndex:', currentEditingGameIndex);
             
+            if (currentEditingGameIndex === null) {
+                console.error('❌ currentEditingGameIndexがnullです');
+                alert('エラー: 編集中の試合が特定できません');
+                return;
+            }
+            
+            console.log('teamGames配列:', teamGames);
             const game = teamGames[currentEditingGameIndex];
+            console.log('編集対象の試合:', game);
+            
+            if (!game) {
+                console.error('❌ 試合データが見つかりません');
+                alert('エラー: 試合データが見つかりません');
+                return;
+            }
             
             // 試合情報を更新
             game.date = document.getElementById('editGameDate').value;
