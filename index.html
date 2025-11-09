@@ -4585,19 +4585,33 @@
                     return; // この選手はスキップして次へ
                 }
                 
-                stats.twoPointsMade = parseInt(document.getElementById('edit_' + playerId + '_2pm').value) || 0;
-                stats.twoPointsAttempted = parseInt(document.getElementById('edit_' + playerId + '_2pa').value) || 0;
-                stats.threePointsMade = parseInt(document.getElementById('edit_' + playerId + '_3pm').value) || 0;
-                stats.threePointsAttempted = parseInt(document.getElementById('edit_' + playerId + '_3pa').value) || 0;
-                stats.freeThrowsMade = parseInt(document.getElementById('edit_' + playerId + '_ftm').value) || 0;
-                stats.freeThrowsAttempted = parseInt(document.getElementById('edit_' + playerId + '_fta').value) || 0;
-                stats.offensiveRebounds = parseInt(document.getElementById('edit_' + playerId + '_oreb').value) || 0;
-                stats.defensiveRebounds = parseInt(document.getElementById('edit_' + playerId + '_dreb').value) || 0;
-                stats.assists = parseInt(document.getElementById('edit_' + playerId + '_ast').value) || 0;
-                stats.steals = parseInt(document.getElementById('edit_' + playerId + '_stl').value) || 0;
-                stats.blocks = parseInt(document.getElementById('edit_' + playerId + '_blk').value) || 0;
-                stats.turnovers = parseInt(document.getElementById('edit_' + playerId + '_to').value) || 0;
-                stats.fouls = parseInt(document.getElementById('edit_' + playerId + '_foul').value) || 0;
+                // すべての要素を取得してから値を設定
+                const elem2pa = document.getElementById('edit_' + playerId + '_2pa');
+                const elem3pm = document.getElementById('edit_' + playerId + '_3pm');
+                const elem3pa = document.getElementById('edit_' + playerId + '_3pa');
+                const elemFtm = document.getElementById('edit_' + playerId + '_ftm');
+                const elemFta = document.getElementById('edit_' + playerId + '_fta');
+                const elemOreb = document.getElementById('edit_' + playerId + '_oreb');
+                const elemDreb = document.getElementById('edit_' + playerId + '_dreb');
+                const elemAst = document.getElementById('edit_' + playerId + '_ast');
+                const elemStl = document.getElementById('edit_' + playerId + '_stl');
+                const elemBlk = document.getElementById('edit_' + playerId + '_blk');
+                const elemTo = document.getElementById('edit_' + playerId + '_to');
+                const elemFoul = document.getElementById('edit_' + playerId + '_foul');
+                
+                stats.twoPointsMade = elem2pm ? (parseInt(elem2pm.value) || 0) : 0;
+                stats.twoPointsAttempted = elem2pa ? (parseInt(elem2pa.value) || 0) : 0;
+                stats.threePointsMade = elem3pm ? (parseInt(elem3pm.value) || 0) : 0;
+                stats.threePointsAttempted = elem3pa ? (parseInt(elem3pa.value) || 0) : 0;
+                stats.freeThrowsMade = elemFtm ? (parseInt(elemFtm.value) || 0) : 0;
+                stats.freeThrowsAttempted = elemFta ? (parseInt(elemFta.value) || 0) : 0;
+                stats.offensiveRebounds = elemOreb ? (parseInt(elemOreb.value) || 0) : 0;
+                stats.defensiveRebounds = elemDreb ? (parseInt(elemDreb.value) || 0) : 0;
+                stats.assists = elemAst ? (parseInt(elemAst.value) || 0) : 0;
+                stats.steals = elemStl ? (parseInt(elemStl.value) || 0) : 0;
+                stats.blocks = elemBlk ? (parseInt(elemBlk.value) || 0) : 0;
+                stats.turnovers = elemTo ? (parseInt(elemTo.value) || 0) : 0;
+                stats.fouls = elemFoul ? (parseInt(elemFoul.value) || 0) : 0;
             });
             
             // 個人データも更新
