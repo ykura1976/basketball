@@ -4575,16 +4575,14 @@
             game.scores.opp.q4 = parseInt(document.getElementById('editOppQ4').value) || 0;
             
             // 各選手の統計を更新
-            console.log('🔵 選手統計を更新開始');
-            console.log('game.playerStats:', game.playerStats);
-            
             Object.keys(game.playerStats).forEach(function(playerId) {
                 const stats = game.playerStats[playerId];
-                console.log('選手ID:', playerId);
                 
-                const elem = document.getElementById('edit_' + playerId + '_2pm');
-                if (!elem) {
-                    console.error('❌ 要素が見つかりません: edit_' + playerId + '_2pm');
+                // 要素が存在するかチェック（削除された選手などの場合はスキップ）
+                const elem2pm = document.getElementById('edit_' + playerId + '_2pm');
+                if (!elem2pm) {
+                    console.warn('⚠️ 選手の入力欄が見つかりません。スキップします: ' + playerId);
+                    return; // この選手はスキップして次へ
                 }
                 
                 stats.twoPointsMade = parseInt(document.getElementById('edit_' + playerId + '_2pm').value) || 0;
