@@ -4514,9 +4514,28 @@
             const container = document.getElementById('editPlayersList');
             let html = '';
             
+            // デバッグ用: データの確認
+            console.log('=== displayEditPlayerStats デバッグ ===');
+            console.log('game:', game);
+            console.log('game.playerStats:', game.playerStats);
+            console.log('players:', players);
+            
+            // playerStatsが存在しない場合のエラーメッセージ
+            if (!game.playerStats || Object.keys(game.playerStats).length === 0) {
+                html = '<div style="padding: 20px; text-align: center; color: #666;">';
+                html += '<p>⚠️ この試合には選手データがありません</p>';
+                html += '<p style="font-size: 0.9em; margin-top: 10px;">試合記録モードで記録された試合のみ編集できます</p>';
+                html += '</div>';
+                container.innerHTML = html;
+                return;
+            }
+            
             Object.keys(game.playerStats).forEach(function(playerId) {
                 const player = players.find(function(p) { return p.id === playerId; });
-                if (!player) return;
+                if (!player) {
+                    console.log('選手が見つかりません: playerId =', playerId);
+                    return;
+                }
                 
                 const stats = game.playerStats[playerId];
                 
@@ -4524,24 +4543,32 @@
                 html += '<div class="player-header">#' + player.number + ' ' + player.name + '</div>';
                 html += '<div class="stat-edit-grid">';
                 
-                html += '<div class="stat-edit-item"><label>2P成功</label><input type="number" min="0" id="edit_' + playerId + '_2pm" value="' + stats.twoPointsMade + '"></div>';
-                html += '<div class="stat-edit-item"><label>2P試投</label><input type="number" min="0" id="edit_' + playerId + '_2pa" value="' + stats.twoPointsAttempted + '"></div>';
-                html += '<div class="stat-edit-item"><label>3P成功</label><input type="number" min="0" id="edit_' + playerId + '_3pm" value="' + stats.threePointsMade + '"></div>';
-                html += '<div class="stat-edit-item"><label>3P試投</label><input type="number" min="0" id="edit_' + playerId + '_3pa" value="' + stats.threePointsAttempted + '"></div>';
-                html += '<div class="stat-edit-item"><label>FT成功</label><input type="number" min="0" id="edit_' + playerId + '_ftm" value="' + stats.freeThrowsMade + '"></div>';
-                html += '<div class="stat-edit-item"><label>FT試投</label><input type="number" min="0" id="edit_' + playerId + '_fta" value="' + stats.freeThrowsAttempted + '"></div>';
-                html += '<div class="stat-edit-item"><label>オフェンスRB</label><input type="number" min="0" id="edit_' + playerId + '_oreb" value="' + stats.offensiveRebounds + '"></div>';
-                html += '<div class="stat-edit-item"><label>ディフェンスRB</label><input type="number" min="0" id="edit_' + playerId + '_dreb" value="' + stats.defensiveRebounds + '"></div>';
-                html += '<div class="stat-edit-item"><label>アシスト</label><input type="number" min="0" id="edit_' + playerId + '_ast" value="' + stats.assists + '"></div>';
-                html += '<div class="stat-edit-item"><label>スティール</label><input type="number" min="0" id="edit_' + playerId + '_stl" value="' + stats.steals + '"></div>';
-                html += '<div class="stat-edit-item"><label>ブロック</label><input type="number" min="0" id="edit_' + playerId + '_blk" value="' + stats.blocks + '"></div>';
-                html += '<div class="stat-edit-item"><label>TO</label><input type="number" min="0" id="edit_' + playerId + '_to" value="' + stats.turnovers + '"></div>';
-                html += '<div class="stat-edit-item"><label>ファウル</label><input type="number" min="0" id="edit_' + playerId + '_foul" value="' + stats.fouls + '"></div>';
+                html += '<div class="stat-edit-item"><label>2P成功</label><input type="number" min="0" id="edit_' + playerId + '_2pm" value="' + (stats.twoPointsMade || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>2P試投</label><input type="number" min="0" id="edit_' + playerId + '_2pa" value="' + (stats.twoPointsAttempted || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>3P成功</label><input type="number" min="0" id="edit_' + playerId + '_3pm" value="' + (stats.threePointsMade || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>3P試投</label><input type="number" min="0" id="edit_' + playerId + '_3pa" value="' + (stats.threePointsAttempted || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>FT成功</label><input type="number" min="0" id="edit_' + playerId + '_ftm" value="' + (stats.freeThrowsMade || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>FT試投</label><input type="number" min="0" id="edit_' + playerId + '_fta" value="' + (stats.freeThrowsAttempted || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>オフェンスRB</label><input type="number" min="0" id="edit_' + playerId + '_oreb" value="' + (stats.offensiveRebounds || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>ディフェンスRB</label><input type="number" min="0" id="edit_' + playerId + '_dreb" value="' + (stats.defensiveRebounds || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>アシスト</label><input type="number" min="0" id="edit_' + playerId + '_ast" value="' + (stats.assists || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>スティール</label><input type="number" min="0" id="edit_' + playerId + '_stl" value="' + (stats.steals || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>ブロック</label><input type="number" min="0" id="edit_' + playerId + '_blk" value="' + (stats.blocks || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>TO</label><input type="number" min="0" id="edit_' + playerId + '_to" value="' + (stats.turnovers || 0) + '"></div>';
+                html += '<div class="stat-edit-item"><label>ファウル</label><input type="number" min="0" id="edit_' + playerId + '_foul" value="' + (stats.fouls || 0) + '"></div>';
                 
                 html += '</div></div>';
             });
             
+            // データが何も表示されなかった場合
+            if (html === '') {
+                html = '<div style="padding: 20px; text-align: center; color: #666;">';
+                html += '<p>⚠️ 選手データを表示できませんでした</p>';
+                html += '</div>';
+            }
+            
             container.innerHTML = html;
+            console.log('表示したHTML:', html);
         }
 
         function saveGameEdit() {
