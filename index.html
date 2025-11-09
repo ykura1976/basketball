@@ -3845,14 +3845,24 @@
                 '<div><strong>💾 保存日時:</strong> ' + new Date(draftTeamGame.savedAt).toLocaleString('ja-JP') + '</div>' +
                 '</div>' +
                 '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">' +
-                '<button class="primary-btn" style="background: #2ecc71;" onclick=\'resumeDraftGame()\'>▶️ 続きから記録</button>' +
-                '<button class="primary-btn" style="background: #2ecc71;" onclick=\'deleteDraftGame()\'>🗑️ 削除して新規作成</button>' +
+                '<button id="resumeDraftBtn" class="primary-btn" style="background: #2ecc71;">▶️ 続きから記録</button>' +
+                '<button id="deleteDraftBtn" class="primary-btn" style="background: #e74c3c;">🗑️ 削除して新規作成</button>' +
                 '</div>';
             
             // タブの最初に挿入
             teamRecordTab.insertBefore(alertBox, teamRecordTab.firstChild);
+            
+            // 🆕 ボタンにイベントリスナーを追加
+            document.getElementById('resumeDraftBtn').addEventListener('click', function() {
+                console.log('続きから記録ボタンが押されました');
+                resumeDraftGame();
+            });
+            
+            document.getElementById('deleteDraftBtn').addEventListener('click', function() {
+                console.log('削除して新規作成ボタンが押されました');
+                deleteDraftGame();
+            });
         }
-
         // ========== 途中保存データを削除して新規作成 ==========
         function deleteDraftGame() {
             if (!confirm('⚠️ 途中保存されたデータを削除します\n\n削除すると復元できません。\n本当によろしいですか?')) {
