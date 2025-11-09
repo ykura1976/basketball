@@ -4480,6 +4480,16 @@
                 document.getElementById('editOppQ3').value = game.scores.opp.q3 || 0;
                 document.getElementById('editOurQ4').value = game.scores.our.q4 || 0;
                 document.getElementById('editOppQ4').value = game.scores.opp.q4 || 0;
+            } else {
+                // 古いデータでscoresがない場合は0でクリア
+                document.getElementById('editOurQ1').value = 0;
+                document.getElementById('editOppQ1').value = 0;
+                document.getElementById('editOurQ2').value = 0;
+                document.getElementById('editOppQ2').value = 0;
+                document.getElementById('editOurQ3').value = 0;
+                document.getElementById('editOppQ3').value = 0;
+                document.getElementById('editOurQ4').value = 0;
+                document.getElementById('editOppQ4').value = 0;
             }
             
             // 選手統計を表示
