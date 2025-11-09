@@ -3935,6 +3935,11 @@
                     scoreHtml = '<div style="font-size: 1.5em; font-weight: bold; margin-top: 5px;">' +
                         ourTotal + ' - ' + oppTotal + ' (' + outcome + ')' +
                         '</div>';
+                } else {
+                    // 古いデータでscoresがない場合の互換性処理
+                    scoreHtml = '<div style="font-size: 1em; color: #999; margin-top: 5px; font-style: italic;">' +
+                        '(スコア情報なし)' +
+                        '</div>';
                 }
                 
                 html += '<div class="game-history-item" onclick="toggleGameDetail(' + originalIndex + ')">' +
