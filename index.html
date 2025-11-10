@@ -2626,6 +2626,85 @@
         let charts = {};
         let allTeamsData = {};  // 全チームのデータを保存する箱
         let currentTeamCode = null;  // 今選んでいるチームのコード
+
+        // 🆕 デバッグ用: グローバルからアクセスできるようにする
+        window.debugTeamGames = function() {
+            console.log('=== teamGames (試合データ) ===');
+            console.log('配列の長さ:', teamGames.length);
+            console.log('内容:', teamGames);
+            teamGames.forEach(function(game, index) {
+                console.log(`試合${index + 1}:`, game.date, 'vs', game.opponent);
+                console.log('  スコア:', game.scores);
+            });
+            return teamGames;
+        };
+        
+        window.debugTeamData = function() {
+            console.log('=== teamData (チーム情報) ===');
+            console.log(teamData);
+            return teamData;
+        };
+        
+        window.debugLocalStorage = function() {
+            console.log('=== localStorage ===');
+            console.log('teamGames:', localStorage.getItem('teamGames'));
+            console.log('teamData:', localStorage.getItem('teamData'));
+            return {
+                teamGames: localStorage.getItem('teamGames'),
+                teamData: localStorage.getItem('teamData')
+            };
+        };
+        
+        window.debugAll = function() {
+            console.log('========================================');
+            console.log('🔍 デバッグ情報');
+            console.log('========================================');
+            
+            console.log('\n1️⃣ メモリ上のデータ:');
+            console.log('  teamGames:', teamGames);
+            console.log('  teamData:', teamData);
+            console.log('  players:', players);
+            
+            console.log('\n2️⃣ localStorage:');
+            console.log('  teamGames:', localStorage.getItem('teamGames'));
+            console.log('  teamData:', localStorage.getItem('teamData'));
+            
+            console.log('\n3️⃣ 関数の存在確認:');
+            console.log('  saveGameEdit:', typeof saveGameEdit);
+            console.log('  syncGamesOnly:', typeof syncGamesOnly);
+            console.log('  saveData:', typeof saveData);
+            
+            console.log('========================================');
+            
+            return {
+                teamGames: teamGames,
+                teamData: teamData,
+                players: players,
+                localStorage: {
+                    teamGames: localStorage.getItem('teamGames'),
+                    teamData: localStorage.getItem('teamData')
+                }
+            };
+        };
+        
+        // 🆕 手動で同期を実行する関数
+        window.manualSync = async function() {
+            console.log('🔄 手動同期を開始...');
+            
+            if (!teamData) {
+                console.error('❌ teamDataがありません。チームに参加していますか?');
+                return;
+            }
+            
+            console.log('📤 teamGamesを送信します:', teamGames);
+            
+            try {
+                await syncGamesOnly();
+                console.log('✅ 同期完了!');
+            } catch (e) {
+                console.error('❌ 同期エラー:', e);
+            }
+        };
         
         let stats = {
             twoPointsMade: 0, twoPointsAttempted: 0,
