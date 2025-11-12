@@ -2406,7 +2406,7 @@
                     <input type="text" id="editVideoUrl4" placeholder="https://youtube.com/watch?v=...">
                 </div>
                 <div class="input-group">
-                    <label>動画5</label>
+                    <label>試合ダイジェスト</label>
                     <input type="text" id="editVideoUrl5" placeholder="https://youtube.com/watch?v=...">
                 </div>
                 <p style="font-size: 0.9em; color: #666; margin-top: 10px;">※空欄のままでもOK</p>
@@ -4150,7 +4150,11 @@
                 }
                 
                 html += '<div style="margin-bottom: 15px;">';
-                html += '<p style="font-weight: bold; margin-bottom: 5px;">動画 ' + (index + 1) + '</p>';
+                // 元の配列での位置を確認
+                const originalIndex = game.videoUrls.indexOf(url);
+                // 5番目(インデックス4)の動画は「試合ダイジェスト」、それ以外は「動画1」「動画2」...
+                const label = (originalIndex === 4) ? '試合ダイジェスト' : '動画 ' + (index + 1);
+                html += '<p style="font-weight: bold; margin-bottom: 5px;">' + label + '</p>';
                 html += '<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">';
                 html += '<iframe src="' + embedUrl + '" ';
                 html += 'style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" ';
