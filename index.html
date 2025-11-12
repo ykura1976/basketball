@@ -2386,6 +2386,32 @@
                 </div>
             </div>
 
+            <!-- 🆕 動画URL入力セクション(新規追加) -->
+            <div class="edit-section">
+                <h3>📹 動画URL</h3>
+                <div class="input-group">
+                    <label>動画1</label>
+                    <input type="text" id="editVideoUrl1" placeholder="https://youtube.com/watch?v=...">
+                </div>
+                <div class="input-group">
+                    <label>動画2</label>
+                    <input type="text" id="editVideoUrl2" placeholder="https://youtube.com/watch?v=...">
+                </div>
+                <div class="input-group">
+                    <label>動画3</label>
+                    <input type="text" id="editVideoUrl3" placeholder="https://youtube.com/watch?v=...">
+                </div>
+                <div class="input-group">
+                    <label>動画4</label>
+                    <input type="text" id="editVideoUrl4" placeholder="https://youtube.com/watch?v=...">
+                </div>
+                <div class="input-group">
+                    <label>動画5</label>
+                    <input type="text" id="editVideoUrl5" placeholder="https://youtube.com/watch?v=...">
+                </div>
+                <p style="font-size: 0.9em; color: #666; margin-top: 10px;">※空欄のままでもOK</p>
+            </div>
+            
             <div class="edit-section" id="editPlayersSection">
                 <h3>👥 選手統計</h3>
                 <div id="editPlayersList"></div>
@@ -4028,6 +4054,7 @@
                     '</div>' +
                     '<div class="game-detail" id="gameDetail' + originalIndex + '">' +
                     generateScoreDetail(game) +
+                    generateVideoPlayers(game) +
                     '<button class="edit-game-btn" onclick="event.stopPropagation(); openEditGameModal(' + originalIndex + ')">📝 試合記録を編集(管理者のみ)</button>' +
                     generateGameRankings(game) +
                     '</div>';
@@ -4084,6 +4111,56 @@
             }
             html += '</div>';
             
+            return html;
+        }
+
+        // 🆕 動画プレーヤー生成関数(新規追加)
+        function generateVideoPlayers(game) {
+            // 動画URLがない、または空の配列の場合は何も表示しない
+            if (!game.videoUrls || !Array.isArray(game.videoUrls)) {
+                return '';
+            }
+            
+            // 空でないURLだけをフィルタリング
+            const validUrls = game.videoUrls.filter(function(url) {
+                return url && url.trim() !== '';
+            });
+            
+            // 有効なURLがない場合は何も表示しない
+            if (validUrls.length === 0) {
+                return '';
+            }
+            
+            let html = '<div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 10px;">';
+            html += '<h3 style="margin-bottom: 15px;">📹 試合動画</h3>';
+            
+            validUrls.forEach(function(url, index) {
+                // YouTubeのURLをembed形式に変換
+                let embedUrl = url;
+                
+                // youtube.com/watch?v= 形式
+                if (url.includes('youtube.com/watch?v=')) {
+                    const videoId = url.split('v=')[1].split('&')[0];
+                    embedUrl = 'https://www.youtube.com/embed/' + videoId;
+                }
+                // youtu.be/ 形式
+                else if (url.includes('youtu.be/')) {
+                    const videoId = url.split('youtu.be/')[1].split('?')[0];
+                    embedUrl = 'https://www.youtube.com/embed/' + videoId;
+                }
+                
+                html += '<div style="margin-bottom: 15px;">';
+                html += '<p style="font-weight: bold; margin-bottom: 5px;">動画 ' + (index + 1) + '</p>';
+                html += '<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">';
+                html += '<iframe src="' + embedUrl + '" ';
+                html += 'style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" ';
+                html += 'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ';
+                html += 'allowfullscreen></iframe>';
+                html += '</div>';
+                html += '</div>';
+            });
+            
+            html += '</div>';
             return html;
         }
 
@@ -4570,6 +4647,22 @@
                 document.getElementById('editOurQ4').value = 0;
                 document.getElementById('editOppQ4').value = 0;
             }
+
+            // 🆕 動画URLを入力欄に設定(新規追加)
+            if (game.videoUrls && Array.isArray(game.videoUrls)) {
+                document.getElementById('editVideoUrl1').value = game.videoUrls[0] || '';
+                document.getElementById('editVideoUrl2').value = game.videoUrls[1] || '';
+                document.getElementById('editVideoUrl3').value = game.videoUrls[2] || '';
+                document.getElementById('editVideoUrl4').value = game.videoUrls[3] || '';
+                document.getElementById('editVideoUrl5').value = game.videoUrls[4] || '';
+            } else {
+                // 古いデータでvideoUrlsがない場合は空でクリア
+                document.getElementById('editVideoUrl1').value = '';
+                document.getElementById('editVideoUrl2').value = '';
+                document.getElementById('editVideoUrl3').value = '';
+                document.getElementById('editVideoUrl4').value = '';
+                document.getElementById('editVideoUrl5').value = '';
+            }
             
             // 選手統計を表示
             displayEditPlayerStats(game);
@@ -4652,6 +4745,18 @@
             game.scores.opp.q3 = parseInt(document.getElementById('editOppQ3').value) || 0;
             game.scores.our.q4 = parseInt(document.getElementById('editOurQ4').value) || 0;
             game.scores.opp.q4 = parseInt(document.getElementById('editOppQ4').value) || 0;
+
+　　　　　　 // 🆕 動画URLを更新(新規追加)
+            const videoUrl1 = document.getElementById('editVideoUrl1').value.trim();
+            const videoUrl2 = document.getElementById('editVideoUrl2').value.trim();
+            const videoUrl3 = document.getElementById('editVideoUrl3').value.trim();
+            const videoUrl4 = document.getElementById('editVideoUrl4').value.trim();
+            const videoUrl5 = document.getElementById('editVideoUrl5').value.trim();
+            
+            // 配列として保存(空文字列も含める)
+            game.videoUrls = [videoUrl1, videoUrl2, videoUrl3, videoUrl4, videoUrl5];
+            
+            console.log('💾 動画URL保存:', game.videoUrls);　
             
             // 各選手の統計を更新
             Object.keys(game.playerStats).forEach(function(playerId) {
