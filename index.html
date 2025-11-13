@@ -7899,6 +7899,11 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             document.getElementById('videoPlayerContainer').innerHTML = iframe;
             document.getElementById('videoDisplayArea').style.display = 'block';
             document.getElementById('showVideoButtonArea').style.display = 'none';
+
+            // ここから追加
+            // 2分割モードを有効化
+            document.body.classList.add('split-view-mode');
+            // ここまで追加
         }
         
         // 動画を閉じる
@@ -7907,6 +7912,11 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
             document.getElementById('showVideoButtonArea').style.display = 'block';
             // 動画を停止するためにiframeを削除
             document.getElementById('videoPlayerContainer').innerHTML = '';
+
+            // ここから追加
+            // 2分割モードを解除
+            document.body.classList.remove('split-view-mode');
+            // ここまで追加
         }
         
               
