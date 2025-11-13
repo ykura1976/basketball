@@ -7877,8 +7877,10 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
         // YouTube URLからビデオIDを抽出
         function extractYouTubeId(url) {
             const patterns = [
-                /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/,
-                /youtube\.com\/embed\/([^&\s]+)/
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s?]+)/,  // 通常のURL
+                /youtube\.com\/embed\/([^&\s?]+)/,                     // 埋め込みURL
+                /youtube\.com\/live\/([^&\s?]+)/,                      // ライブ配信URL
+                /youtube\.com\/shorts\/([^&\s?]+)/                     // Shorts URL
             ];
             
             for (let pattern of patterns) {
