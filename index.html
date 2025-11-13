@@ -2160,6 +2160,24 @@
                         ※ 後から入力することもできます
                     </div>
                 </div>
+
+                <!-- ここから追加(動画プレイヤーエリア) -->
+                <!-- 動画表示エリア -->
+                <div id="videoDisplayArea" style="display:none; margin-bottom:20px;">
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <h3 style="margin:0;">📺 動画プレイヤー</h3>
+                            <button id="closeSplitViewBtn" onclick="closeSplitView()" 
+                                style="padding:8px 16px; background-color:#e74c3c; color:white; border:none; border-radius:5px; cursor:pointer; font-size:14px;">
+                                ✕ 動画を閉じる
+                            </button>
+                        </div>
+                        <div id="videoPlayerContainer" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; background:#000;">
+                            <!-- YouTubeのiframeがここに挿入される -->
+                        </div>
+                    </div>
+                </div>
+                <!-- ここまで追加(動画プレイヤーエリア) -->
                 
                 <div class="card">
                     <h2 style="margin-bottom: 15px;">ピリオドを選択</h2>
@@ -2252,24 +2270,7 @@
                         <div style="text-align: center; color: #999; font-size: 0.9em;">プレイ履歴がここに表示されます</div>
                     </div>
                 </div>
-
-                <!-- ここから追加(ステップ2) -->
-                <!-- 動画表示エリアと切り替えボタン -->
-                <div id="videoDisplayArea" style="display:none; margin-bottom:20px;">
-                    <div class="card">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <h3 style="margin:0;">📺 動画プレイヤー</h3>
-                            <button id="closeSplitViewBtn" onclick="closeSplitView()" 
-                                style="padding:8px 16px; background-color:#e74c3c; color:white; border:none; border-radius:5px; cursor:pointer; font-size:14px;">
-                                ✕ 動画を閉じる
-                            </button>
-                        </div>
-                        <div id="videoPlayerContainer" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; background:#000;">
-                            <!-- YouTubeのiframeがここに挿入される -->
-                        </div>
-                    </div>
-                </div>
-                                               
+                                                               
                 <div class="card">
                     <h2 style="margin-bottom: 15px;">試合統計</h2>
                     <div id="teamStats"></div>
