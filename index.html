@@ -2144,6 +2144,17 @@
                             oninput="updateVideoButtonVisibility()"
                         />
                     </div>
+                    
+                    <!-- ここから追加 -->
+                    <!-- 動画を表示するボタン -->
+                    <div id="showVideoButtonArea" style="display:none; text-align:center; margin-top:15px;">
+                        <button id="showVideoBtn" onclick="showVideoPlayer()" 
+                            style="padding:12px 24px; font-size:16px; background-color:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                            📺 動画を見ながら記録モード
+                        </button>
+                    </div>
+                    <!-- ここまで追加 -->
+                    
                     <div style="font-size:13px; color:#666; margin-top:10px; line-height:1.6;">
                         💡 ヒント: URLを入力すると、動画を見ながら記録できます<br>
                         ※ 後から入力することもできます
@@ -2258,16 +2269,7 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- 動画を表示するボタン -->
-                <div id="showVideoButtonArea" style="display:none; text-align:center; margin-bottom:20px;">
-                    <button id="showVideoBtn" onclick="showVideoPlayer()" 
-                        style="padding:12px 24px; font-size:16px; background-color:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-                        📺 動画を見ながら記録モード
-                    </button>
-                </div>
-                <!-- ここまで追加(ステップ2) -->
-                
+                                               
                 <div class="card">
                     <h2 style="margin-bottom: 15px;">試合統計</h2>
                     <div id="teamStats"></div>
