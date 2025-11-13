@@ -1584,6 +1584,32 @@
         font-style: italic;
         margin-top: 5px;
     }
+
+    /* ========================================
+           ステップ3: 2分割レイアウト用CSS
+       ======================================== */
+        
+    /* 2分割モード時のコンテナ */
+    .split-view-mode #teamRecording {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 100px);
+        overflow: hidden;
+    }
+        
+    /* 2分割モード時の動画エリア(上半分・固定) */
+    .split-view-mode #videoDisplayArea {
+        flex-shrink: 0;
+        margin-bottom: 10px;
+    }
+        
+    /* 2分割モード時の入力フォームエリア(下半分・スクロール可能) */
+    .split-view-mode #recordingInputArea {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+        
     </style>
 </head>
 <body>
@@ -2178,6 +2204,10 @@
                     </div>
                 </div>
                 <!-- ここまで追加(動画プレイヤーエリア) -->
+
+                <!-- ここから追加(入力フォームエリアの開始) -->
+                <div id="recordingInputArea">
+                <!-- ここまで追加 -->
                 
                 <div class="card">
                     <h2 style="margin-bottom: 15px;">ピリオドを選択</h2>
@@ -2278,6 +2308,9 @@
                     
                 </div>
             </div>
+            <!-- ここから追加(入力フォームエリアの終了) -->
+            </div>
+            <!-- ここまで追加 -->
      </div>
      <div id="teamHistoryTab" style="display: none;">
          <div id="teamGamesList"></div>
