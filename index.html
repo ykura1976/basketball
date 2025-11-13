@@ -7907,9 +7907,8 @@ async function clearServerGameData(adminPassword) {  // ← パラメータ追�
                 return;
             }
             
-            // iframeを作成
             const iframe = `<iframe width="100%" height="100%" 
-                src="https://www.youtube.com/embed/${videoId}" 
+                src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&playsinline=1" 
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowfullscreen
