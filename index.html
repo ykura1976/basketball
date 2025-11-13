@@ -1593,8 +1593,14 @@
     .split-view-mode #teamRecording {
         display: flex;
         flex-direction: column;
-        height: calc(100vh - 100px);
-        overflow: hidden;
+        height: calc(100vh - 120px);
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        padding: 0 20px;
+        max-width: 600px;
+        margin: 0 auto;
     }
         
     /* 2分割モード時の動画エリア(上半分・固定) */
@@ -1608,6 +1614,7 @@
         flex: 1;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        padding-bottom: 20px;
     }
         
     </style>
