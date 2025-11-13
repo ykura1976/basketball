@@ -1586,35 +1586,21 @@
     }
 
     /* ========================================
-           ステップ3: 2分割レイアウト用CSS
+       ステップ3: 2分割レイアウト用CSS
        ======================================== */
-        
-    /* 2分割モード時のコンテナ */
-    .split-view-mode #teamRecording {
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 120px);
-        position: fixed;
-        top: 80px;
-        left: 0;
-        right: 0;
-        padding: 0 20px;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-        
-    /* 2分割モード時の動画エリア(上半分・固定) */
+    
+    /* 2分割モード時: 動画エリアを固定 */
     .split-view-mode #videoDisplayArea {
-        flex-shrink: 0;
-        margin-bottom: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding-top: 10px;
     }
-        
-    /* 2分割モード時の入力フォームエリア(下半分・スクロール可能) */
+    
+    /* 2分割モード時: 入力フォームエリアは通常通りスクロール */
     .split-view-mode #recordingInputArea {
-        flex: 1;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 20px;
+        /* 特別な設定は不要。通常通りスクロール可能 */
     }
         
     </style>
