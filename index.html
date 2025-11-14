@@ -1586,51 +1586,69 @@
     }
 
     /* ========================================
-       ステップ3: 2分割レイアウト用CSS
+       📺 2分割モード（動画+記録フォーム）
        ======================================== */
     
-    /* 2分割モード時: bodyのスクロールを無効化 */
+    /* bodyのスクロールを無効化 */
     body.split-view-mode {
-        overflow: hidden;
+        overflow: hidden !important;
         height: 100vh;
+        position: fixed;
+        width: 100%;
     }
     
-    /* 2分割モード時: teamRecordingをflexコンテナに */
+    /* teamRecordingを画面全体に */
     .split-view-mode #teamRecording {
         display: flex;
         flex-direction: column;
         height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
         padding-bottom: 0;
+        padding-top: 0;
     }
     
-    /* 2分割モード時: URL入力カードを非表示 */
+    /* URL入力カードを非表示 */
     .split-view-mode #videoUrlInputCard {
-        display: none;
+        display: none !important;
     }
     
-    /* 2分割モード時: 動画エリアを固定(上部) */
+    /* 動画エリアを固定(上部40%) */
     .split-view-mode #videoDisplayArea {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        flex-shrink: 0;
+        flex: 0 0 40vh;
+        max-height: 40vh;
+        overflow: hidden;
         margin-bottom: 0;
-        background: white;
+        position: relative;
+        z-index: 100;
+        background: #000;
     }
     
-    /* 動画プレイヤーのサイズを調整 */
+    /* 動画プレイヤーのサイズ（16:9比率を維持） */
     .split-view-mode #videoPlayerContainer {
-        padding-bottom: 40% !important;
+        padding-bottom: 0 !important;
+        height: 100% !important;
+        position: relative !important;
     }
     
-    /* 2分割モード時: 入力フォームエリアをスクロール可能に */
+    /* 入力フォームエリア（残り60%でスクロール可能） */
     .split-view-mode #recordingInputArea {
-        flex: 1 !important;
+        flex: 1 1 60vh;
         overflow-y: auto !important;
         overflow-x: hidden !important;
         -webkit-overflow-scrolling: touch;
         min-height: 0;
+        max-height: 60vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding-top: 10px;
+    }
+    
+    /* スマホ対応：より確実にスクロール */
+    @media (max-width: 768px) {
+        .split-view-mode #recordingInputArea {
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
     }
         
     </style>
