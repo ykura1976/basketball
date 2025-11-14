@@ -1610,8 +1610,13 @@
     
     /* 2分割モード時: 動画エリアを固定(上部) */
     .split-view-mode #videoDisplayArea {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
         flex-shrink: 0;
         margin-bottom: 0;
+        background: white;
     }
     
     /* 動画プレイヤーのサイズを調整 */
@@ -1621,10 +1626,11 @@
     
     /* 2分割モード時: 入力フォームエリアをスクロール可能に */
     .split-view-mode #recordingInputArea {
-        flex: 1;
-        overflow-y: auto;
-        overflow-x: hidden;
+        flex: 1 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
         -webkit-overflow-scrolling: touch;
+        min-height: 0;
     }
         
     </style>
@@ -2325,9 +2331,6 @@
                     
                 </div>
             </div>
-            <!-- ここから追加(入力フォームエリアの終了) -->
-            </div>
-            <!-- ここまで追加 -->
      </div>
             
      <div id="teamHistoryTab" style="display: none;">
