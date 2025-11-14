@@ -1585,70 +1585,52 @@
         margin-top: 5px;
     }
 
-    /* ========================================
-       📺 2分割モード（動画+記録フォーム）
-       ======================================== */
-    
-    /* bodyのスクロールを無効化 */
+    /* 2分割モード時: bodyのスクロールを無効化 */
     body.split-view-mode {
         overflow: hidden !important;
         height: 100vh;
-        position: fixed;
-        width: 100%;
     }
     
-    /* teamRecordingを画面全体に */
+    /* 2分割モード時: teamRecordingを画面いっぱいに */
     .split-view-mode #teamRecording {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        max-height: 100vh;
-        overflow: hidden;
-        padding-bottom: 0;
-        padding-top: 0;
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+        padding-bottom: 0 !important;
     }
     
-    /* URL入力カードを非表示 */
+    /* 2分割モード時: URL入力カードを非表示 */
     .split-view-mode #videoUrlInputCard {
         display: none !important;
     }
     
-    /* 動画エリアを固定(上部40%) */
+    /* 2分割モード時: 動画エリアを固定(画面の40%) */
     .split-view-mode #videoDisplayArea {
-        flex: 0 0 40vh;
-        max-height: 40vh;
-        overflow: hidden;
-        margin-bottom: 0;
-        position: relative;
-        z-index: 100;
-        background: #000;
+        flex: 0 0 auto !important;
+        flex-shrink: 0 !important;
+        height: 40vh !important;
+        max-height: 40vh !important;
+        overflow: hidden !important;
+        margin-bottom: 0 !important;
     }
     
-    /* 動画プレイヤーのサイズ（16:9比率を維持） */
+    /* 動画プレイヤーのサイズを調整 */
     .split-view-mode #videoPlayerContainer {
         padding-bottom: 0 !important;
         height: 100% !important;
-        position: relative !important;
     }
     
-    /* 入力フォームエリア（残り60%でスクロール可能） */
+    /* 2分割モード時: 入力フォームエリアをスクロール可能に(画面の60%) */
     .split-view-mode #recordingInputArea {
-        flex: 1 1 60vh;
-        overflow-y: auto !important;
+        flex: 1 1 auto !important;
+        height: 60vh !important;
+        max-height: 60vh !important;
+        overflow-y: scroll !important;
         overflow-x: hidden !important;
-        -webkit-overflow-scrolling: touch;
-        min-height: 0;
-        max-height: 60vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding-top: 10px;
-    }
-    
-    /* スマホ対応：より確実にスクロール */
-    @media (max-width: 768px) {
-        .split-view-mode #recordingInputArea {
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
-        }
+        -webkit-overflow-scrolling: touch !important;
+        min-height: 0 !important;
     }
         
     </style>
