@@ -5648,6 +5648,20 @@ if (result.players) {
                 teamBtn.classList.add('team-mode');
                 document.getElementById('teamMode').style.display = 'block';
                 document.body.classList.add('team-mode');
+
+                // ←←← ここから追加 ←←←
+                // チームモードを開いた時、アクティブなタブに応じてデータを表示
+                const activeTeamTab = document.querySelector('#teamMode .tab.active');
+                if (activeTeamTab) {
+                    const tabText = activeTeamTab.textContent;
+                    if (tabText.includes('対戦履歴')) {
+                        displayTeamGamesHistory();
+                    } else if (tabText.includes('ランキング')) {
+                        displayTeamRankings();
+                    }
+                }
+                // ←←← ここまで追加 ←←←
+               
             } else if (mode === 'settings') {
                 document.querySelector('.mode-btn:nth-child(3)').classList.add('active');
                 document.getElementById('settingsMode').style.display = 'block';
