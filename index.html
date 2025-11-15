@@ -5648,8 +5648,8 @@ if (result.players) {
                 teamBtn.classList.add('team-mode');
                 document.getElementById('teamMode').style.display = 'block';
                 document.body.classList.add('team-mode');
-
-                // ←←← ここから追加 ←←←
+            
+                // ↓↓↓ ここから修正 ↓↓↓
                 // チームモードを開いた時、アクティブなタブに応じてデータを表示
                 const activeTeamTab = document.querySelector('#teamMode .tab.active');
                 if (activeTeamTab) {
@@ -5659,8 +5659,14 @@ if (result.players) {
                     } else if (tabText.includes('ランキング')) {
                         displayTeamRankings();
                     }
+                } else {
+                    // ※ 起動時などタブがまだアクティブでない場合は、デフォルトの「対戦記録」タブのデータを表示
+                    displayTeamStatus();
                 }
-                // ←←← ここまで追加 ←←←
+                // ↑↑↑ ここまで修正 ↑↑↑
+   
+
+               
                
             } else if (mode === 'settings') {
                 document.querySelector('.mode-btn:nth-child(3)').classList.add('active');
